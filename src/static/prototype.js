@@ -115,7 +115,14 @@ async function available_topics()
         let a = document.createElement("a");
         a.appendChild(document.createTextNode(key));
         a.setAttribute("id", key);
+        a.setAttrinute("show_articles", "false");
         a.setAttribute("onclick", "available_topics_click(this); return false");
+       /* a.onclick = function()
+        {
+            show_articles = false ? true : false;
+            available_topics_click(this);
+            //return false; 
+        };*/
         li.appendChild(a);
         li.setAttribute("class", "navigation_bar_li");
         li.setAttribute("id", key)
@@ -129,9 +136,23 @@ async function available_articles(topic)
     let data = await get_json("api");
     let list = document.getElementById(topic);
 
-
     console.log(list.innerHTML);
+    console.log(topic);
+    var sss = document.getElementById(topic).getAttribute("show_articles");
+    console.log(sss);
 
+    if(document.getElementById(topic).show_articles == true)
+    {
+        data[topic]["documents"].forEach( element =>
+            {
+              var temp = document.getElementById(topic + ";" + element.title);
+              temp.parentNode.removeChild(temp);  
+            }
+        )
+        document.getElementById(topic).setAttribute("show_articles", "false");
+    }
+
+    else{
 
     let ul = document.createElement("ul");
     data[topic]["documents"].forEach( element => {
@@ -145,7 +166,8 @@ async function available_articles(topic)
         ul.appendChild(li_child);
     })
     list.appendChild(ul)
-        
+    docuemnt.getElementById("topic").setAttribute("show_articles", "true");
+    }
 
     /*data.articles.forEach( element => {
         //add the documents to the navigation bar
