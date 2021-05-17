@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='/main.css') }}?v=" />
+</head>
+<body>
+    <header>
+        <h1>Prototype</h1>
+    </header>
+    <script src={{ url_for('static', filename='prototype.js') }}></script>
+    <noscript>You need to enable JavaScript.</noscript>
+
+    <div class="navigation_bar">
+        <h2>Navigation Bar</h2>
+
+        <ul class="navigation_bar_ul">
+            <li class="navigation_bar_li"><a href="#">Single Article View</a></li>
+            <li class="navigation_bar_li"><a href="#">Multi Article View</a></li>
+            <li class="navigation_bar_li"><a href="#">Statistic</a></li>
+            <li class="navigation_bar_li"><a href="#">Available Articles</a></li>
+            
+            <ul id="available_articles">
+            </ul>
+        </ul>
+    </div>
+
+    <div class="text_theme">
+        <h2>Entities</h2>
+        <div id="entities"></div>
+    </div>
+
+    <div id="text", class="text_theme">
+
+        <mark class="text_element_market">I am markt</mark>
+        
+    </div>
+
+    
+</body>
+
+</html>

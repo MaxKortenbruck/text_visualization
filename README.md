@@ -17,3 +17,24 @@ Ist das addon installiert, könnt ihr in der Commandpalette (Ctrl+Shift+P)  *Git
 Da es sich um ein privates repo handelt, müsst ihr euch noch mit euren github daten einloggen, da wird man von vscode aber durchgeführt. 
 
 
+
+Nutzung des Webservers:
+
+Es muss Docker auf dem System installiert sein. Bei Linux muss zusätzlich noch Docker Compose installiert sein. 
+
+Im Wurzelverzeichnis
+
+>docker-compose build
+
+dann
+
+>docker-compose up -d
+
+zum beenden:
+
+>docker-compose down
+
+
+Hinweise zum Programmieren:
+
+Das css File wir in firefox durch strg+F5 mit neu geladen, sonst wird es im Cache gespeichert und nicht immer neu geladen.
