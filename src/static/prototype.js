@@ -1,5 +1,10 @@
 'use strict'
 
+/**
+ * reads json from server
+ * @param {string} file - Specifies the json we want to get
+ * @returns - Returns the requested json
+ */
 async function get_json(file="api")
 {
     let data = await fetch("http://127.0.0.1:5000/" + file);
@@ -9,15 +14,22 @@ async function get_json(file="api")
 
 
 
-// article ist build as follows: string: name_of_josn;name_of_document )
+/**
+ * build a text out of the jason
+ * @param {json} data - Json Data
+ * @param {string} article - Article id in the format ("topic";"article")
+ * @returns null
+ */
 function json_to_text(data, article)
 {
     let text_return = '';
+    let sentence_symbols = [".",",","?","!",";",":","%","€","$","\'","\""];
 
+    // res is the split of the article in topic and the article name
     let res = []
-
     res = article.split(";");
 
+    // adds local index to article
     let counter = 0;
     let document_number = 0;
     data[res[0]].documents.forEach( element => {
@@ -29,10 +41,14 @@ function json_to_text(data, article)
     })
 
     text = data[res[0]].documents[ document_number ].text;
-    text.forEach(element => {
-        element.forEach(word => {
+    text.forEach(sentence => {
+
+        sentence.forEach(word => {
+            if(!sentence_symbols.includes(word["word"]))
+            {
+                text_return += ' ';
+            }
             text_return += word['word'];
-            text_return += ' ';
         });
     });
 
@@ -63,12 +79,6 @@ async function print_whole_text(article)
 {
     let data = await get_json();
     load_entities(data, article);
-    json_to_text(data, article);
-}
-
-async function mark_whole_text(article)
-{
-    let data = await get_json();
     json_to_text(data, article);
 }
 
@@ -155,7 +165,7 @@ function available_articles_click(linkElement)
 
 function available_entities_click(linkElement)
 {
-    mark_whole_text(linkElement.id);
+    console.log(linkElement.id);
 }
 
 
@@ -164,16 +174,16 @@ function onload_function()
     available_topics();
 }
 
-/* Set the width of the side navigation to 250px */
+onload_function();
+
+/* Set the width of the side navigation to 250px and the left margin of the page content to 250px and add a black background color to body */
 function openNav() {
-    document.getElementById("available_articles").style.width = "250px";
+    document.getElementById("mySidenav").style.width = "250px";
     document.getElementById("main").style.marginLeft = "250px";
   }
   
-  /* Set the width of the side navigation to 0 */
+  /* Set the width of the side navigation to 0 and the left margin of the page content to 0, and the background color of body to white */
   function closeNav() {
-    document.getElementById("available_articles").style.width = "0";
-  document.getElementById("main").style.marginLeft = "0";
-  }
-
-onload_function();
+    document.getElementById("mySidenav").style.width = "0";
+    document.getElementById("main").style.marginLeft = "0";
+  } 
