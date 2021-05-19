@@ -13,21 +13,27 @@
 
     <div id="mySidenav" class="sidenav">
         <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-        <a href="#">Information</a>
+        <a href="#", onclick="show('div_information'); return false">Information</a>
         <a href="#">Single Article View</a>
         <a href="#">Multi Article View</a>
+        <a href="#", onclick="show('available_topics'); return false">Available Articles</a>
         <a href="#">Statistic</a>
         <a href="#">Contact</a>
 
     </div>
 
     <div id=main>
-        <span onclick="openNav()">open</span>
+        <span onclick="openNav('available_topics')">open</span>
         <header>
             <h1>Prototype</h1>
         </header>
 
-        <div class="navigation_bar">
+        <div id="div_information", class="text_theme">
+            <h2>Information</h2>
+            Dasss ist eine krasse Information
+        </div>
+
+        <div class="navigation_bar", id="available_topics">
             <h2>Available Articles</h2>
 
             <ul class="navigation_bar_ul">
@@ -36,12 +42,13 @@
             </ul>
         </div>
 
-        <div class="text_theme">
-            <h2>Entities</h2>
-            <div id="entities"></div>
+        <div id="text", class="text_theme">
         </div>
 
-        <div id="text", class="text_theme">
+
+        <div class="entitie_div">
+            <h2>Entities</h2>
+            <div id="entities"></div>
         </div>
     </div>
     

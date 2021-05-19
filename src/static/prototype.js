@@ -186,4 +186,13 @@ function openNav() {
   function closeNav() {
     document.getElementById("mySidenav").style.width = "0";
     document.getElementById("main").style.marginLeft = "0";
-  } 
+}
+
+function show(id)
+{
+    let element = document.getElementById(id);
+    if(element != null)
+    {
+        element.style.display = (element.style.display=='block'?'none':'block'); 
+    }
+}
