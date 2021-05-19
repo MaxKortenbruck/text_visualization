@@ -115,14 +115,12 @@ async function available_topics()
         let a = document.createElement("a");
         a.appendChild(document.createTextNode(key));
         a.setAttribute("id", key);
-        a.setAttrinute("show_articles", "false");
-        a.setAttribute("onclick", "available_topics_click(this); return false");
-       /* a.onclick = function()
+        a.setAttribute("show_articles", false);
+        a.onclick = function()
         {
-            show_articles = false ? true : false;
             available_topics_click(this);
-            //return false; 
-        };*/
+            return false; 
+        };
         li.appendChild(a);
         li.setAttribute("class", "navigation_bar_li");
         li.setAttribute("id", key)
@@ -141,15 +139,16 @@ async function available_articles(topic)
     var sss = document.getElementById(topic).getAttribute("show_articles");
     console.log(sss);
 
-    if(document.getElementById(topic).show_articles == true)
+    if(document.getElementById(topic).getAttribute("show_articles") == true)
     {
         data[topic]["documents"].forEach( element =>
             {
               var temp = document.getElementById(topic + ";" + element.title);
+              console.log(temp);
               temp.parentNode.removeChild(temp);  
             }
         )
-        document.getElementById(topic).setAttribute("show_articles", "false");
+        document.getElementById(topic).setAttribute("show_articles", false);
     }
 
     else{
@@ -161,12 +160,16 @@ async function available_articles(topic)
         a_child.appendChild(document.createTextNode(element.title));
         a_child.setAttribute("id", topic + ";" + element.title);
         a_child.setAttribute("onclick", "available_articles_click(this); return false");
+        a_child.onclick = function(){
+            available_articles_click(this);
+            return false;
+        }
         li_child.appendChild(a_child);
         li_child.setAttribute("class", "navigation_bar_li");
         ul.appendChild(li_child);
     })
     list.appendChild(ul)
-    docuemnt.getElementById("topic").setAttribute("show_articles", "true");
+    document.getElementById("topic").setAttribute("show_articles", true);
     }
 
     /*data.articles.forEach( element => {
