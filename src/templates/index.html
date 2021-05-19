@@ -8,33 +8,41 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='/main.css') }}?v=" />
 </head>
 <body>
-    <header>
-        <h1>Prototype</h1>
-    </header>
     <script src={{ url_for('static', filename='prototype.js') }}></script>
     <noscript>You need to enable JavaScript.</noscript>
 
-    <div class="navigation_bar">
-        <h2>Navigation Bar</h2>
+    <div id="mySidenav" class="sidenav">
+        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+        <a href="#">Information</a>
+        <a href="#">Single Article View</a>
+        <a href="#">Multi Article View</a>
+        <a href="#">Statistic</a>
+        <a href="#">Contact</a>
 
-        <ul class="navigation_bar_ul">
-            <li class="navigation_bar_li"><a href="#">Single Article View</a></li>
-            <li class="navigation_bar_li"><a href="#">Multi Article View</a></li>
-            <li class="navigation_bar_li"><a href="#">Statistic</a></li>
-            <li class="navigation_bar_li"><a href="#">Available Articles</a></li>
-            
-            <ul id="available_articles">
+    </div>
+
+    <div id=main>
+        <span onclick="openNav()">open</span>
+        <header>
+            <h1>Prototype</h1>
+        </header>
+
+        <div class="navigation_bar">
+            <h2>Available Articles</h2>
+
+            <ul class="navigation_bar_ul">
+                <ul id="available_articles">
+                </ul>
             </ul>
-        </ul>
-    </div>
+        </div>
 
-    <div class="text_theme">
-        <h2>Entities</h2>
-        <div id="entities"></div>
-    </div>
+        <div class="text_theme">
+            <h2>Entities</h2>
+            <div id="entities"></div>
+        </div>
 
-    <div id="text", class="text_theme">
-        
+        <div id="text", class="text_theme">
+        </div>
     </div>
     
 </body>
