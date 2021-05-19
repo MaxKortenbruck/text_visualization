@@ -1,35 +1,5 @@
 'use strict'
 
-/**this is a class for sentence
- * @constructor all words in an array
- */
-class sentence
-{
-    constructor(words)
-    {
-        this.words = words;
-    }
-}
-
-class article
-{
-    constructor(sentences, title)
-    {
-        this.sentences = sentence(sentences);
-        this.title = title;
-    }
-
-}
-
-class topic
-{
-    constructor(articles, topic_title)
-    {
-        this.documents = article(articles);
-        this.topic_title = topic_title;
-    }
-}
-
 async function get_json(file="api")
 {
     let data = await fetch("http://127.0.0.1:5000/" + file);
@@ -115,12 +85,11 @@ async function available_topics()
         let a = document.createElement("a");
         a.appendChild(document.createTextNode(key));
         a.setAttribute("id", key);
-        a.setAttribute("show_articles", false);
         a.onclick = function()
         {
             available_topics_click(this);
-            return false; 
-        };
+            return false;
+        }
         li.appendChild(a);
         li.setAttribute("class", "navigation_bar_li");
         li.setAttribute("id", key)
@@ -134,44 +103,34 @@ async function available_articles(topic)
     let data = await get_json("api");
     let list = document.getElementById(topic);
 
-    console.log(list.innerHTML);
-    console.log(topic);
-    var sss = document.getElementById(topic).getAttribute("show_articles");
-    console.log(sss);
-
-    if(document.getElementById(topic).getAttribute("show_articles") == true)
+    if(document.getElementById("div" + topic) == null)
     {
-        data[topic]["documents"].forEach( element =>
-            {
-              var temp = document.getElementById(topic + ";" + element.title);
-              console.log(temp);
-              temp.parentNode.removeChild(temp);  
-            }
-        )
-        document.getElementById(topic).setAttribute("show_articles", false);
+        let div = document.createElement("div");
+            div.setAttribute("id", "div" + topic);
+
+            let ul = document.createElement("ul");
+            data[topic]["documents"].forEach( element => {
+                let li_child = document.createElement("li");
+                let a_child = document.createElement("a");
+                a_child.appendChild(document.createTextNode(element.title));
+                a_child.setAttribute("id", topic + ";" + element.title);
+                a_child.onclick = function()
+                {
+                    available_articles_click(this);
+                    return false;
+                }
+                li_child.appendChild(a_child);
+                li_child.setAttribute("class", "navigation_bar_li");
+                ul.appendChild(li_child);
+            })
+        div.appendChild(ul);
+        list.appendChild(div);
     }
 
-    else{
-
-    let ul = document.createElement("ul");
-    data[topic]["documents"].forEach( element => {
-        let li_child = document.createElement("li");
-        let a_child = document.createElement("a");
-        a_child.appendChild(document.createTextNode(element.title));
-        a_child.setAttribute("id", topic + ";" + element.title);
-        a_child.setAttribute("onclick", "available_articles_click(this); return false");
-        a_child.onclick = function(){
-            available_articles_click(this);
-            return false;
-        }
-        li_child.appendChild(a_child);
-        li_child.setAttribute("class", "navigation_bar_li");
-        ul.appendChild(li_child);
-    })
-    list.appendChild(ul)
-    document.getElementById("topic").setAttribute("show_articles", true);
+    else
+    {
+        list.removeChild(document.getElementById("div"+topic));
     }
-
     /*data.articles.forEach( element => {
         //add the documents to the navigation bar
         let li = document.createElement("li")
@@ -192,8 +151,6 @@ function available_topics_click(linkElement)
 function available_articles_click(linkElement)
 {
     print_whole_text(linkElement.id);
-
-    load_topic(linkElement.id);
 }
 
 function available_entities_click(linkElement)
