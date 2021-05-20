@@ -52,7 +52,7 @@ async function get_json(file="api")
  */
 function json_to_text(data, article)
 {
-    let text_return = '', text_t;
+    let text_return = "", headline = "", temp_text = "";
     let sentence_symbols = [".",",","?","!",";",":","%","€","$","\’","\""];
 
     // res is the split of the article in topic and the article name
@@ -67,8 +67,14 @@ function json_to_text(data, article)
     text = data[res[0]].documents[ document_number ].text;
     text.forEach(sentence => {
 
-        sentence.forEach(word[word] => {    
-            sentence_array.push(word);    
+        sentence.forEach(word => { 
+            if(!sentence_symbols.includes(word["word"]))
+            {
+                temp_text += " ";
+            }
+            temp_text += word["word"];
+            sentence_array.push(temp_text);
+            temp_text = "";    
         });
         text_array.push(sentence_array);
         sentence_array = [];
@@ -76,18 +82,26 @@ function json_to_text(data, article)
 
     console.log(text_array);    
     const element = document.getElementById("text");
+    //element.setAttribute('style', 'white-space: pre;');
 
     text_array.forEach(sentence => {
 
         sentence.forEach(word => {
-            if(!sentence_symbols.includes(word["word"]))
-            {
-                sentence_array.push(" ");
-            }
+         if(sentence_array_index == 0)
+         {
+            headline += word;
+         }
+         else
+         {
+             text_return += word;
+         }
+            
         });
+
+        sentence_array_index++;
     });
 
-    element.textContent = text_return;
+    element.innerHTML ="<font size = 20 vmin; >" + headline + "</font><br/><br/>" + text_return;
     
     return 0;
 }
