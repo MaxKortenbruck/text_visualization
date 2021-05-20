@@ -18,19 +18,17 @@ body
     list-style-type: none;
   }
   
-  .navigation_bar_li a {
+.navigation_bar_li a {
     display: block;
     color: #000;
     padding: 8px 16px;
     text-decoration: none;
   }
   
-  /* Change the link color on hover */
-  /*
-  .navigation_bar_li a:hover {
-    background-color: lightgray;
-  }
-*/
+/* Change the link color on hover */
+.navigation_bar_li a:hover {
+  background-color: lightgray;
+}
 
 /* The side navigation menu */
 .sidenav {
