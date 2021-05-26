@@ -177,6 +177,20 @@ function mark_entities_in_text(data, article, text_array, text_element)
 }
 
 
+function create_text_div(data, article)
+{
+    let res = article.split(";");
+    let text_div = document.createElement("div");
+    let title = document.createElement("h2");
+
+    text_div.setAttribute("class", "text_theme");
+
+    title.appendChild( document.createTextNode(res[1]));
+    text_div.appendChild(title);
+
+    document.getElementById("text").appendChild(text_div);
+}
+
 function load_entities(data, article)
 {
     let res = article.split(";");
@@ -215,7 +229,7 @@ async function print_whole_text(article)
 {
     let data = await get_json();
     load_entities(data, article);
-    json_to_text(data, article);
+    create_text_div(data, article);
 }
 
 /**add all availible Topics to html
@@ -252,23 +266,23 @@ async function available_articles(topic)
     if(document.getElementById("div" + topic) == null)
     {
         let div = document.createElement("div");
-            div.setAttribute("id", "div" + topic);
+        div.setAttribute("id", "div" + topic);
 
-            let ul = document.createElement("ul");
-            data[topic]["documents"].forEach( element => {
-                let li_child = document.createElement("li");
-                let a_child = document.createElement("a");
-                a_child.appendChild(document.createTextNode(element.title));
-                a_child.setAttribute("id", topic + ";" + element.title);
-                a_child.onclick = function()
-                {
-                    available_articles_click(this);
-                    return false;
-                }
-                li_child.appendChild(a_child);
-                li_child.setAttribute("class", "navigation_bar_li");
-                ul.appendChild(li_child);
-            })
+        let ul = document.createElement("ul");
+        data[topic]["documents"].forEach( element => {
+            let li_child = document.createElement("li");
+            let a_child = document.createElement("a");
+            a_child.appendChild(document.createTextNode(element.title));
+            a_child.setAttribute("id", topic + ";" + element.title);
+            a_child.onclick = function()
+            {
+                available_articles_click(this);
+                return false;
+            }
+            li_child.appendChild(a_child);
+            li_child.setAttribute("class", "navigation_bar_li");
+            ul.appendChild(li_child);
+        })
         div.appendChild(ul);
         list.appendChild(div);
     }
@@ -289,6 +303,7 @@ async function available_articles(topic)
         list.appendChild(li)
     })*/
 }
+
 function available_topics_click(linkElement)
 {
     available_articles(linkElement.id);
@@ -313,13 +328,24 @@ function onload_function()
 onload_function();
 
 /* Set the width of the side navigation to 250px and the left margin of the page content to 250px and add a black background color to body */
-function openNav() {
+function openNav() 
+{
     document.getElementById("mySidenav").style.width = "250px";
     document.getElementById("main").style.marginLeft = "250px";
-  }
+}
   
   /* Set the width of the side navigation to 0 and the left margin of the page content to 0, and the background color of body to white */
-  function closeNav() {
+function closeNav() 
+{
     document.getElementById("mySidenav").style.width = "0";
     document.getElementById("main").style.marginLeft = "0";
-  } 
+}
+
+function show(id)
+{
+    let element = document.getElementById(id);
+    if(element != null)
+    {
+        element.style.display = (element.style.display=='block'?'none':'block'); 
+    }
+}
