@@ -80,7 +80,6 @@ function json_to_text(data, article)
         sentence_array = [];
     });
 
-    console.log(text_array);    
     const element = document.getElementById("text");
     //element.setAttribute('style', 'white-space: pre;');
 
@@ -101,23 +100,35 @@ function json_to_text(data, article)
         sentence_array_index++;
     });
 
-    element.innerHTML ="<font size = 20 vmin; >" + headline + "</font><br/><br/>" + text_return;
+    // element.innerHTML ="<font size = 20 vmin; >" + headline + "</font><br/><br/>" + text_return;
     
-    return 0;
+    return text_return;
 }
 
 function create_text_div(data, article)
 {
     let res = article.split(";");
-    let text_div = document.createElement("div");
-    let title = document.createElement("h2");
+    let text_div = document.getElementById("div" + res[1]);
+    if(text_div == null)
+    {
+        let text_div = document.createElement("div");
+        let title = document.createElement("h2");
+        let text = document.createTextNode(json_to_text(data, article))
 
-    text_div.setAttribute("class", "text_theme");
+        text_div.setAttribute("class", "text_theme");
+        text_div.setAttribute("id", "div" + res[1])
 
-    title.appendChild( document.createTextNode(res[1]));
-    text_div.appendChild(title);
+        title.appendChild( document.createTextNode(res[1]));
+        text_div.appendChild(title);
+        text_div.appendChild(text);
 
-    document.getElementById("text").appendChild(text_div);
+        document.getElementById("text").appendChild(text_div);
+    }
+    else
+    {
+        document.getElementById("text").removeChild(text_div);
+    }
+
 }
 
 function load_entities(data, article)
@@ -220,17 +231,6 @@ async function available_articles(topic)
     {
         list.removeChild(document.getElementById("div"+topic));
     }
-    /*data.articles.forEach( element => {
-        //add the documents to the navigation bar
-        let li = document.createElement("li")
-        let a = document.createElement("a")
-        a.appendChild(document.createTextNode(element))
-        a.setAttribute("id", element)
-        a.setAttribute("onclick", "available_articles_click(this); return false")
-        li.appendChild(a)
-        li.setAttribute("class", "navigation_bar_li")
-        list.appendChild(li)
-    })*/
 }
 
 function available_topics_click(linkElement)
@@ -245,7 +245,7 @@ function available_articles_click(linkElement)
 
 function available_entities_click(linkElement)
 {
-    console.log(linkElement.id);
+    console.log("");
 }
 
 
