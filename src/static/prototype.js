@@ -111,7 +111,7 @@ function json_to_text(data, article)
  * @param {String} text_element - ID of a html element 
  * @param {Array[]} text_array - 2 Dimensional Array of the article's sentences and words
  */
-function write_article_text(text_element, text_array)
+function write_article_text(text_element, text_array, headline_id)
 {
     let text_return = "", headline = ""; 
     let sentence_array_index = 0;
@@ -131,9 +131,10 @@ function write_article_text(text_element, text_array)
         });
         sentence_array_index++;
     });
-
-    element.innerHTML ="<font size = 20 vmin; >" + headline + "</font><br/><br/>" + text_return;
+    // element.innerHTML ="<font size = 20 vmin; >" + headline + "</font><br/><br/>" + text_return;
+    create_text_div(headline, text_return, headline_id)
 }
+
 
 /**
  * 
@@ -211,24 +212,31 @@ function mark_entities_in_text(data, article, entity, text_element)
             }
         })
     } 
-    write_article_text(text_element, text_array);   
+    write_article_text(text_element, text_array, res[1]);   
 }
 
 
-function create_text_div(data, article)
+function create_text_div(headline, market_text, headline_id)
 {
-    let res = article.split(";");
-    let text_div = document.getElementById("div" + res[1]);
+    let text_div = document.getElementById("div" + headline_id);
     if(text_div == null)
     {
         let text_div = document.createElement("div");
         let title = document.createElement("h2");
-        let text = document.createTextNode(json_to_text(data, article))
+        let text = document.createElement("div");
+
+        let a = document.createElement("p");
+        let b = document.createElement("p");
+
+        a.innerHTML = headline;
+        b.innerHTML = market_text;
+
+        title.appendChild(a);
+        text.appendChild(b);
 
         text_div.setAttribute("class", "text_theme");
-        text_div.setAttribute("id", "div" + res[1])
+        text_div.setAttribute("id", "div" + headline_id)
 
-        title.appendChild( document.createTextNode(res[1]));
         text_div.appendChild(title);
         text_div.appendChild(text);
 
@@ -238,6 +246,7 @@ function create_text_div(data, article)
     {
         document.getElementById("text").removeChild(text_div);
     }
+    console.log(text_div);
 
 }
 
@@ -370,8 +379,6 @@ function onload_function()
     available_topics();
 }
 
-onload_function();
-
 /* Set the width of the side navigation to 250px and the left margin of the page content to 250px and add a black background color to body */
 function openNav() 
 {
@@ -394,3 +401,5 @@ function show(id)
         element.style.display = (element.style.display=='block'?'none':'block'); 
     }
 }
+
+onload_function();

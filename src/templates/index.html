@@ -5,12 +5,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='/main.css') }}?v=" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='/main.css') }}" />
 </head>
 <body>
-    <script src={{ url_for('static', filename='prototype.js') }}></script>
-    <noscript>You need to enable JavaScript.</noscript>
-
     <div id="mySidenav" class="sidenav">
         <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
         <a href="#", onclick="show('div_information'); return false">Information</a>
@@ -49,7 +46,8 @@
         </div>
     </div>
 
-    
+    <script src={{ url_for('static', filename='prototype.js') }}></script>
+    <noscript>You need to enable JavaScript.</noscript>
 </body>
 
 </html>
