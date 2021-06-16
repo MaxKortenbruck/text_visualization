@@ -20,7 +20,7 @@ module.exports = class Document {
      */
     set_document_name(data, article)
     {
-        let identif = article.split[";"];
+        let identif = article.split(";");
         let result = data[identif[0]].documents.find( art =>{
             return art.title === identif[1];
         });
