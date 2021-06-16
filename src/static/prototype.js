@@ -255,9 +255,6 @@ function load_entities(data, article)
     let res = article.split(";");
     let div = document.getElementById("entities")
     div.innerHTML = "";
-    let sentence_index = 0;
-
-    let articel_index = get_article_index(data, res[0], res[1])
 
     let all = document.createElement("all");
     all.appendChild( document.createTextNode("Mark all entities in text") );
@@ -291,10 +288,11 @@ function load_entities(data, article)
 
 async function print_whole_text(article)
 {
+    console.log(article)
     let data = await get_json();
     load_entities(data, article);
-    create_text_div(data, article);
-    json_to_text(data, article);
+    // create_text_div(data, article);
+    // json_to_text(data, article);
 }
 
 /**add all availible Topics to html
