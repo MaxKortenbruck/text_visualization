@@ -26,6 +26,10 @@ def multiArticleView():
 def statistics():
     return render_template('statistics.html')
 
+@app.route('/contact')
+def contact():
+	return render_template('contact.html')
+
 @app.route('/api')
 def send_json():
 
