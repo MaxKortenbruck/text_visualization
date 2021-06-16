@@ -37,4 +37,4 @@ zum beenden:
 
 Hinweise zum Programmieren:
 
-Das css File wir in firefox durch strg+F5 mit neu geladen, sonst wird es im Cache gespeichert und nicht immer neu geladen.
+Das css File wird in firefox durch strg+F5 mit neu geladen, sonst wird es im Cache gespeichert und nicht immer neu geladen.
