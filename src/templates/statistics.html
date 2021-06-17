@@ -3,7 +3,10 @@
 {% block content %}
 
 <!-- preparing a DOM with width and height for ECharts -->
-<div id="chart" style="width:600px; height:400px;"></div>
+
+<div id="mainChart"></div>
+
+<div id="chart" style="width:1920px; height:1080px;"></div>
 
 <script src="{{ url_for('static', filename='echarts.min.js') }}"></script>
 
