@@ -1,13 +1,16 @@
 'use strict'
 
 module.exports = class Mention {
-    constructor()
+    constructor(sent, txt, tok, annot, ind, ent)
     {
-        this.sentence;
-        this.text;
-        this.tokens;
-        this.annotate_type;
-        this.merging_info;
-        this.political_direction;
+        this.sentence = sent;
+        this.text = txt;
+        this.tokens = tok;
+        this.annotate_type = annot;
+        this.index = ind;
+        
+        let temp = ent.merging_history.phrases[ind];
+        let ph = temp[1].split("_");
+        this.political_direction = ph[1];
     }
 }

@@ -8,11 +8,11 @@ module.exports = class Enitiy {
         this.topic = topic;
         
         this.title = set_entity_title();
-        this.mentions = set_mentions();
         
         let ent = data[topic].entities.find(element => {
             element.name === entity_name;
         });
+        this.mentions = set_mentions(data, topic, ent);
         this.phrasing_complexity = ent.phrasing_complexity;       
         this.type = ent.type;        
         this.size = ent.size;
@@ -32,5 +32,16 @@ module.exports = class Enitiy {
     }
 
 
-    set_mentions(data, );
+    set_mentions(entity)
+    {
+        var Mention = require("mention.js");
+        var mentions = [];
+        var index = 0;
+        entity.mentions.forEach(element => {            
+            e = new Mention(element.sentence, element.text, element.tokens. element.annot_type, index, entity);
+            mentions.push(e);
+            index ++; 
+        });
+        return mentions;
+    }
 }

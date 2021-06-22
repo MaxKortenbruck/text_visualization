@@ -7,7 +7,7 @@ module.exports = class Topic
         this.title = topic_name;
         this.name = this.set_topic_name(topic_name);
         this.index = this.set_topic_index(data, topic_name);
-        this.blsu;
+        this.articles = null;
     }
     /**
      * Returns the internal index of this topic in the json data
@@ -47,11 +47,10 @@ module.exports = class Topic
     set_articles(data)
     {
         var Document = require("document.js");
-        var document_array = [];
         data[this.title].document.forEach(art => {
             article_name = this.title + ";" + art.title;
             doc = new Document(data, article_name, this.title);
-            document_array.push(doc);
+            articles.push(doc);
         });
     }
 }
