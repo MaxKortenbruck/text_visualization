@@ -67,4 +67,18 @@ module.exports = class Document {
         });
         return text_array;
     }
+    add_entity(ent)
+    {
+        this.my_entities.push(ent);
+    }
+    mark_entity(ent)
+    {
+        this.marked_entities.push(ent.identifier);
+    }
+    unmark_entity(ent)
+    {
+        this.marked_entities = this.marked_entities.filter(function( ele ){
+            return ele.identifier !== ent.identifier;
+        })
+    }
 }

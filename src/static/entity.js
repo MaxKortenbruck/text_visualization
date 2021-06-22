@@ -38,7 +38,7 @@ module.exports = class Enitiy {
         var mentions = [];
         var index = 0;
         entity.mentions.forEach(element => {            
-            e = new Mention(element.sentence, element.text, element.tokens. element.annot_type, index, entity);
+            var e = new Mention(element.sentence, element.text, element.tokens. element.annot_type, index, entity);
             mentions.push(e);
             index ++; 
         });
