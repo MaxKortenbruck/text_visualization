@@ -26,27 +26,81 @@ async function get_topics()
 
 }
 
+function get_full_title(data, t)
+{
+    let topic = "";
+    for(const key in data)
+    {
+        if(key.includes(t))
+        {
+            topic = key;
+            break;
+        }
+    }
+    return topic;
+}
+
 async function get_articles(topic)
 {
     let data = await get_json();
     
     //search topic
-    let full_topic = ''
-    for(const key in data)
-    {
-        if(key.includes(topic))
-        {
-            full_topic = key;
-            break;
-        }
-    }
+    topic = get_full_title(data, topic);
     
     let articles = [];
-    data[full_topic].documents.forEach( article => {
+    data[topic].documents.forEach( article => {
         articles.push(article.title);
     })
 
     return articles;
+}
+
+function cleanup_entities(names)
+{
+    let new_names = [];
+    names.forEach( name => {
+        let temp = name;
+        temp = temp.slice(0, -2);
+        temp = temp.replace(/_/g, " ");
+        new_names.push(temp);
+    })
+    return new_names;
+}
+
+async function get_statistics(topic)
+{
+    let data = await get_json();
+    topic = get_full_title(data, topic)
+    
+    data = data[topic];
+    let names = []
+    let mentiond = []
+    data.entities.forEach( entitie => {
+        
+        let temp_mentions = entitie["mentions"];
+
+        names.push(entitie.name);
+        mentiond.push(temp_mentions.length);
+        
+    })
+
+    names = cleanup_entities(names);
+
+    let ret = [];
+    ret.push(names);
+    ret.push(mentiond);
+
+    return ret;
+}
+
+async function get_entity_statistics(topic, entity_index)
+{
+    let data = await get_json();
+    topic = get_full_title(data, topic);
+    data = data[topic].entities[entity_index];
+    
+    console.log(data);
+    return 0;
 }
 
 async function get_text(t, article)
@@ -90,5 +144,5 @@ async function get_text(t, article)
 
 
 
-export { get_topics, get_articles, get_text }
+export { get_topics, get_articles, get_statistics, get_entity_statistics, get_text }
 
