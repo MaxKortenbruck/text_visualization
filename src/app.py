@@ -22,6 +22,10 @@ def singleArticleView():
 def multiArticleView():
     return render_template('multi-article-view.html')
 
+@app.route('/article-view')
+def ArticleView():
+    return render_template('article-view.html')
+
 @app.route('/statistics')
 def statistics():
     return render_template('statistics.html')

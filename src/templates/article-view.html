@@ -1,0 +1,48 @@
+{% extends "base.html" %} {% block title %}Article View{% endblock %}
+
+{% block content %}
+
+<div>
+    <div class="accordion" id="accordionExample">
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="headingOne">
+            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+              Available Topics and Articles
+            </button>
+          </h2>
+          <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+            <div class="accordion-body">
+              <div class="row">
+                    <div class="col-3" id="articel_view;available_topics">
+                        Topics
+                        <div id="articel_view;available_topics;list" class="list-group">
+
+                        </div>
+                    </div>
+                    <div class="col" id="articel_view;available_articles">
+                        Articles
+                    </div>
+                </div>
+            </div>
+          </div>
+        </div>
+    </div>
+    </div>
+
+
+
+    
+</div>
+
+<div class="container-fluid">
+    <div class="row row-cols-1" id="articel_view;row" style="margin-top: 20px">
+
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
+<script type="module" src={{ url_for('static', filename='article-view.js') }}></script>
+
+
+
+{% endblock %}
