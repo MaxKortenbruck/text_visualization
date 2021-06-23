@@ -82,7 +82,7 @@ body
 
 .close-arrow:hover
 {
-	text-shadow: 3px 0px lightgray;
+	text-shadow: -3px 0px lightgray;
 }
 
 
@@ -100,7 +100,7 @@ body
 
 .open-arrow:hover
 {
-	text-shadow: -3px 0px gray;
+	text-shadow: 3px 0px gray;
 }
 
 /* Style page content - use this if you want to push the page content to the right when you open the side navigation */
