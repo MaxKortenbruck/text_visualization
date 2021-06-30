@@ -215,30 +215,53 @@ function mark_entities_in_text(data, article, entity, text_element)
     write_article_text(text_element, text_array, res[1]);   
 }
 
+function closeArticle(element)
+{
+	let headline = "div" + element.id.split(";")[1]
+	document.getElementById("text").removeChild(document.getElementById(headline))
+}
 
-function create_text_div(headline, market_text, headline_id)
+
+
+function create_text_div(headline, marked_text, headline_id)
 {
     let text_div = document.getElementById("div" + headline_id);
-    if(text_div == null)
+	if(text_div == null)
     {
-        let text_div = document.createElement("div");
-        let title = document.createElement("h2");
-        let text = document.createElement("div");
+        let text_div = document.createElement("div")
+        let title = document.createElement("h2")
+		let close_button = document.createElement("button")
+		
+        let text = document.createElement("div")
 
-        let a = document.createElement("p");
-        let b = document.createElement("p");
+        let a = document.createElement("p")
+        let b = document.createElement("p")
 
-        a.innerHTML = headline;
-        b.innerHTML = market_text;
+		close_button.setAttribute("id", "btn;" + headline_id)
+		close_button.setAttribute("class", "close-button")
+		close_button.setAttribute("aria-label", "Close alert")
+		close_button.setAttribute("type", "button")
 
-        title.appendChild(a);
-        text.appendChild(b);
+		let button = document.createTextNode("x")
+		close_button.appendChild(button)
+		close_button.onclick = function() {
+			closeArticle(this)
+			return false;
+		}
+		
 
-        text_div.setAttribute("class", "text_theme");
+        a.innerHTML = headline
+        b.innerHTML = marked_text
+
+        title.appendChild(a)
+        text.appendChild(b)
+
+        text_div.setAttribute("class", "text_theme")
         text_div.setAttribute("id", "div" + headline_id)
 
-        text_div.appendChild(title);
-        text_div.appendChild(text);
+        text_div.appendChild(title)
+		text_div.appendChild(close_button)
+        text_div.appendChild(text)
 
         document.getElementById("text").appendChild(text_div);
     }
@@ -253,11 +276,9 @@ function create_text_div(headline, market_text, headline_id)
 function load_entities(data, article)
 {
     let res = article.split(";");
+	console.log(res)
     let div = document.getElementById("entities")
     div.innerHTML = "";
-    let sentence_index = 0;
-
-    let articel_index = get_article_index(data, res[0], res[1])
 
     let all = document.createElement("all");
     all.appendChild( document.createTextNode("Mark all entities in text") );
@@ -291,10 +312,38 @@ function load_entities(data, article)
 
 async function print_whole_text(article)
 {
-    let data = await get_json();
-    load_entities(data, article);
-    create_text_div(data, article);
-    json_to_text(data, article);
+    //console.log(article)
+    let data = await get_json()
+    let text_array = json_to_text(data, article)
+
+	// first sentence of text -> headline
+	let headline_array = text_array[0]
+	let headline = ""
+	headline_array.forEach(
+		word => {
+			headline += word
+		}
+	)
+
+	// text_array to text
+	text_array.shift()
+	let text = ""
+	text_array.forEach(
+		sentence => {
+			sentence.forEach(
+				word => {
+					text += word
+				}
+			)
+		}
+	)
+
+	let res = article.split(";")
+
+	
+	load_entities(data, article);
+    create_text_div(headline, text, res[1]);
+    
 }
 
 /**add all availible Topics to html

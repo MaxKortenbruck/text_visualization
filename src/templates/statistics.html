@@ -2,10 +2,17 @@
 
 {% block content %}
 
-<div class="div_available_topics", id="available_topics">
-    <h2>Available Topics</h2>
-    <ul id="available_articles", class="navigation_bar_ul">
-    </ul>
-</div>
+<!-- preparing a DOM with width and height for ECharts -->
+
+<div id="mainChart"></div>
+
+<div id="chart" style="width:1920px; height:1080px;"></div>
+
+<script src="{{ url_for('static', filename='echarts.min.js') }}"></script>
+
+<script src="{{ url_for('static', filename='charts.js') }}"></script>
+
+
+
 
 {% endblock %}

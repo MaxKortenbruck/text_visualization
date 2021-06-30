@@ -5,26 +5,24 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='/main.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='./main.css') }}" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+
 </head>
 <body>
     <div id="mySidenav" class="sidenav">
-        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+		<button class="close-arrow" onclick="closeNav()">&lang;</button>
         <a href="/information">Information</a>
         <a href="/single-article-view">Single Article View</a>
         <a href="/multi-article-view">Multi Article View</a>
         <a href="#", onclick="show('available_topics'); return false">Available Articles</a>
         <a href="/statistics">Statistic</a>
-        <a href="#">Contact</a>
+        <a href="/contact">Contact</a>
 
     </div>
 
     <div id=main>
-        <span onclick="openNav('available_topics')">open</span>
-
-        <header style="text-align:center">
-          <h1>Prototype</h1>
-        </header>
+        <button class="open-arrow" onclick="openNav('available_topics')">&rang;</button>
 
         <div>{% block content %} {% endblock %}</div>
 

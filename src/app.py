@@ -22,9 +22,17 @@ def singleArticleView():
 def multiArticleView():
     return render_template('multi-article-view.html')
 
+@app.route('/article-view')
+def ArticleView():
+    return render_template('article-view.html')
+
 @app.route('/statistics')
 def statistics():
     return render_template('statistics.html')
+
+@app.route('/contact')
+def contact():
+	return render_template('contact.html')
 
 @app.route('/api')
 def send_json():
