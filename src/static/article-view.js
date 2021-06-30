@@ -277,9 +277,9 @@ async function display_article(id)
     collapse_stat.appendChild(document.createTextNode("dummy"))
 
     //create the div element for the pie plot
-    let div_article_statistic = document.createElement("div");
+    // let div_article_statistic = document.createElement("div");
 
-    let data = await get_statistics_of_article(res[1], res[3]);
+    // let data = await get_statistics_of_article(res[1], res[3]);
     // console.log(data);
 
 

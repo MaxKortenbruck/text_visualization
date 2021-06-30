@@ -165,7 +165,6 @@ async function get_text(t, article)
 
 }
 
-
 async function get_statistics_of_article(t, article_direction)
 {
     let data = await get_json();
@@ -206,5 +205,5 @@ async function get_statistics_of_article(t, article_direction)
     return(0)
 
 }
-export { get_topics, get_articles, get_statistics, get_entity_statistics, get_text, get_statistics_of_article }
 
+export { get_topics, get_articles, get_statistics, get_entity_statistics, get_text, get_statistics_of_article }
