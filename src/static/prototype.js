@@ -229,8 +229,9 @@ function create_text_div(headline, marked_text, headline_id)
 	if(text_div == null)
     {
         let text_div = document.createElement("div")
-        let title = document.createElement("h2")
-		let close_button = document.createElement("button")
+        let close_button = document.createElement("button")
+		let title = document.createElement("h2")
+		
 		
         let text = document.createElement("div")
 

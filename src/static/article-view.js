@@ -162,8 +162,10 @@ async function display_article(id)
     //create Close Button
     let closeButton = document.createElement("button");
     closeButton.type = "button";
-    closeButton.className = "btn-close";
+	closeButton.setAttribute("class", "close-button");
     closeButton.setAttribute("aria-label", "Close");
+	let cross = document.createTextNode("×")
+	closeButton.appendChild(cross)
     closeButton.onclick = function ()
     {
       close_text(this);
