@@ -10,40 +10,24 @@
 <body>
     <div id="mySidenav" class="sidenav">
         <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-        <a href="#", onclick="show('div_information'); return false">Information</a>
-        <a href="#">Single Article View</a>
-        <a href="#">Multi Article View</a>
+        <a href="/information">Information</a>
+        <a href="/single-article-view">Single Article View</a>
+        <a href="/multi-article-view">Multi Article View</a>
         <a href="#", onclick="show('available_topics'); return false">Available Articles</a>
-        <a href="#">Statistic</a>
+        <a href="/statistics">Statistic</a>
         <a href="#">Contact</a>
 
     </div>
 
     <div id=main>
         <span onclick="openNav('available_topics')">open</span>
-        <header>
-            <h1>Prototype</h1>
+
+        <header style="text-align:center">
+          <h1>Prototype</h1>
         </header>
 
-        <div id="div_information", class="text_theme">
-            <h2>Information</h2>
-            Dasss ist eine krasse Information
-        </div>
+        <div>{% block content %} {% endblock %}</div>
 
-        <div class="div_available_topics", id="available_topics">
-            <h2>Available Topics</h2>
-            <ul id="available_articles", class="navigation_bar_ul">
-            </ul>
-        </div>
-
-        <div id="text">
-        </div>
-
-
-        <div class="entitie_div">
-            <h2>Entities</h2>
-            <div id="entities"></div>
-        </div>
     </div>
 
     <script src={{ url_for('static', filename='prototype.js') }}></script>
