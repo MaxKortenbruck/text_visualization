@@ -14,11 +14,15 @@ async function get_topics()
     {
         let array = [];
         value.documents.forEach( article => {
-            array.push(article.title)
+
+            let article_title = article.title;
+            article_title += ";" + article.name.split("_")[1];
+            array.push(article_title)
         })
 
         //extract title
         let title = key.substr(0, key.length - 17).split(/[-,_]+/);
+
 
         ret[title[title.length-1]] = array;
     }
@@ -49,7 +53,9 @@ async function get_articles(topic)
     
     let articles = [];
     data[topic].documents.forEach( article => {
-        articles.push(article.title);
+        let article_title = article.title;
+        article_title += ";" + article.name.split("_")[1];
+        articles.push(article_title);
     })
 
     return articles;
@@ -98,9 +104,27 @@ async function get_entity_statistics(topic, entity_index)
     let data = await get_json();
     topic = get_full_title(data, topic);
     data = data[topic].entities[entity_index];
+
+    let mentions_text = [];
+    let mentions_number = [];
+
+    data.mentions.forEach( mention => {
+        if( mentions_text.includes( mention.text ) )
+        {
+            mentions_number[ mentions_text.indexOf(mention.text) ] += 1;
+        }
+        else
+        {
+            mentions_text.push(mention.text);
+            mentions_number.push(1);
+        }
+    })
     
-    console.log(data);
-    return 0;
+    let ret = [];
+    ret.push(mentions_text);
+    ret.push(mentions_number);
+
+    return ret;
 }
 
 async function get_text(t, article)
@@ -121,7 +145,6 @@ async function get_text(t, article)
     let index = 0;
     for(let i in data[topic].documents)
     {
-        console.log( data[topic].documents[i].title, article);
         if( data[topic].documents[i].title == article)
         {
             index = i;
@@ -143,6 +166,45 @@ async function get_text(t, article)
 }
 
 
+async function get_statistics_of_article(t, article_direction)
+{
+    let data = await get_json();
+    let topic = get_full_title(data, t)
 
-export { get_topics, get_articles, get_statistics, get_entity_statistics, get_text }
+    mentions = data[topic].entities;
+
+
+    ////////////work on it
+    let political_direction = ["L", "LL", "M", "R", "RR"];
+    let dict = {}
+    dict["names"] = [];
+    dict["mentiond"] = [];
+
+    /*political_direction.forEach( direction => {
+        let temp = {};
+        temp["names"] = [];
+        temp["mentiond"] = [];
+        dict[direction] = temp;
+    })*/
+
+    mentions.forEach( mention => {
+        //in jede liste das Entitie schreiben
+        political_direction.forEach( direction => {
+            dict[direction]["names"].push(mention.name);
+            dict[direction]["mentiond"].push(0);
+        })
+
+        //durch mention iterieren und politische ausrichtung auslesen
+        mention["merging_history"]["original"]["phrases"].forEach( element => {
+            let direction_of_mention = element[1].split("_")[1];
+            index = dict[direction_of_mention]["names"].length - 1;
+            dict[direction_of_mention]["mentiond"][index] += 1;
+        })
+    })
+
+    /////////till here
+    return(0)
+
+}
+export { get_topics, get_articles, get_statistics, get_entity_statistics, get_text, get_statistics_of_article }
 
