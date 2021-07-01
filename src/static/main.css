@@ -2,7 +2,7 @@
 
 body
 {
-  background-color: lightgray;
+  background-color: lightgray !important;
 }
 
 .div_available_topics {
@@ -45,6 +45,7 @@ body
 	overflow-x: hidden; /* Disable horizontal scroll */
 	padding-top: 60px; /* Place content 60px from the top */
 	transition: 0.5s; /* 0.5 second transition effect to slide in the sidenav */
+	box-shadow: 3px 0 5px -2px #474747;
 }
   
 /* The navigation menu links */
@@ -93,7 +94,7 @@ body
 	border: 0;
 	background-color: transparent;
 	font-size: 40px;
-	position: absolute;
+	position: fixed;
 	top: 50%;
 	left: 2px;
 }
@@ -171,7 +172,7 @@ body
 }
 
 
-.close-button 
+.block .close-button 
 { 
 	border: 1.5px solid #5D5D5D;  
 	border-radius: 50%; 
@@ -184,6 +185,9 @@ body
 	line-height: 5px;
 	width: 30px;
 	height: 30px;
+	position: absolute;
+	top: 25px;
+	right: 25px;
 }
 
 .close-button:hover 
@@ -206,12 +210,36 @@ body
   display: table;
 }
 
-
-.accordion{
+.block
+{
 	display: block;
-    box-shadow: 0px 0px 13px 0px #474747 ;
-    margin: 10px;
-    padding: 20px;
+	position: relative;
+    box-shadow: 0px 0px 13px 0px #474747;
+	margin-left: 5px;
+    padding: 0 5px 0 5px;
     background-color: white;
     border-radius: 15px;
+}
+
+.accordion
+{
+	padding: 20px !important;
+}
+
+.accordion-button:active,
+.accordion-button.active,
+.accordion-button:focus,
+.accordion-button:focus:active
+{
+	background-color: #f0f0f0 !important;
+	border: 1px solid #d6d6d6 !important;
+	outline: none !important;
+	box-shadow:0px 0px 7px 0px #dfdfdf !important;
+	color: black !important;
+	
+}
+
+.accordion-button:after
+{
+	background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23000000'><path fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/></svg>") !important;
 }

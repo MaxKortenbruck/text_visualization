@@ -146,11 +146,11 @@ async function display_article(id)
 
     //create div element as container for the article
     let div = document.createElement("div");
-    div.className = "col";
+    div.className = "col block";
     div.id = article_id;
 
     let divChild = document.createElement("div");
-    divChild.className = "border bg-light overflow-auto";
+    //divChild.className = "border bg-light overflow-auto";
     divChild.style = "padding: 20px; height: 500px;"
 
     //create and append headline
@@ -179,12 +179,10 @@ async function display_article(id)
     top.className = "row";
 
     let topfChild = document.createElement("div");
-    topfChild.className = "col";
     topfChild.appendChild(headlineElement);
-    top.appendChild( topfChild)
+    top.appendChild(topfChild)
 
     let topsChild = document.createElement("div");
-    topsChild.className = "col-1";
     topsChild.appendChild(closeButton);
     top.appendChild(topsChild)
 
