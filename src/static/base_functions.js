@@ -170,11 +170,10 @@ async function get_statistics_of_article(t, article_direction)
     let data = await get_json();
     let topic = get_full_title(data, t)
 
-    mentions = data[topic].entities;
+    let mentions = data[topic].entities;
 
 
     ////////////work on it
-    let political_direction = ["L", "LL", "M", "R", "RR"];
     let dict = {}
     dict["names"] = [];
     dict["mentiond"] = [];
@@ -188,21 +187,26 @@ async function get_statistics_of_article(t, article_direction)
 
     mentions.forEach( mention => {
         //in jede liste das Entitie schreiben
-        political_direction.forEach( direction => {
-            dict[direction]["names"].push(mention.name);
-            dict[direction]["mentiond"].push(0);
-        })
+        
+        dict["names"].push(mention.name);
+        dict["mentiond"].push(0);
+        
 
         //durch mention iterieren und politische ausrichtung auslesen
         mention["merging_history"]["original"]["phrases"].forEach( element => {
             let direction_of_mention = element[1].split("_")[1];
-            index = dict[direction_of_mention]["names"].length - 1;
-            dict[direction_of_mention]["mentiond"][index] += 1;
+            if(direction_of_mention == article_direction)
+            {
+                let index = dict["names"].length - 1;
+                dict["mentiond"][index] += 1;
+            }
+            // index = dict[direction_of_mention]["names"].length - 1;
+            // dict[direction_of_mention]["mentiond"][index] += 1;
         })
     })
 
-    /////////till here
-    return(0)
+    dict["names"] = cleanup_entities(dict["names"]);
+    return dict;
 
 }
 

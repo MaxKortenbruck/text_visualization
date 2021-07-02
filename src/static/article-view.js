@@ -273,15 +273,20 @@ async function display_article(id)
     body_stat.className = "accordion-body";
     collapse_stat.appendChild(body_stat);
 
-    //here will be the code for the statistics
-    collapse_stat.appendChild(document.createTextNode("dummy"))
 
-    //create the div element for the pie plot
-    // let div_article_statistic = document.createElement("div");
+    //here is the code for the statistics
+    // create the div element for the pie plot
+    let div_article_statistic = document.createElement("div");
+    collapse_stat.appendChild(div_article_statistic);
 
-    // let data = await get_statistics_of_article(res[1], res[3]);
-    // console.log(data);
+    let data = await get_statistics_of_article(res[1], res[3]);
 
+    let plot = create_pie_plot(res[1], data["names"], data["mentiond"], div_article_statistic);
+
+    // handle click event in Chart
+    plot.on('click', function(params) {
+      entetie_in_statistic_click(params);
+    })
 
     divChild.appendChild(accordion);
 
@@ -308,6 +313,8 @@ function entetie_in_statistic_click(params)
   let topic = params.seriesName;
   let entity_index = params.dataIndex;
   let entity_name = params.name;
+
+  console.log(params)
   set_entity_statistics(topic, entity_index, entity_name);
 }
 
