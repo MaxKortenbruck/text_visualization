@@ -38,6 +38,12 @@ module.exports = class Entitiy {
             }
         });
     }
+
+    get entity_statistics()
+    {
+        
+    }
+
     get identifier()
     {
         return this._identifier;
