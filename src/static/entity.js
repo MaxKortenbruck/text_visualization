@@ -22,9 +22,10 @@ module.exports = class Entitiy {
     set_mentions(entity)
     {
         var Mention = require("mention.js");
+        var index = 0;
         entity.mentions.forEach(element => {            
             var m = new Mention(element.sentence, element.text, element.tokens. element.annot_type, index, entity);
-            
+            index ++;
             mentions_array.push(m);
             //create map with political direction and its' mentions 
             if(!this._mentions_map.has(m.political_direction))

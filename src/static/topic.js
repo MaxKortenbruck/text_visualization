@@ -7,8 +7,8 @@ module.exports = class Topic
     constructor(data, topic_name)
     {
 
-        this.title = topic_name;
-        this.name = this.set_topic_name(topic_name);
+        this._identifier = topic_name;
+        //this.name = this.set_topic_name(topic_name);
         //this.index = this.set_topic_index(data, topic_name);
         this.articles = null;
         this.entities = null;
@@ -38,32 +38,21 @@ module.exports = class Topic
         }
         return index;
     }*/
-    /**
-     * Returns the topic name without any numbers or additional information
-     * @param {String} title - Topic of the article
-     * @returns - String of topic name
-     */
-    set_topic_name(title)
-    {   
-        let temp = title.split[";"];
-        let text = temp[0].split("_");
-        return text[1];
-    }
     set_entities(data)
     {
         var Entity = require("entity.js");
-        data[this.title].entities.forEach(element => {
-            let id = this.title + ";" + element.name;
-            let en = new Entity(data, this.title, element.name, id);
+        data[this._identifier].entities.forEach(element => {
+            let id = this._identifier + ";" + element.name;
+            let en = new Entity(data, this._identifier, element.name, id);
             this.entities.push(en);
         })
     }
     set_articles(data)
     {
         var Document = require("document.js");
-        data[this.title].document.forEach(art => {
-            let article_name = this.title + ";" + art.title;
-            var doc = new Document(data, article_name, this.title);
+        data[this._identifier].document.forEach(art => {
+            let article_name = this._identifier + ";" + art.title;
+            var doc = new Document(data, article_name, this._identifier);
             this.articles.push(doc);
         });
     }
@@ -81,5 +70,17 @@ module.exports = class Topic
                 }
             });
         });
+    }
+
+    get identifier()
+    {
+        return this._identifier;
+    }
+
+    get name()
+    {
+        let temp = this._identifier.split[";"];
+        let text = temp[0].split("_");
+        return text[1];
     }
 }

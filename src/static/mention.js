@@ -3,16 +3,16 @@
 module.exports = class Mention {
     constructor(sent, txt, tok, annot, ind, ent)
     {
-        this.sentence = sent;
-        this.text = txt;
-        this.tokens = tok;
-        this.annotate_type = annot;
-        this.index = ind;
+        this._sentence = sent;
+        this._text = txt;
+        this._tokens = tok;
+        this._annotate_type = annot;
+        this._index = ind;
         this._political_direction = null;
         
         //noch zu try catch ummodelieren
         let temp = ent.merging_history.phrases[ind];
-        if(this.text == ent.merging_history.phrases[ind][0])
+        if(this._text == ent.merging_history.phrases[ind][0])
         {
             let ph = temp[1].split("_");
             this._political_direction = ph[1];
@@ -24,5 +24,25 @@ module.exports = class Mention {
     get political_direction()
     {
         return this._political_direction;
+    }
+    
+    get text()
+    {
+        return this._text;
+    }
+    
+    get tokens()
+    {
+        return this._tokens;
+    }
+
+    get annotate_type()
+    {
+        return this._annotate_type;
+    }
+
+    get index()
+    {
+        return this._index;
     }
 }

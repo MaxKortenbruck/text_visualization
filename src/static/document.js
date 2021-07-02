@@ -5,12 +5,12 @@ module.exports = class Document {
     {
         //complete identifier topic;article
         this._identifier = article;
-        this.name = this.set_document_name(data, article);
-        this.political_direction = set_political_direction();
-        this.topic = topic;
-        this.my_entities;
-        this.marked_entities;
-        this.text_array = this.set_article_text(data);
+        this._name = this.set_document_name(data, article);
+        this._political_direction = set_political_direction();
+        this._topic = topic;
+        this._my_entities = null;
+        this._marked_entities = null;
+        this._text_array = this.set_article_text(data);
     }
 
     /**
@@ -33,7 +33,7 @@ module.exports = class Document {
      */
     set_political_direction()
     {
-        let text = this.name.split["_"];
+        let text = this._name.split["_"];
         return text[1];
     }
 
@@ -48,8 +48,8 @@ module.exports = class Document {
         let sentence_symbols = [".",",","?","!",";",":","%","€","$","\’","\""];
         let sentence_array = [], text_array = [];
         
-        let article = data[this.topic].documents.find( art => {
-            return art.name === this.name;
+        let article = data[this._topic].documents.find( art => {
+            return art.name === this._name;
         })
         let text = article.text;
         text.forEach(sentence => {
@@ -67,27 +67,41 @@ module.exports = class Document {
         });
         return text_array;
     }
+    
     add_entity(ent)
     {
-        this.my_entities.push(ent);
+        this._my_entities.push(ent);
     }
-    get_text()
-    {   
-        //check if any entities need to be marked in the text
-        //if so, print a marked text
-        if(this.marked_entities.length > 0)
-        {
-
-        }
-    }
+    
     mark_entity(ent)
     {
-        this.marked_entities.push(ent.identifier);
+        this._marked_entities.push(ent.identifier);
     }
+    
     unmark_entity(ent)
     {
-        this.marked_entities = this.marked_entities.filter(function( ele ){
+        this._marked_entities = this._marked_entities.filter(function( ele ){
             return ele.identifier !== ent.identifier;
         })
     }
+
+    get text()
+    {
+        var text_return;
+        if(this._marked_entities > 0)
+        {
+            
+        }
+        else
+        {
+           this._text_array.forEach(sentence => {
+               sentence.forEach(word => {
+                   text_return += word;
+               });
+           });
+        }   
+        return text_return;
+    }
+
+    get statistics()
 }
