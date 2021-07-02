@@ -4,7 +4,7 @@ module.exports = class Document {
     constructor(data, article, topic)
     {
         //complete identifier topic;article
-        this.title = article;
+        this._identifier = article;
         this.name = this.set_document_name(data, article);
         this.political_direction = set_political_direction();
         this.topic = topic;
@@ -14,7 +14,7 @@ module.exports = class Document {
     }
 
     /**
-     * Set the article name from JSON data in format like 6_LL
+     * Set the article name from JSON data
      * @param {JSON-Object} data - JSON dataset
      * @returns String with article name
      */
@@ -29,7 +29,7 @@ module.exports = class Document {
 
     /**
      * 
-     * @returns String of text array
+     * @returns string with political direction in format line 'LL' or 'R' 
      */
     set_political_direction()
     {
@@ -70,6 +70,15 @@ module.exports = class Document {
     add_entity(ent)
     {
         this.my_entities.push(ent);
+    }
+    get_text()
+    {   
+        //check if any entities need to be marked in the text
+        //if so, print a marked text
+        if(this.marked_entities.length > 0)
+        {
+
+        }
     }
     mark_entity(ent)
     {

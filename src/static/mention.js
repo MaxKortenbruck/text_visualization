@@ -8,9 +8,21 @@ module.exports = class Mention {
         this.tokens = tok;
         this.annotate_type = annot;
         this.index = ind;
+        this._political_direction = null;
         
+        //noch zu try catch ummodelieren
         let temp = ent.merging_history.phrases[ind];
-        let ph = temp[1].split("_");
-        this.political_direction = ph[1];
+        if(this.text == ent.merging_history.phrases[ind][0])
+        {
+            let ph = temp[1].split("_");
+            this._political_direction = ph[1];
+        }
+        else {console.log("Error in phrases and text index")}
+
+    }
+
+    get political_direction()
+    {
+        return this._political_direction;
     }
 }
