@@ -16,7 +16,7 @@ module.exports = class Enitiy {
         this.phrasing_complexity = ent.phrasing_complexity;       
         this.type = ent.type;        
         this.size = ent.size;
-        this.representative = ent.merging_history.representative;
+        this.representative = ent.merging_history.original.representative;
     }
 
 
