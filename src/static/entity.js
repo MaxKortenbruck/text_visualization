@@ -1,6 +1,6 @@
 'use strict'
 
-module.exports = class Enitiy {
+module.exports = class Entitiy {
     constructor(data, topic, entity_name, identifier)
     {   
         this.identifier = identifier
