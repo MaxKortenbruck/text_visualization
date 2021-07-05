@@ -108,12 +108,43 @@ async function set_statistics(topic)
   document.getElementById("statistics_on_load_warning").style.display="none";
 }
 
-async function set_entity_statistics(topic, entity_index, entity_name)
+async function set_entity_statistics(topic, entity_index, entity_name, parent, article_direction="")
 {
-  let data = await get_entity_statistics(topic, entity_index);
-
-  let parent = document.getElementById("entityChart");
+  let data = await get_entity_statistics(topic, entity_index, article_direction);
   create_treemap(entity_name, data, parent);
+}
+
+function open_entity(name)
+{
+  let parent = document.getElementById("openentitys")
+  //check if entity is already open
+  for(let i=0; i<parent.children.length; i++)
+  {
+    if(parent.children[i].firstChild.data == name)
+    {
+      return;
+    }
+  }
+
+  //create new open entity
+  let span = document.createElement("span");
+  span.className = "badge bg-primary";
+  span.style = "margin: 5px;";
+  span.appendChild(document.createTextNode(name));
+
+  //create close-button
+  let btn = document.createElement("button");
+  btn.type = "button";
+  btn.className = "btn-close";
+  btn.setAttribute("aria-label", "close");
+  btn.onclick = function()
+  {
+    close_entity(this);
+    return false;
+  }
+  span.appendChild(btn);
+
+  parent.appendChild( span );
 }
 
 function determine_open_articles()
@@ -128,8 +159,13 @@ function close_text(button_element)
 {
   let to_close = button_element.parentNode.parentNode.parentNode.parentNode.parentNode;
   document.getElementById("articel_view;row").removeChild(to_close);
-  console.log(to_close);
   determine_open_articles();
+}
+
+function close_entity(element)
+{
+  let to_close = element.parentNode;
+  document.getElementById("openentitys").removeChild(to_close);
 }
 
 async function display_article(id)
@@ -138,7 +174,7 @@ async function display_article(id)
     let text = await get_text(res[1],res[2]);
 
     //check if the article is already open
-    let article_id = "article" + res[1] + res[3];
+    let article_id = "articlespacer" + res[1] + "spacer" + res[3];
     if(document.getElementById(article_id))
     {
       return;
@@ -151,11 +187,12 @@ async function display_article(id)
 
     let divChild = document.createElement("div");
     divChild.className = "border bg-light overflow-auto";
-    divChild.style = "padding: 20px; height: 500px;"
+    divChild.style = "padding: 20px; height: 1000px;"
 
     //create and append headline
     let headline = res[2];
     let headlineElement = document.createElement("h4");
+    headlineElement.style = "line-height: 2;";
     headlineElement.appendChild( document.createTextNode(headline))
     divChild.appendChild(headlineElement);
 
@@ -282,11 +319,15 @@ async function display_article(id)
     let data = await get_statistics_of_article(res[1], res[3]);
 
     let plot = create_pie_plot(res[1], data["names"], data["mentiond"], div_article_statistic);
-
     // handle click event in Chart
     plot.on('click', function(params) {
       entetie_in_statistic_click(params);
     })
+
+    //create a div Element for the treemap
+    let div_treemap = document.createElement("div")
+    div_treemap.id = "treemap;" + res[1] + ";" + res[3];
+    collapse_stat.appendChild(div_treemap);
 
     divChild.appendChild(accordion);
 
@@ -314,8 +355,20 @@ function entetie_in_statistic_click(params)
   let entity_index = params.dataIndex;
   let entity_name = params.name;
 
-  console.log(params)
-  set_entity_statistics(topic, entity_index, entity_name);
+  set_entity_statistics(topic, entity_index, entity_name, document.getElementById("entityChart"));
+  open_entity(entity_name);
+
+  //scan "article_view;row" for open articles and update treemaps
+  let open_articles = document.getElementById("articel_view;row").children;
+  for(let i=0; i<open_articles.length; i++)
+  {
+    // console.log(open_articles[i].id.split("0"))
+    let res = open_articles[i].id.split("spacer");
+    let treemap_parent = document.getElementById("treemap;" + res[1] + ";" + res[2]);
+    console.log
+    let article_direction = res[2];
+    set_entity_statistics(topic, entity_index, entity_name, treemap_parent, article_direction)
+  }
 }
 
 async function on_load() {

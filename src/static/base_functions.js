@@ -99,26 +99,71 @@ async function get_statistics(topic)
     return ret;
 }
 
-async function get_entity_statistics(topic, entity_index)
+async function get_entity_statistics(topic, entity_index, article_direction="")
 {
+    //get data for entity
     let data = await get_json();
     topic = get_full_title(data, topic);
-    data = data[topic].entities[entity_index];
+    data = data[topic].entities;
 
+    //create variables for the return
     let mentions_text = [];
     let mentions_number = [];
 
-    data.mentions.forEach( mention => {
-        if( mentions_text.includes( mention.text ) )
+    //determine if the statistics for a specific article is needed
+    let political_direction = ["L", "LL", "M", "R", "RR"];
+    if(political_direction.includes(article_direction))
+    {
+        let entity_array = data[entity_index].mentions;
+        let merging_history_array = data[entity_index].merging_history.original.phrases;
+        for(let i=0; i<entity_array.length; i++)
         {
-            mentions_number[ mentions_text.indexOf(mention.text) ] += 1;
+            let direction = merging_history_array[i][1].split("_")[1];
+            if(direction == article_direction)
+            {
+                if( mentions_text.includes( entity_array[i].text ) )
+                {
+                    mentions_number[ mentions_text.indexOf( entity_array[i].text ) ] += 1;
+                }
+                else
+                {
+                    mentions_text.push(entity_array[i].text);
+                    mentions_number.push(1);
+                }
+            }
+
         }
-        else
-        {
-            mentions_text.push(mention.text);
-            mentions_number.push(1);
-        }
-    })
+        //iterate through mentions, check the direction and add the Number
+        /*data.mentions.forEach( mention => {
+            let mention_direction = mention;
+            // console.log(mention)
+            if( mentions_text.includes( mention.text ) )
+            {
+                mentions_number[ mentions_text.indexOf(mention.text) ] += 1;
+            }
+            else
+            {
+                mentions_text.push(mention.text);
+                mentions_number.push(1);
+            }
+        })*/
+    }
+    else
+    {
+        //iterate through mentions and add the Number
+        data[entity_index].mentions.forEach( mention => {
+            if( mentions_text.includes( mention.text ) )
+            {
+                mentions_number[ mentions_text.indexOf(mention.text) ] += 1;
+            }
+            else
+            {
+                mentions_text.push(mention.text);
+                mentions_number.push(1);
+            }
+        })
+    }
+    
     
     let ret = [];
     ret.push(mentions_text);
@@ -172,8 +217,6 @@ async function get_statistics_of_article(t, article_direction)
 
     let mentions = data[topic].entities;
 
-
-    ////////////work on it
     let dict = {}
     dict["names"] = [];
     dict["mentiond"] = [];
