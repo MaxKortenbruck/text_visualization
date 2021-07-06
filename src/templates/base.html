@@ -10,13 +10,13 @@
 
 </head>
 <body>
+	<div>
+		<img src="{{ url_for('static', filename='./BUW_Logo.png')}}" alt="logo" id="logo" class="logo" style="width: 0;">
+	</div>
     <div id="mySidenav" class="sidenav">
 		<button class="close-arrow" onclick="closeNav()">&lang;</button>
         <a href="/information">Information</a>
-        <a href="/single-article-view">Single Article View</a>
-        <a href="/multi-article-view">Multi Article View</a>
-        <a href="#", onclick="show('available_topics'); return false">Available Articles</a>
-        <a href="/statistics">Statistic</a>
+        <a href="/article-view">Article View</a>
         <a href="/contact">Contact</a>
 
     </div>

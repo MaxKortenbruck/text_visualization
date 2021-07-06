@@ -7,6 +7,7 @@ function create_pie_plot(key, names, mentiond, parentFromChart)
 {
     let div = document.createElement("div");
     div.setAttribute("id", "plt;pie;" + key);
+	div.className = "pie-plot";
     div.setAttribute("style", resulution);
 
     while(parentFromChart.firstChild)
@@ -30,7 +31,7 @@ function create_pie_plot(key, names, mentiond, parentFromChart)
     // specify chart configuration item and data
     let option = {
         title: {
-            text: 'Enteties from ' + key,
+            text: 'Entities from ' + key,
             left: 'center'
         },
         tooltip: {
@@ -68,7 +69,85 @@ function create_pie_plot(key, names, mentiond, parentFromChart)
                 },
                 data: array
             }
-        ]
+        ],
+		responsive: true,
+		maintainAspectRatio: false
+    };
+    // use configuration item and data specified to show chart
+    myChart.setOption(option);
+
+    return myChart;
+}
+
+function create_text_pie_plot(key, names, mentiond, parentFromChart)
+{
+    let div = document.createElement("div");
+    div.setAttribute("id", "plt;pie;" + key);
+	div.className = "text-pie-plot";
+    div.setAttribute("style", resulution);
+
+    while(parentFromChart.firstChild)
+    {
+        parentFromChart.removeChild(parentFromChart.firstChild);
+    }
+    parentFromChart.appendChild(div);
+    // based on prepared DOM, initialize echarts instance
+    var myChart = echarts.init(div);
+
+    let array = [];
+    let i = 0;
+    names.forEach( name => {
+        let dict = {};
+        dict["value"] = mentiond[i];
+        dict["name"] = name;
+        i++;
+        array.push(dict);
+    })
+
+    // specify chart configuration item and data
+    let option = {
+        title: {
+            text: 'Entities from ' + key,
+            left: 'center'
+        },
+        tooltip: {
+            trigger: 'item'
+        },
+        legend: {
+            show: false,
+            top: '5%',
+            left: 'center'
+        },
+        series: [
+            {
+                name: key,
+                type: 'pie',
+                radius: ['40%', '70%'],
+                avoidLabelOverlap: false,
+                itemStyle: {
+                    borderRadius: 10,
+                    borderColor: '#fff',
+                    borderWidth: 2
+                },
+                label: {
+                    show: false,
+                    position: 'center'
+                },
+                emphasis: {
+                    label: {
+                        show: true,
+                        fontSize: '40',
+                        fontWeight: 'bold'
+                    }
+                },
+                labelLine: {
+                    show: false
+                },
+                data: array
+            }
+        ],
+		responsive: true,
+		maintainAspectRatio: false
     };
     // use configuration item and data specified to show chart
     myChart.setOption(option);
@@ -81,6 +160,7 @@ function create_treemap(entity_name, data_array, parentFromChart)
 {
     let div = document.createElement("div");
     div.setAttribute("id", "plt;pie;" + entity_name);
+	div.className = "tree-map";
     div.setAttribute("style", resulution);
 
     while(parentFromChart.firstChild)
@@ -120,4 +200,4 @@ function create_treemap(entity_name, data_array, parentFromChart)
 
 }
 
-export { create_pie_plot , create_treemap }
+export { create_pie_plot, create_text_pie_plot, create_treemap }

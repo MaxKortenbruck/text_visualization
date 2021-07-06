@@ -1,5 +1,5 @@
 import { get_topics, get_articles, get_statistics, get_entity_statistics, get_text, get_statistics_of_article } from "./base_functions.js";
-import { create_pie_plot, create_treemap } from "./article-view-charts.js";
+import { create_pie_plot, create_text_pie_plot, create_treemap } from "./article-view-charts.js";
 
 async function set_topics() {
   let data = await get_topics();
@@ -102,7 +102,7 @@ async function set_statistics(topic)
 
   // handle click event in Chart
   plot.on('click', function(params) {
-      entetie_in_statistic_click(params);
+      entity_in_statistic_click(params);
   })
 
   document.getElementById("statistics_on_load_warning").style.display="none";
@@ -151,7 +151,7 @@ function determine_open_articles()
 {
   let row = document.getElementById("articel_view;row")
   let anz = row.childElementCount;
-  if(anz > 3){ anz = 3};
+  if(anz > 2){ anz = 2};
   row.className = "row row-cols-" + anz;
 }
 
@@ -186,14 +186,14 @@ async function display_article(id)
     div.id = article_id;
 
     let divChild = document.createElement("div");
-    //divChild.className = "border bg-light overflow-auto";
-    divChild.style = "padding: 20px; height: 500px;"
+    divChild.className = "overflow-auto";
+    divChild.style = "padding: 20px; height: 500px;";
 
     //create and append headline
     let headline = res[2];
     let headlineElement = document.createElement("h4");
-    headlineElement.style = "line-height: 2;";
-    headlineElement.appendChild( document.createTextNode(headline))
+    headlineElement.style = "line-height: 1.5;";
+    headlineElement.appendChild( document.createTextNode(headline));
     divChild.appendChild(headlineElement);
 
     //create Close Button
@@ -234,6 +234,7 @@ async function display_article(id)
     // accordion item for text
     let accordion_text = document.createElement("div");
     accordion_text.className = "accordion-item";
+	accordion_text.style = "font-size: 15px;" ;
     accordion.appendChild(accordion_text)
 
     //header for text
@@ -318,11 +319,12 @@ async function display_article(id)
 
     let data = await get_statistics_of_article(res[1], res[3]);
 
-    let plot = create_pie_plot(res[1], data["names"], data["mentiond"], div_article_statistic);
+    let plot = create_text_pie_plot(res[1], data["names"], data["mentiond"], div_article_statistic);
     // handle click event in Chart
     plot.on('click', function(params) {
-      entetie_in_statistic_click(params);
+      entity_in_statistic_click(params);
     })
+
 
     //create a div Element for the treemap
     let div_treemap = document.createElement("div")
@@ -349,7 +351,7 @@ function article_click(id)
   display_article(id);
 }
 
-function entetie_in_statistic_click(params)
+function entity_in_statistic_click(params)
 {
   let topic = params.seriesName;
   let entity_index = params.dataIndex;
