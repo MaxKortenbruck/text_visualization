@@ -93,7 +93,6 @@ function create_treemap(entity_name, data_array, parentFromChart)
     let data = [];
     for(let i in data_array[0])
     {
-        console.log(data_array[0][i], data_array[1][i]);
         let temp = {};
         temp['name'] = data_array[0][i];
         temp['value'] = data_array[1][i];
