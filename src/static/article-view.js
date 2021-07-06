@@ -47,6 +47,8 @@ async function set_topics() {
 
 async function set_topics() {
   //var data = await get_topics();
+  let dt = await get_topics();
+
   let list = document.getElementById("articel_view;available_topics")
   var data = [];
     art.forEach(element => {

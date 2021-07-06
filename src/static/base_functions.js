@@ -19,7 +19,7 @@ for(const[key, value] of Object.entries(data))
     art.push(a);
 }
 
-/*
+
 async function get_topics()
 {
     let data = await get_json();
@@ -43,8 +43,8 @@ async function get_topics()
     console.log(ret);
     return ret;
 }
-*/
 
+/*
 async function get_topics()
 {
     var ret = [];
@@ -54,7 +54,7 @@ async function get_topics()
     console.log(ret);
     return ret;
 }
-
+*/
 function get_full_title(data, t)
 {
     let topic = "";
@@ -101,7 +101,7 @@ async function get_articles(topic)
         article_title += ";" + article.name.split("_")[1];
         articles.push(article_title);
     })
-
+    console.log(articles);
     return articles;
 }
 
