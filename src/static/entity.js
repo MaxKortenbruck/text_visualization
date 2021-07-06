@@ -11,8 +11,7 @@ export class Entity {
         this._topic = topic;
 
         var ent = data[topic].entities.find(item => item.name === entity_name);
-        
-        console.log(ent);
+      
         this._all_political_mentions = []
         this._mentions_array = [];
         this._phrasing_complexity = ent.phrasing_complexity;       
@@ -46,8 +45,6 @@ export class Entity {
 
     is_name(entity)
     {
-        console.log(entity.name);
-        console.log(self._name)
         return entity.name === self._name;
     }
 

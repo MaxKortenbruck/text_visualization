@@ -1,6 +1,30 @@
 import { get_topics, get_articles, get_statistics, get_entity_statistics, get_text, get_statistics_of_article } from "./base_functions.js";
 import { create_pie_plot, create_treemap } from "./article-view-charts.js";
+import {Topic} from "./topic.js"
 
+
+async function get_json(file="api")
+{
+    let ret = await fetch("http://127.0.0.1:5000/" + file);
+    let data = ret.json();
+    return data;
+}
+
+var json_data = await get_json();
+var art = [];
+
+for(const[key, value] of Object.entries(json_data))
+{
+    var title = key;
+    var name = value.topic;
+    var a = new Topic(json_data, title, name);
+    art.push(a);
+}
+
+
+
+
+/*
 async function set_topics() {
   let data = await get_topics();
   let list = document.getElementById("articel_view;available_topics")
@@ -19,11 +43,35 @@ async function set_topics() {
 
     list.appendChild(a);
   }
+}*/
+
+async function set_topics() {
+  //var data = await get_topics();
+  let list = document.getElementById("articel_view;available_topics")
+  var data = [];
+    art.forEach(element => {
+        data.push(element.formatted_name);
+    });
+
+  data.forEach(topic => 
+  {
+    let a = document.createElement("a");
+    a.className = "list-group-item list-group-item-action"
+    a.id = "a;" + topic;
+    a.onclick = function()
+    {
+      topic_click(this.id);
+      return false;
+    }
+    a.appendChild( document.createTextNode(topic) );
+
+    list.appendChild(a);
+  });
 }
 
 async function set_articles(topic)
 {
-  let data = await get_articles(topic);
+  //let data = await get_articles(topic);
 
   //add list with Articles
   let table = document.createElement("table");
@@ -55,7 +103,7 @@ async function set_articles(topic)
   //create table body
   let body = document.createElement("tbody");
   let i = 1;
-  data.forEach( article => {
+  art.forEach( article => {
     let trChild = document.createElement("tr");
     trChild.id = "row;" + topic + ";" + article;
     trChild.onclick = function()
@@ -337,9 +385,17 @@ async function display_article(id)
     
 }
 
+/*
 function topic_click(element)
 {
   let topic = element.split(";")[1];
+  set_articles(topic);
+  set_statistics(topic);
+}
+*/
+
+function topic_click(topic)
+{
   set_articles(topic);
   set_statistics(topic);
 }

@@ -8,15 +8,7 @@ async function get_json(file="api")
     return data;
 }
 
-
-//var Topic = require("entity.js");
 var data = await get_json();
-
-console.log(data)
-
-//var title = get_topics(data)
-//console.log(title)
-//var t = get_full_title(data,)
 var art = [];
 
 for(const[key, value] of Object.entries(data))
@@ -27,10 +19,7 @@ for(const[key, value] of Object.entries(data))
     art.push(a);
 }
 
-
-
-
-
+/*
 async function get_topics()
 {
     let data = await get_json();
@@ -51,8 +40,19 @@ async function get_topics()
 
         ret[title[title.length-1]] = array;
     }
+    console.log(ret);
     return ret;
+}
+*/
 
+async function get_topics()
+{
+    var ret = [];
+    art.forEach(element => {
+        ret.push(element.formatted_name);
+    });
+    console.log(ret);
+    return ret;
 }
 
 function get_full_title(data, t)
@@ -68,6 +68,25 @@ function get_full_title(data, t)
     }
     return topic;
 }
+
+/*
+async function get_articles(topic)
+{
+    let data = await get_json();
+    
+    //search topic
+    topic = get_full_title(data, topic);
+    
+    let articles = [];
+    data[topic].documents.forEach( article => {
+        let article_title = article.title;
+        article_title += ";" + article.name.split("_")[1];
+        articles.push(article_title);
+    })
+
+    return articles;
+}
+*/
 
 async function get_articles(topic)
 {

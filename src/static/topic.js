@@ -10,6 +10,7 @@ export class Topic
 
         this._identifier = topic_id;
         this._name = topic_name;
+        console.log(topic_id);
         console.log(topic_name);
         //this.name = this.set_topic_name(topic_name);
         //this.index = this.set_topic_index(data, topic_name);
@@ -80,9 +81,9 @@ export class Topic
         return this._identifier;
     }
 
-    get name()
+    get formatted_name()
     {
-        var text = this._identifier.split["_"];
+        let text = this._name.split("_");
         return text[1];
     }
 }
