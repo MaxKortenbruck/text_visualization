@@ -99,4 +99,24 @@ export class Document {
     {
         return this._political_direction;
     }
+
+    get id()
+    {
+        return this._identifier;
+    }
+
+    get name()
+    {
+        return this._name;
+    }
+
+    get topic()
+    {
+        return this._topic;
+    }
+
+    get title()
+    {
+        return this._title;
+    }
 }

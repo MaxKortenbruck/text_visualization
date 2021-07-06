@@ -103,32 +103,34 @@ async function set_articles(topic)
   //create table body
   let body = document.createElement("tbody");
   let i = 1;
-  art.forEach( article => {
-    let trChild = document.createElement("tr");
-    trChild.id = "row;" + topic + ";" + article;
-    trChild.onclick = function()
-    {
-        article_click(this.id);
-        return false;
-    }
-
-    let tdNumber = document.createElement("td");
-    tdNumber.appendChild( document.createTextNode(i) );
-    i++;
-    
-
-    let tdTitle = document.createElement("td");
-    tdTitle.appendChild( document.createTextNode(article.split(";")[0]));
-
-    let thOrientation = document.createElement("td");
-    thOrientation.appendChild( document.createTextNode(article.split(";")[1]));
-
-    trChild.appendChild( tdNumber );
-    trChild.appendChild( tdTitle );
-    trChild.appendChild( thOrientation );
-
-    body.appendChild( trChild );
-  })
+  art.forEach(top =>{
+    top.forEach( article => {
+      let trChild = document.createElement("tr");
+      trChild.id = "row;" + article.id;
+      trChild.onclick = function()
+      {
+          article_click(this.id);
+          return false;
+      }
+  
+      let tdNumber = document.createElement("td");
+      tdNumber.appendChild( document.createTextNode(i) );
+      i++;
+      
+  
+      let tdTitle = document.createElement("td");
+      tdTitle.appendChild( document.createTextNode(article.topic));
+  
+      let thOrientation = document.createElement("td");
+      thOrientation.appendChild( document.createTextNode(article.title));
+  
+      trChild.appendChild( tdNumber );
+      trChild.appendChild( tdTitle );
+      trChild.appendChild( thOrientation );
+  
+      body.appendChild( trChild );
+    });
+  });
 
   table.appendChild(body)
   let div_a_aritcles = document.getElementById("articel_view;available_articles");
