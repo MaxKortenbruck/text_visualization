@@ -223,8 +223,9 @@ function close_entity(element)
 async function display_article(id)
 {
     let res = id.split(";")
-    let text = await get_text(res[1],res[2]);
-
+    //let text = await get_text(res[1],res[2]);
+    //mit indexen arbeiten, topic index dann artikel finden
+    let article = art.
     //check if the article is already open
     let article_id = "articlespacer" + res[1] + "spacer" + res[3];
     if(document.getElementById(article_id))

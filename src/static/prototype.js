@@ -6,10 +6,12 @@ class Entity
     {
         this.json_data = data;
         this.name = name;
+        this.placeh = "row;SeekingMigrantCaravan;Migrant caravan of asylum seekers reaches U.S. border;L in get_articles"
+        this.pp = "articlespacerSeekingMigrantCaravanspacerL"
     }
 
 }
-
+S
 /**
  * Searches the the provided dataset for the requested article's index
  * @param {String} data - Json dataset
