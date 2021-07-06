@@ -1,17 +1,20 @@
 'use strict'
 
-const Enitiy = require("./entity");
+import {Entity} from "./entity.js";
+import {Document} from "./document.js";
 
-module.exports = class Topic
+export class Topic
 {
-    constructor(data, topic_name)
+    constructor(data, topic_id, topic_name)
     {
 
-        this._identifier = topic_name;
+        this._identifier = topic_id;
+        this._name = topic_name;
+        console.log(topic_name);
         //this.name = this.set_topic_name(topic_name);
         //this.index = this.set_topic_index(data, topic_name);
-        this.articles = null;
-        this.entities = null;
+        this.articles = [];
+        this.entities = [];
         this.set_articles(data);
         this.set_entities(data);
         this.entities_to_articles();
@@ -40,19 +43,23 @@ module.exports = class Topic
     }*/
     set_entities(data)
     {
-        var Entity = require("entity.js");
         data[this._identifier].entities.forEach(element => {
-            let id = this._identifier + ";" + element.name;
-            let en = new Entity(data, this._identifier, element.name, id);
+            var id = this._identifier + ";" + element.name;
+            
+            console.log(element.name)
+
+            var en = new Entity(data, this._identifier, element.name, id);
             this.entities.push(en);
         })
     }
     set_articles(data)
     {
-        var Document = require("document.js");
-        data[this._identifier].document.forEach(art => {
+        console.log(this._identifier);
+        console.log(data[this._identifier].documents)
+        data[this._identifier].documents.forEach(art => {
             let article_name = this._identifier + ";" + art.title;
             var doc = new Document(data, article_name, this._identifier);
+            console.log(doc);
             this.articles.push(doc);
         });
     }
@@ -60,13 +67,9 @@ module.exports = class Topic
     {
         this.articles.forEach(art => {
             this.entities.forEach(ent => {
-                for (let ment of ent.mentions)
+                if(ent.mentions.includes(art.political_direction))
                 {
-                    if(art.political_direction == ment.political_direction)
-                    {
-                        art.add_entity(ent);
-                        break;
-                    }
+                    art.add_entity(ent);
                 }
             });
         });
@@ -79,8 +82,7 @@ module.exports = class Topic
 
     get name()
     {
-        let temp = this._identifier.split[";"];
-        let text = temp[0].split("_");
+        var text = this._identifier.split["_"];
         return text[1];
     }
 }

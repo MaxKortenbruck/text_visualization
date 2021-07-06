@@ -1,6 +1,6 @@
 'use strict'
 
-module.exports = class Document {
+export class Document {
     constructor(data, article, topic)
     {
         //complete identifier topic;article
@@ -19,8 +19,8 @@ module.exports = class Document {
         this._political_direction = tmp[1];
         
         this._topic = topic;
-        this._my_entities = null;
-        this._marked_entities = null;
+        this._my_entities = [];
+        this._marked_entities = [];
         this._text_array = this.set_article_text(data);
     }
 
@@ -93,5 +93,10 @@ module.exports = class Document {
     get statistics_of_article()
     {
 
+    }
+
+    get political_direction()
+    {
+        return this._political_direction;
     }
 }

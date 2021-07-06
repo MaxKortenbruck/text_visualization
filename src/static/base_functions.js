@@ -1,3 +1,5 @@
+import {Topic} from "./topic.js";
+
 
 async function get_json(file="api")
 {
@@ -5,6 +7,29 @@ async function get_json(file="api")
     let data = ret.json();
     return data;
 }
+
+
+//var Topic = require("entity.js");
+var data = await get_json();
+
+console.log(data)
+
+//var title = get_topics(data)
+//console.log(title)
+//var t = get_full_title(data,)
+var art = [];
+
+for(const[key, value] of Object.entries(data))
+{
+    var title = key;
+    var name = value.topic;
+    var a = new Topic(data, title, name);
+    art.push(a);
+}
+
+
+
+
 
 async function get_topics()
 {

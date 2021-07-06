@@ -1,16 +1,19 @@
 'use strict'
 
-module.exports = class Entitiy {
+import {Mention} from "./mention.js";
+
+export class Entity {
     constructor(data, topic, entity_name, identifier)
     {   
+        var self = this;
         this._identifier = identifier
         this._name = entity_name;
         this._topic = topic;
+
+        var ent = data[topic].entities.find(item => item.name === entity_name);
         
-        let ent = data[topic].entities.find(element => {
-            element.name === entity_name;
-        });
-        this._mentions_map = new Map(); 
+        console.log(ent);
+        this._all_political_mentions = []
         this._mentions_array = [];
         this._phrasing_complexity = ent.phrasing_complexity;       
         this._type = ent.type;        
@@ -21,22 +24,31 @@ module.exports = class Entitiy {
 
     set_mentions(entity)
     {
-        var Mention = require("mention.js");
         var index = 0;
         entity.mentions.forEach(element => {            
-            var m = new Mention(element.sentence, element.text, element.tokens. element.annot_type, index, entity);
+            var m = new Mention(element.sentence, element.text, element.tokens, element.annot_type, index, entity);
             index ++;
-            mentions_array.push(m);
-            //create map with political direction and its' mentions 
-            if(!this._mentions_map.has(m.political_direction))
+            this.mentions_array.push(m);
+            if(!this._all_political_mentions.includes(m.political_direction_of_article))
             {
-                this._mentions_map.set(m.political_direction, new Set(m));
+                this._all_political_mentions.push(m.political_direction_of_article);
             }
-            else
-            {
-                this._mentions_map.get(m.political_direction).add(m);
-            }
-        });
+        })
+    }
+
+   setValue(map, key, value) {
+        if (!map.has(key)) {
+            map.set(key, new Set(value));
+            return;
+        }
+        map.get(key).add(value);
+    }
+
+    is_name(entity)
+    {
+        console.log(entity.name);
+        console.log(self._name)
+        return entity.name === self._name;
     }
 
     get entity_statistics()
@@ -49,14 +61,28 @@ module.exports = class Entitiy {
         return this._identifier;
     }
 
-    get mentions_map()
+    get mentions()
     {
-        return this._mentions_map;
+        return this._all_political_mentions;
     }
 
-    get political_mentions(key)
+    get_mentions_for_article(key = 'all')
     {
-        return this._mentions_map.get(key);
+        if(key == 'all')
+        {
+            return this._mentions_array;
+        }
+        else
+        {
+            var ret_array = [];
+            this._mentions_arra.forEach(element => {
+                if(element.political_direction_of_article == key)
+                {
+                    ret_array.push(element);
+                }
+            }); 
+            return ret_array;
+        }
     }
 
     get mentions_array()
