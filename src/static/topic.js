@@ -13,7 +13,7 @@ export class Topic
         console.log(topic_id);
         console.log(topic_name);
         //this.name = this.set_topic_name(topic_name);
-        this.index = this.set_topic_index(data, topic_name);
+        //this.index = this.set_topic_index(data, topic_name);
         this.articles = [];
         this.entities = [];
         this.set_articles(data);
@@ -27,7 +27,7 @@ export class Topic
      * @param {JSON-Oject} data - JSON data 
      * @param {String} topic_name - Topic Indentificator     
      * @returns - Integer of topic index
-     */
+     *//*
     set_topic_index(data, topic_name)
     {
         var index = 0, counter = 0;
@@ -42,6 +42,7 @@ export class Topic
         }
         return index;
     }
+    */
     set_entities(data)
     {
         data[this._identifier].entities.forEach(element => {

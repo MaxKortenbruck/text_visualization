@@ -91,8 +91,18 @@ export class Document {
     }
     
     get statistics_of_article()
-    {
-
+    {   
+        var mention_dict = {
+            names : [],
+            numbers : []
+        }
+        var mentions = [];
+        this._my_entities.forEach( ent => {
+            mention_dict.names.push(ent.formatted_name);
+            mentions = ent.get_mentions_for_article(this.political_direction)
+            mention_dict.numbers.push(mentions.length);
+        })
+        return mention_dict;
     }
 
     get political_direction()

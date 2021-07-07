@@ -11,7 +11,7 @@ class Entity
     }
 
 }
-S
+
 /**
  * Searches the the provided dataset for the requested article's index
  * @param {String} data - Json dataset

@@ -35,19 +35,6 @@ export class Entity {
         })
     }
 
-   setValue(map, key, value) {
-        if (!map.has(key)) {
-            map.set(key, new Set(value));
-            return;
-        }
-        map.get(key).add(value);
-    }
-
-    is_name(entity)
-    {
-        return entity.name === self._name;
-    }
-
     get entity_statistics()
     {
         
@@ -63,16 +50,24 @@ export class Entity {
         return this._all_political_mentions;
     }
 
-    get_mentions_for_article(key = 'all')
+    get formatted_name()
     {
-        if(key == 'all')
+        var ret = this._name;
+        ret = ret.slice(0, -2);
+        ret = ret.replace(/_/g, " ");
+        return ret;
+    }
+
+    get_mentions_for_article(key = "all")
+    {
+        if(key == "all")
         {
             return this._mentions_array;
         }
         else
         {
             var ret_array = [];
-            this._mentions_arra.forEach(element => {
+            this._mentions_array.forEach(element => {
                 if(element.political_direction_of_article == key)
                 {
                     ret_array.push(element);
@@ -112,4 +107,28 @@ export class Entity {
         }
         return text;
     }
+
+
+
+
+
+
+    //Deprecated
+
+   setValue(map, key, value) 
+   {
+        if (!map.has(key)) 
+        {
+            map.set(key, new Set(value));
+            return;
+        }
+        map.get(key).add(value);
+    }
+
+    is_name(entity)
+    {
+        return entity.name === self._name;
+    }
+
+
 }
