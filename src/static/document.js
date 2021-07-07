@@ -129,4 +129,10 @@ export class Document {
     {
         return this._title;
     }
+
+    get clean_topic()
+    {   
+        var ret = this._topic
+        return ret.slice(0, -17).replace(/[-,_,.]/g, "");
+    }
 }

@@ -11,7 +11,7 @@ async function get_json(file="api")
 }
 
 var json_data = await get_json();
-var art = [];
+var art = []; 
 
 for(const[key, value] of Object.entries(json_data))
 {
@@ -188,7 +188,8 @@ function close_entity(element)
 
 async function display_article(article)
 {
-    var article_div_id = "articleSpacer" + article.topic + "spacer" + article.name;   
+    var article_div_id = "articlespacer" + article.clean_topic + "spacer" + article.political_direction;
+    console.log(article_div_id);   
     //check if the article is already open
     if(document.getElementById(article_div_id))
     {
