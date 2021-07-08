@@ -132,7 +132,12 @@ export class Document {
 
     get clean_topic()
     {   
-        var ret = this._topic
-        return ret.slice(0, -17).replace(/[-,_,.]/g, "");
+        var ret = this._topic;
+        return ret.slice(0, -17).replace(/[-,_,.,0,1,2,3,4,5,6,7,8,9]/g, "");
+    }
+
+    get entities()
+    {
+        return this._my_entities;
     }
 }

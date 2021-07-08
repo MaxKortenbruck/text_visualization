@@ -20,7 +20,7 @@ export class Entity {
         this._representative = ent.merging_history.representative;
         this.set_mentions(ent);
     }
-
+    //mentions nach ll und L un R mit Object ordnen
     set_mentions(entity)
     {
         var index = 0;
@@ -58,8 +58,42 @@ export class Entity {
         return ret;
     }
 
-    get_mentions_for_article(key = "all")
+    count_mentions(key = "all")
     {
+        var ent = [];
+        var index = 0;
+        var ent_dict = {
+            mention_text : [],
+            numbers : []
+        }
+
+        if(key == "all")
+        {
+            ent = this._mentions_array;
+        }
+        else
+        {
+            ent = this.get_mentions_for_article(key);
+
+        }
+        ent.forEach( ment => {
+            if(!ent_dict.mention_text.includes(ment.text))
+            {
+                ent_dict.mention_text.push(ment.text);
+                index = ent_dict.mention_text.indexOf(ment.text);
+                ent_dict.numbers[index] = 1;
+            }
+            else
+            {
+                index = ent_dict.mention_text.indexOf(ment.text);
+                ent_dict.numbers[index] += 1;
+            }
+        })
+        return ent_dict;
+    }
+    get_mentions_for_article(key = "all")
+    {   
+        
         if(key == "all")
         {
             return this._mentions_array;

@@ -120,15 +120,16 @@ async function set_statistics(topic)
 
   // handle click event in Chart
   plot.on('click', function(params) {
-      entetie_in_statistic_click(params);
+      entity_in_statistic_click(articel, params);
   })
 
   document.getElementById("statistics_on_load_warning").style.display="none";
 }
 
-async function set_entity_statistics(topic, entity_index, entity_name, parent, article_direction="")
+function set_entity_statistics(entity, entity_name, parent, article_direction="")
 {
-  let data = await get_entity_statistics(topic, entity_index, article_direction);
+  //let data = await get_entity_statistics(topic, entity_index, article_direction);
+  let data = entity.count_mentions(article_direction)
   create_treemap(entity_name, data, parent);
 }
 
@@ -186,12 +187,11 @@ function close_entity(element)
   document.getElementById("openentitys").removeChild(to_close);
 }
 
-async function display_article(article)
+async function display_article(articel)
 {
-    var article_div_id = "articlespacer" + article.clean_topic + "spacer" + article.political_direction;
-    console.log(article_div_id);   
+    var articel_div_id = "articlespacer" + articel.clean_topic + "spacer" + articel.political_direction;  
     //check if the article is already open
-    if(document.getElementById(article_div_id))
+    if(document.getElementById(articel_div_id))
     {
       return;
     }
@@ -199,14 +199,14 @@ async function display_article(article)
     //create div element as container for the article
     let div = document.createElement("div");
     div.className = "col";
-    div.id = article_div_id;
+    div.id = articel_div_id;
 
     let divChild = document.createElement("div");
     divChild.className = "border bg-light overflow-auto";
     divChild.style = "padding: 20px; height: 1000px;"
 
     //create and append headline
-    let headline = article.title;
+    let headline = articel.title;
     let headlineElement = document.createElement("h4");
     headlineElement.style = "line-height: 2;";
     headlineElement.appendChild( document.createTextNode(headline))
@@ -245,7 +245,7 @@ async function display_article(article)
     //create accordion for text and statistics
     let accordion = document.createElement("div");
     accordion.className = "accordion";
-    accordion.id = "accordion" + article_div_id;
+    accordion.id = "accordion" + articel_div_id;
 
     // accordion item for text
     let accordion_text = document.createElement("div");
@@ -255,7 +255,7 @@ async function display_article(article)
     //header for text
     let accordion_text_header = document.createElement("h2");
     accordion_text_header.className = "accordion-header";
-    accordion_text_header.id = "textHeader" + article_div_id;
+    accordion_text_header.id = "textHeader" + articel_div_id;
     accordion_text.appendChild(accordion_text_header);
 
     //button for expansion
@@ -263,9 +263,9 @@ async function display_article(article)
     accordion_text_button.className = "accordion-button";
     accordion_text_button.type = "button";
     accordion_text_button.setAttribute("data-bs-toggle", "collapse");
-    accordion_text_button.setAttribute("data-bs-target", "#textCollapse" + article_div_id);
+    accordion_text_button.setAttribute("data-bs-target", "#textCollapse" + articel_div_id);
     accordion_text_button.setAttribute("aria-expanded", "false")
-    accordion_text_button.setAttribute("aria-controls", "textCollapse" + article_div_id);
+    accordion_text_button.setAttribute("aria-controls", "textCollapse" + articel_div_id);
 
     accordion_text_button.appendChild(document.createTextNode("Text"));
 
@@ -273,10 +273,10 @@ async function display_article(article)
   
     //create collapsible div element 
     let collapse_text = document.createElement("div");
-    collapse_text.id = "textCollapse" + article_div_id;
+    collapse_text.id = "textCollapse" + articel_div_id;
     collapse_text.className = "accordion-collapse collapse hide";
-    collapse_text.setAttribute("aria-labelledby", "textHeader" + article_div_id);
-    collapse_text.setAttribute("data-bs-parent", "#accordion" + article_div_id);
+    collapse_text.setAttribute("aria-labelledby", "textHeader" + articel_div_id);
+    collapse_text.setAttribute("data-bs-parent", "#accordion" + articel_div_id);
     accordion_text.appendChild(collapse_text);
 
     //create accordion body
@@ -286,7 +286,7 @@ async function display_article(article)
 
     //create and append text
     let p = document.createElement("p");
-    p.appendChild( document.createTextNode(article.text));
+    p.appendChild( document.createTextNode(articel.text));
     body_text.appendChild(p);
 
     //accordion item for statistics
@@ -297,7 +297,7 @@ async function display_article(article)
     //header for statistics
     let accordion_stat_header = document.createElement("h2");
     accordion_stat_header.className = "accordion-header";
-    accordion_stat_header.id = "statHeader" + article_div_id;
+    accordion_stat_header.id = "statHeader" + articel_div_id;
     accordion_stat.appendChild(accordion_stat_header);
 
     //button for expansion from the statistics
@@ -305,9 +305,9 @@ async function display_article(article)
     accordion_stat_button.className = "accordion-button";
     accordion_stat_button.type= "button";
     accordion_stat_button.setAttribute("data-bs-toggle", "collapse");
-    accordion_stat_button.setAttribute("data-bs-target", "#statCollapse" + article_div_id);
+    accordion_stat_button.setAttribute("data-bs-target", "#statCollapse" + articel_div_id);
     accordion_stat_button.setAttribute("aria-expanded", "false")
-    accordion_stat_button.setAttribute("aria-controls", "statCollapse" + article_div_id);
+    accordion_stat_button.setAttribute("aria-controls", "statCollapse" + articel_div_id);
 
     accordion_stat_button.appendChild( document.createTextNode("Statistics"));
 
@@ -315,10 +315,10 @@ async function display_article(article)
 
     //create collapsible div element for statistics
     let collapse_stat = document.createElement("div");
-    collapse_stat.id = "statCollapse" + article_div_id;
+    collapse_stat.id = "statCollapse" + articel_div_id;
     collapse_stat.className = "accordion-collapse collapse hide";
-    collapse_stat.setAttribute("aria-labelledby", "statHeader" + article_div_id);
-    collapse_stat.setAttribute("data-bs-parent", "#accordion" + article_div_id);
+    collapse_stat.setAttribute("aria-labelledby", "statHeader" + articel_div_id);
+    collapse_stat.setAttribute("data-bs-parent", "#accordion" + articel_div_id);
     accordion_stat.appendChild(collapse_stat);
 
     //create accordion body for the statistics
@@ -332,16 +332,18 @@ async function display_article(article)
     let div_article_statistic = document.createElement("div");
     collapse_stat.appendChild(div_article_statistic);
 
-    let data = article.statistics_of_article;
-    let plot = create_pie_plot(article.topic, data.names, data.numbers, div_article_statistic);
+    let dat = articel.statistics_of_article;
+    let plot = create_pie_plot(articel.title, dat.names, dat.numbers, div_article_statistic);
     // handle click event in Chart
+    //plot.article = article;
     plot.on('click', function(params) {
-      entetie_in_statistic_click(params);
+      console.log(params);
+      entity_in_statistic_click(params);
     })
 
     //create a div Element for the treemap
     let div_treemap = document.createElement("div")
-    div_treemap.id = "treemap;" + article.topic + ";" + article.political_direction;
+    div_treemap.id = "treemap;" + articel.topic + ";" + articel.political_direction;
     collapse_stat.appendChild(div_treemap);
 
     divChild.appendChild(accordion);
@@ -372,14 +374,21 @@ function article_click(article)
   display_article(article);
 }
 
-function entetie_in_statistic_click(params)
+function entity_in_statistic_click(params)
 {
-  let topic = params.seriesName;
-  let entity_index = params.dataIndex;
-  let entity_name = params.name;
+  var enty = null;
+  var index = i;
+  for(let i = 0; i < art.length; i++){
+    enty = art[i].entities.find(item => item.formatted_name == params.name); 
+    if(enty !== null || enty !== undefined)
+    { 
+      index = i;
+      break;
+    }
+  }
 
-  set_entity_statistics(topic, entity_index, entity_name, document.getElementById("entityChart"));
-  open_entity(entity_name);
+  set_entity_statistics(enty, enty.formatted_name, document.getElementById("entityChart") );
+  open_entity(enty.formatted_name);
 
   //scan "article_view;row" for open articles and update treemaps
   let open_articles = document.getElementById("articel_view;row").children;
@@ -388,9 +397,8 @@ function entetie_in_statistic_click(params)
     // console.log(open_articles[i].id.split("0"))
     let res = open_articles[i].id.split("spacer");
     let treemap_parent = document.getElementById("treemap;" + res[1] + ";" + res[2]);
-    console.log
     let article_direction = res[2];
-    set_entity_statistics(topic, entity_index, entity_name, treemap_parent, article_direction)
+    set_entity_statistics(enty, enty.formatted_name, treemap_parent, enty.clean_topic)
   }
 }
 

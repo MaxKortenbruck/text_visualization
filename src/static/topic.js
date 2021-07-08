@@ -10,12 +10,10 @@ export class Topic
 
         this._identifier = topic_id;
         this._name = topic_name;
-        console.log(topic_id);
-        console.log(topic_name);
         //this.name = this.set_topic_name(topic_name);
         //this.index = this.set_topic_index(data, topic_name);
-        this.articles = [];
-        this.entities = [];
+        this._articles = [];
+        this._entities = [];
         this.set_articles(data);
         this.set_entities(data);
         this.entities_to_articles();
@@ -62,12 +60,12 @@ export class Topic
             let article_name = this._identifier + ";" + art.title;
             var doc = new Document(data, article_name, this._identifier);
             console.log(doc);
-            this.articles.push(doc);
+            this._articles.push(doc);
         });
     }
     entities_to_articles()
     {
-        this.articles.forEach(art => {
+        this._articles.forEach(art => {
             this.entities.forEach(ent => {
                 if(ent.mentions.includes(art.political_direction))
                 {
@@ -86,5 +84,21 @@ export class Topic
     {
         let text = this._name.split("_");
         return text[1];
+    }
+
+    get entities()
+    {
+        return this._entities;
+    }
+
+    get articles()
+    {
+        return this._articles;
+    }
+
+    get clean_topic()
+    {   
+        var ret = this._identifier;
+        return ret.slice(0, -17).replace(/[-,_,.,0,1,2,3,4,5,6,7,8,9]/g, "");
     }
 }
