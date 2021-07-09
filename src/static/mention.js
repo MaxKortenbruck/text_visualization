@@ -19,6 +19,8 @@ export class Mention {
         }
         else {console.log("Error in phrases and text index")}
 
+        this._normalized_text = this.set_norm_text(this._text);
+
     }
 
     get political_direction_of_article()
@@ -48,10 +50,27 @@ export class Mention {
 
     get normalized_text()
     {
-        let ret = this.text.toLowerCase;
-        ret.replace(/[´, ', ;, ., ,, ", :, !. ?, (, )]/g, "");
-        let spl = ret.split(" ");
-        if(spl[0] == "the")
-        {spl.shift}
+        return this._normalized_text;
     }
+
+    set_norm_text(txt)
+    {
+        let lower = txt.toLowerCase();
+        //console.log("normalize");
+        //console.log(lower);
+        if(lower[0] == "the"){lower.shift()}
+
+        let splt = lower.split(" ")
+        for(let i = 0; i < splt.length; i++)
+        {
+            splt[i] = splt[i].replace(/[´,`,;,.,,,",:,!.?,(,)]/g, "");
+        }
+        //console.log(splt);
+        if(splt[0] == "the")
+        {splt.shift()};
+
+        console.log(splt.join(" "));
+        return splt.join(" ");
+    }
+
 }

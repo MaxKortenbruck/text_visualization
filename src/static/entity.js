@@ -60,12 +60,8 @@ export class Entity {
 
     count_mentions(key = "all")
     {
-        var ent = [];
+        var ent = [], names = [], values = [];
         var index = 0;
-        var ent_dict = {
-            "name" : [],
-            "value" : []
-        }
         if(key == "all")
         {
             ent = this._mentions_array;
@@ -76,22 +72,26 @@ export class Entity {
 
         } 
         ent.forEach( ment => {
-            if(!ent_dict.name.includes(ment.text))
+            if(!names.includes(ment.normalized_text))
             {
-                ent_dict.name.push(ment.text);
-                index = ent_dict.name.indexOf(ment.text);
-                ent_dict.value[index] = 1;
+                names.push(ment.normalized_text);
+                index = names.indexOf(ment.normalized_text);
+                values[index] = 1;
             }
             else
             {
-                index = ent_dict.name.indexOf(ment.text);
-                ent_dict.value[index] += 1;
+                index = names.indexOf(ment.normalized_text);
+                values[index] += 1;
             }
         })
-        ent = [];
-        for(e in ent_dict)
+        if(names.length != values.length){throw Error};
+        var ent = [];
+        for(let i = 0; i < names.length; i++)
         {
-            ent.push(e);
+            let tmp_obj = {};
+            tmp_obj.name = names[i];
+            tmp_obj.value = values[i];
+            ent.push(tmp_obj);
         }
         return ent;
     }

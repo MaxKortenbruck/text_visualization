@@ -1,7 +1,32 @@
+/** 
+ * Created By : Wanja Zemke 
+ * On:
+ * 
+ * Last Change By : Max Kortenbruck
+ * On: 09.07.2021
+ */
+
 import { get_topics, get_articles, get_statistics, get_entity_statistics, get_text, get_statistics_of_article } from "./base_functions.js";
 import { create_pie_plot, create_treemap } from "./article-view-charts.js";
 import {Topic} from "./topic.js"
 
+/* global definitionsfor the script*/
+// globally safes plotted articles in the format { formatted_name : [&topic, &articel] } 
+var plotted_articles_dict = {}
+
+//json data stored in full_data
+var json_data = await get_json();
+var full_data = []; 
+
+// allocates data from Json in cascade style to Objects:
+// Topic -> Document, Entity -> Mention
+for(const[key, value] of Object.entries(json_data))
+{
+    var title = key;
+    var name = value.topic;
+    var a = new Topic(json_data, title, name);
+    full_data.push(a);
+}
 
 async function get_json(file="api")
 {
@@ -10,25 +35,10 @@ async function get_json(file="api")
     return data;
 }
 
-var json_data = await get_json();
-var art = []; 
-
-for(const[key, value] of Object.entries(json_data))
-{
-    var title = key;
-    var name = value.topic;
-    var a = new Topic(json_data, title, name);
-    art.push(a);
-}
-
-// globally safe plotted articles in the format { formatted_name : [&topic, &articel] } 
-plotted_articles_dict = {}
-
-
 async function set_topics(tp) {
   var i = 0;
   let list = document.getElementById("articel_view;available_topics")
-    art.forEach(topic => {
+    full_data.forEach(topic => {
       
       let a = document.createElement("a");
       a.className = "list-group-item list-group-item-action"
@@ -78,7 +88,7 @@ async function set_articles(index)
   let body = document.createElement("tbody");
   var i = 1;
 
-  art[index].articles.forEach( article => {
+  full_data[index].articles.forEach( article => {
     let trChild = document.createElement("tr");
     trChild.id = "row;" + article.id;
     trChild.onclick = function()
@@ -130,13 +140,13 @@ async function set_statistics(topic)
   document.getElementById("statistics_on_load_warning").style.display="none";
 }
 
-function set_entity_statistics(entity, entity_name, parent, article_direction="")
+function set_entity_statistics(entity, parent, article_direction="")
 {
   //let data = await get_entity_statistics(topic, entity_index, article_direction);
   let data = entity.count_mentions(article_direction)
-  console.log(data.mention_text)
-  console.log(data.numbers);
-  create_treemap(entity_name, data, parent);
+  //console.log(data.mention_text)
+  //console.log(data.numbers);
+  create_treemap(entity.formatted_name, data, parent);
 }
 
 function open_entity(name)
@@ -193,9 +203,9 @@ function close_entity(element)
   document.getElementById("openentitys").removeChild(to_close);
 }
 
-async function display_article(articel)
+async function display_article(article)
 {
-    var articel_div_id = "articlespacer" + articel.clean_topic + "spacer" + articel.political_direction;  
+    var articel_div_id = "articlespacer" + article.clean_topic + "spacer" + article.political_direction;  
     //check if the article is already open
     if(document.getElementById(articel_div_id))
     {
@@ -212,7 +222,7 @@ async function display_article(articel)
     divChild.style = "padding: 20px; height: 1000px;"
 
     //create and append headline
-    let headline = articel.title;
+    let headline = article.title;
     let headlineElement = document.createElement("h4");
     headlineElement.style = "line-height: 2;";
     headlineElement.appendChild( document.createTextNode(headline))
@@ -292,7 +302,7 @@ async function display_article(articel)
 
     //create and append text
     let p = document.createElement("p");
-    p.appendChild( document.createTextNode(articel.text));
+    p.appendChild( document.createTextNode(article.text));
     body_text.appendChild(p);
 
     //accordion item for statistics
@@ -338,19 +348,20 @@ async function display_article(articel)
     let div_article_statistic = document.createElement("div");
     collapse_stat.appendChild(div_article_statistic);
 
-    let dat = articel.statistics_of_article;
-    let plot = create_pie_plot(articel.title, dat.names, dat.numbers, div_article_statistic);
+    let dat = article.statistics_of_article;
+    let plot = create_pie_plot(article.title, dat.names, dat.numbers, div_article_statistic);
+    
     // handle click event in Chart
-    //plot.article = article;
-    plotted_articles_dict[article.title] = [topic, article]; 
+    // add articel to global dict
+    plotted_articles_dict[article.title] = article; 
     plot.on('click', function(params) {
       entity_in_statistic_click(params);
     })
 
     //create a div Element for the treemap
     let div_treemap = document.createElement("div")
-    div_treemap.id = "treemap;" + articel.clean_topic + ";" + articel.political_direction;
-    console.log(articel.clean_topic);
+    div_treemap.id = "treemap;" + article.clean_topic + ";" + article.political_direction;
+    console.log(article.clean_topic);
     collapse_stat.appendChild(div_treemap);
 
     divChild.appendChild(accordion);
@@ -382,26 +393,19 @@ function article_click(article)
 }
 
 function entity_in_statistic_click(params)
-{
-  var enty = null;
-  var index = 0;
-  console.log(art.length);
-  for(let j = 0; j < art.length; j++){
-    enty = art[j].entities.find(item => item.formatted_name == params.name);
-    console.log(enty); 
-    if(enty !== null || enty !== undefined)
-    { 
-      index = j;
-      break;
-    }
-  }
-  console.log(art[1].entities[0].formatted_name);
-  set_entity_statistics(enty, enty.formatted_name, document.getElementById("entityChart") );
-  open_entity(enty.formatted_name);
+{ 
+  console.log(params);
+  console.log(params.seriesName in plotted_articles_dict)
+
+  let artcl = plotted_articles_dict[params.seriesName];
+  let entity = artcl.entities.find( item => item.formatted_name == params.name );
+
+  set_entity_statistics(entity, document.getElementById("entityChart") );
+  open_entity(entity.formatted_name);
 
   //scan "article_view;row" for open articles and update treemaps
   let open_articles = document.getElementById("articel_view;row").children;
-  console.log(open_articles.length)
+  //console.log(open_articles.length)
   for(let i=0; i<open_articles.length; i++)
   {
     // console.log(open_articles[i].id.split("0"))
@@ -409,7 +413,7 @@ function entity_in_statistic_click(params)
     console.log(open_articles[i].id);
     let treemap_parent = document.getElementById("treemap;" + res[1] + ";" + res[2]);
     let article_direction = res[2];
-    set_entity_statistics(enty, enty.formatted_name, treemap_parent, article_direction)
+    set_entity_statistics(entity, treemap_parent, article_direction)
   }
 }
 
