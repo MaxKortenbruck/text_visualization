@@ -45,21 +45,15 @@ export class Topic
     {
         data[this._identifier].entities.forEach(element => {
             var id = this._identifier + ";" + element.name;
-            
-            console.log(element.name)
-
             var en = new Entity(data, this._identifier, element.name, id);
             this.entities.push(en);
         })
     }
     set_articles(data)
     {
-        console.log(this._identifier);
-        console.log(data[this._identifier].documents)
         data[this._identifier].documents.forEach(art => {
             let article_name = this._identifier + ";" + art.title;
             var doc = new Document(data, article_name, this._identifier);
-            console.log(doc);
             this._articles.push(doc);
         });
     }

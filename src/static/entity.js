@@ -63,10 +63,9 @@ export class Entity {
         var ent = [];
         var index = 0;
         var ent_dict = {
-            mention_text : [],
-            numbers : []
+            "name" : [],
+            "value" : []
         }
-
         if(key == "all")
         {
             ent = this._mentions_array;
@@ -75,21 +74,26 @@ export class Entity {
         {
             ent = this.get_mentions_for_article(key);
 
-        }
+        } 
         ent.forEach( ment => {
-            if(!ent_dict.mention_text.includes(ment.text))
+            if(!ent_dict.name.includes(ment.text))
             {
-                ent_dict.mention_text.push(ment.text);
-                index = ent_dict.mention_text.indexOf(ment.text);
-                ent_dict.numbers[index] = 1;
+                ent_dict.name.push(ment.text);
+                index = ent_dict.name.indexOf(ment.text);
+                ent_dict.value[index] = 1;
             }
             else
             {
-                index = ent_dict.mention_text.indexOf(ment.text);
-                ent_dict.numbers[index] += 1;
+                index = ent_dict.name.indexOf(ment.text);
+                ent_dict.value[index] += 1;
             }
         })
-        return ent_dict;
+        ent = [];
+        for(e in ent_dict)
+        {
+            ent.push(e);
+        }
+        return ent;
     }
     get_mentions_for_article(key = "all")
     {   

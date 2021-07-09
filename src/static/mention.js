@@ -45,4 +45,13 @@ export class Mention {
     {
         return this._index;
     }
+
+    get normalized_text()
+    {
+        let ret = this.text.toLowerCase;
+        ret.replace(/[´, ', ;, ., ,, ", :, !. ?, (, )]/g, "");
+        let spl = ret.split(" ");
+        if(spl[0] == "the")
+        {spl.shift}
+    }
 }

@@ -78,7 +78,7 @@ function create_pie_plot(key, names, mentiond, parentFromChart, articel)
 }
 
 // creates the Plot for the entities
-function create_treemap(entity_name, data_array, parentFromChart)
+function create_treemap(entity_name, /*data_array*/data, parentFromChart)
 {
     let div = document.createElement("div");
     div.setAttribute("id", "plt;pie;" + entity_name);
@@ -91,7 +91,7 @@ function create_treemap(entity_name, data_array, parentFromChart)
     parentFromChart.appendChild(div);
 
     //create all nodes:
-    let data = [];
+    /*let data = [];
     for(let i in data_array[0])
     {
         let temp = {};
@@ -99,7 +99,7 @@ function create_treemap(entity_name, data_array, parentFromChart)
         temp['value'] = data_array[1][i];
         data.push(temp);
     }
-
+*/
 
     var myChart = echarts.init(div);
 

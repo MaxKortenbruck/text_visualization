@@ -21,6 +21,10 @@ for(const[key, value] of Object.entries(json_data))
     art.push(a);
 }
 
+// globally safe plotted articles in the format { formatted_name : [&topic, &articel] } 
+plotted_articles_dict = {}
+
+
 async function set_topics(tp) {
   var i = 0;
   let list = document.getElementById("articel_view;available_topics")
@@ -130,6 +134,8 @@ function set_entity_statistics(entity, entity_name, parent, article_direction=""
 {
   //let data = await get_entity_statistics(topic, entity_index, article_direction);
   let data = entity.count_mentions(article_direction)
+  console.log(data.mention_text)
+  console.log(data.numbers);
   create_treemap(entity_name, data, parent);
 }
 
@@ -336,14 +342,15 @@ async function display_article(articel)
     let plot = create_pie_plot(articel.title, dat.names, dat.numbers, div_article_statistic);
     // handle click event in Chart
     //plot.article = article;
+    plotted_articles_dict[article.title] = [topic, article]; 
     plot.on('click', function(params) {
-      console.log(params);
       entity_in_statistic_click(params);
     })
 
     //create a div Element for the treemap
     let div_treemap = document.createElement("div")
-    div_treemap.id = "treemap;" + articel.topic + ";" + articel.political_direction;
+    div_treemap.id = "treemap;" + articel.clean_topic + ";" + articel.political_direction;
+    console.log(articel.clean_topic);
     collapse_stat.appendChild(div_treemap);
 
     divChild.appendChild(accordion);
@@ -377,28 +384,32 @@ function article_click(article)
 function entity_in_statistic_click(params)
 {
   var enty = null;
-  var index = i;
-  for(let i = 0; i < art.length; i++){
-    enty = art[i].entities.find(item => item.formatted_name == params.name); 
+  var index = 0;
+  console.log(art.length);
+  for(let j = 0; j < art.length; j++){
+    enty = art[j].entities.find(item => item.formatted_name == params.name);
+    console.log(enty); 
     if(enty !== null || enty !== undefined)
     { 
-      index = i;
+      index = j;
       break;
     }
   }
-
+  console.log(art[1].entities[0].formatted_name);
   set_entity_statistics(enty, enty.formatted_name, document.getElementById("entityChart") );
   open_entity(enty.formatted_name);
 
   //scan "article_view;row" for open articles and update treemaps
   let open_articles = document.getElementById("articel_view;row").children;
+  console.log(open_articles.length)
   for(let i=0; i<open_articles.length; i++)
   {
     // console.log(open_articles[i].id.split("0"))
     let res = open_articles[i].id.split("spacer");
+    console.log(open_articles[i].id);
     let treemap_parent = document.getElementById("treemap;" + res[1] + ";" + res[2]);
     let article_direction = res[2];
-    set_entity_statistics(enty, enty.formatted_name, treemap_parent, enty.clean_topic)
+    set_entity_statistics(enty, enty.formatted_name, treemap_parent, article_direction)
   }
 }
 
