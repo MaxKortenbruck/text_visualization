@@ -174,17 +174,12 @@ body
 }
 
 
-.block .close-button 
+.block .close-button
 { 
-	border: 1.5px solid #5D5D5D;  
-	border-radius: 50%; 
-	background-color: #FF5D50;
+	border: 2px solid #5D5D5D;  
+	border-radius: 50%;
+	background-image: url('close_button.svg');
 	transition-duration: 0.4s;
-	color:#4B4B4B;
-	padding: 0;
-	font-size: 30px;
-	font-weight: 400;
-	line-height: 5px;
 	width: 30px;
 	height: 30px;
 	position: absolute;
@@ -194,7 +189,7 @@ body
 
 .close-button:hover 
 {
-	background-color: #FF4A3C;
+	background-color: #FA0000;
 	box-shadow: 0px 0px 7px 3px #949494;
 }
 
