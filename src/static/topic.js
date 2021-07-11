@@ -1,23 +1,31 @@
 'use strict'
 
-const Enitiy = require("./entity");
+import {Entity} from "./entity.js";
+import {Document} from "./document.js";
 
-module.exports = class Topic
+export class Topic
 {
-    constructor(data, topic_name)
+    constructor(data, topic_id, topic_name)
     {
-        this.title = topic_name;
-        this.name = this.set_topic_name(topic_name);
-        this.index = this.set_topic_index(data, topic_name);
-        this.articles = null;
-        this.entities = null;
+
+        this._identifier = topic_id;
+        this._name = topic_name;
+        //this.name = this.set_topic_name(topic_name);
+        //this.index = this.set_topic_index(data, topic_name);
+        this._articles = [];
+        this._entities = [];
+        this.set_articles(data);
+        this.set_entities(data);
+        this.entities_to_articles();
+
     }
+    
     /**
      * Returns the internal index of this topic in the json data
      * @param {JSON-Oject} data - JSON data 
      * @param {String} topic_name - Topic Indentificator     
      * @returns - Integer of topic index
-     */
+     *//*
     set_topic_index(data, topic_name)
     {
         var index = 0, counter = 0;
@@ -32,48 +40,72 @@ module.exports = class Topic
         }
         return index;
     }
-    /**
-     * Returns the topic name without any numbers or additional information
-     * @param {String} title - Topic of the article
-     * @returns - String of topic name
-     */
-    set_topic_name(title)
-    {   
-        let temp = title.split[";"];
-        let text = temp[0].split("_");
-        return text[1];
-    }
+    */
     set_entities(data)
     {
-        var Entity = require("entity.js");
-        data[this.title].entities.forEach(element => {
-            let id = this.title + ";" + element.name;
-            let en = new Entity(data, this.title, element.name, id);
+        data[this._identifier].entities.forEach(element => {
+            var id = this._identifier + ";" + element.name;
+            var en = new Entity(data, this._identifier, element.name, id);
             this.entities.push(en);
         })
     }
     set_articles(data)
     {
-        var Document = require("document.js");
-        data[this.title].document.forEach(art => {
-            let article_name = this.title + ";" + art.title;
-            var doc = new Document(data, article_name, this.title);
-            this.articles.push(doc);
+        data[this._identifier].documents.forEach(art => {
+            let article_name = this._identifier + ";" + art.title;
+            var doc = new Document(data, article_name, this._identifier);
+            this._articles.push(doc);
         });
     }
     entities_to_articles()
     {
-        this.articles.forEach(art => {
+        this._articles.forEach(art => {
             this.entities.forEach(ent => {
-                for (let ment of ent.mentions)
+                if(ent.mentions.includes(art.political_direction))
                 {
-                    if(art.political_direction == ment.political_direction)
-                    {
-                        art.add_entity(ent);
-                        break;
-                    }
+                    art.add_entity(ent);
                 }
             });
         });
+    }
+
+    get identifier()
+    {
+        return this._identifier;
+    }
+
+    get formatted_name()
+    {
+        let text = this._name.split("_");
+        return text[1];
+    }
+
+    get entities()
+    {
+        return this._entities;
+    }
+
+    get articles()
+    {
+        return this._articles;
+    }
+
+    get clean_topic()
+    {   
+        var ret = this._identifier;
+        return ret.slice(0, -17).replace(/[-,_,.,0,1,2,3,4,5,6,7,8,9]/g, "");
+    }
+
+    get statistics_of_entities()
+    {
+        var entity_dict = {
+            names : [],
+            numbers : []
+        }
+        this.entities.forEach( ent => {
+            entity_dict.names.push(ent.formatted_name);
+            entity_dict.numbers.push(ent.mentions_array.length);
+        })
+        return entity_dict;
     }
 }

@@ -1,3 +1,5 @@
+import {Topic} from "./topic.js";
+
 
 async function get_json(file="api")
 {
@@ -5,6 +7,18 @@ async function get_json(file="api")
     let data = ret.json();
     return data;
 }
+
+var data = await get_json();
+var art = [];
+
+for(const[key, value] of Object.entries(data))
+{
+    var title = key;
+    var name = value.topic;
+    var a = new Topic(data, title, name);
+    art.push(a);
+}
+
 
 async function get_topics()
 {
@@ -26,10 +40,21 @@ async function get_topics()
 
         ret[title[title.length-1]] = array;
     }
+    console.log(ret);
     return ret;
-
 }
 
+/*
+async function get_topics()
+{
+    var ret = [];
+    art.forEach(element => {
+        ret.push(element.formatted_name);
+    });
+    console.log(ret);
+    return ret;
+}
+*/
 function get_full_title(data, t)
 {
     let topic = "";
@@ -44,6 +69,7 @@ function get_full_title(data, t)
     return topic;
 }
 
+/*
 async function get_articles(topic)
 {
     let data = await get_json();
@@ -58,6 +84,24 @@ async function get_articles(topic)
         articles.push(article_title);
     })
 
+    return articles;
+}
+*/
+
+async function get_articles(topic)
+{
+    let data = await get_json();
+    
+    //search topic
+    topic = get_full_title(data, topic);
+    
+    let articles = [];
+    data[topic].documents.forEach( article => {
+        let article_title = article.title;
+        article_title += ";" + article.name.split("_")[1];
+        articles.push(article_title);
+    })
+    console.log(articles);
     return articles;
 }
 
@@ -99,26 +143,71 @@ async function get_statistics(topic)
     return ret;
 }
 
-async function get_entity_statistics(topic, entity_index)
+async function get_entity_statistics(topic, entity_index, article_direction="")
 {
+    //get data for entity
     let data = await get_json();
     topic = get_full_title(data, topic);
-    data = data[topic].entities[entity_index];
+    data = data[topic].entities;
 
+    //create variables for the return
     let mentions_text = [];
     let mentions_number = [];
 
-    data.mentions.forEach( mention => {
-        if( mentions_text.includes( mention.text ) )
+    //determine if the statistics for a specific article is needed
+    let political_direction = ["L", "LL", "M", "R", "RR"];
+    if(political_direction.includes(article_direction))
+    {
+        let entity_array = data[entity_index].mentions;
+        let merging_history_array = data[entity_index].merging_history.original.phrases;
+        for(let i=0; i<entity_array.length; i++)
         {
-            mentions_number[ mentions_text.indexOf(mention.text) ] += 1;
+            let direction = merging_history_array[i][1].split("_")[1];
+            if(direction == article_direction)
+            {
+                if( mentions_text.includes( entity_array[i].text ) )
+                {
+                    mentions_number[ mentions_text.indexOf( entity_array[i].text ) ] += 1;
+                }
+                else
+                {
+                    mentions_text.push(entity_array[i].text);
+                    mentions_number.push(1);
+                }
+            }
+
         }
-        else
-        {
-            mentions_text.push(mention.text);
-            mentions_number.push(1);
-        }
-    })
+        //iterate through mentions, check the direction and add the Number
+        /*data.mentions.forEach( mention => {
+            let mention_direction = mention;
+            // console.log(mention)
+            if( mentions_text.includes( mention.text ) )
+            {
+                mentions_number[ mentions_text.indexOf(mention.text) ] += 1;
+            }
+            else
+            {
+                mentions_text.push(mention.text);
+                mentions_number.push(1);
+            }
+        })*/
+    }
+    else
+    {
+        //iterate through mentions and add the Number
+        data[entity_index].mentions.forEach( mention => {
+            if( mentions_text.includes( mention.text ) )
+            {
+                mentions_number[ mentions_text.indexOf(mention.text) ] += 1;
+            }
+            else
+            {
+                mentions_text.push(mention.text);
+                mentions_number.push(1);
+            }
+        })
+    }
+    
     
     let ret = [];
     ret.push(mentions_text);
@@ -170,11 +259,8 @@ async function get_statistics_of_article(t, article_direction)
     let data = await get_json();
     let topic = get_full_title(data, t)
 
-    mentions = data[topic].entities;
+    let mentions = data[topic].entities;
 
-
-    ////////////work on it
-    let political_direction = ["L", "LL", "M", "R", "RR"];
     let dict = {}
     dict["names"] = [];
     dict["mentiond"] = [];
@@ -188,21 +274,26 @@ async function get_statistics_of_article(t, article_direction)
 
     mentions.forEach( mention => {
         //in jede liste das Entitie schreiben
-        political_direction.forEach( direction => {
-            dict[direction]["names"].push(mention.name);
-            dict[direction]["mentiond"].push(0);
-        })
+        
+        dict["names"].push(mention.name);
+        dict["mentiond"].push(0);
+        
 
         //durch mention iterieren und politische ausrichtung auslesen
         mention["merging_history"]["original"]["phrases"].forEach( element => {
             let direction_of_mention = element[1].split("_")[1];
-            index = dict[direction_of_mention]["names"].length - 1;
-            dict[direction_of_mention]["mentiond"][index] += 1;
+            if(direction_of_mention == article_direction)
+            {
+                let index = dict["names"].length - 1;
+                dict["mentiond"][index] += 1;
+            }
+            // index = dict[direction_of_mention]["names"].length - 1;
+            // dict[direction_of_mention]["mentiond"][index] += 1;
         })
     })
 
-    /////////till here
-    return(0)
+    dict["names"] = cleanup_entities(dict["names"]);
+    return dict;
 
 }
 

@@ -6,6 +6,8 @@ class Entity
     {
         this.json_data = data;
         this.name = name;
+        this.placeh = "row;SeekingMigrantCaravan;Migrant caravan of asylum seekers reaches U.S. border;L in get_articles"
+        this.pp = "articlespacerSeekingMigrantCaravanspacerL"
     }
 
 }
@@ -229,8 +231,9 @@ function create_text_div(headline, marked_text, headline_id)
 	if(text_div == null)
     {
         let text_div = document.createElement("div")
-        let title = document.createElement("h2")
-		let close_button = document.createElement("button")
+        let close_button = document.createElement("button")
+		let title = document.createElement("h2")
+		
 		
         let text = document.createElement("div")
 
@@ -431,6 +434,8 @@ function onload_function()
 /* Set the width of the side navigation to 250px and the left margin of the page content to 250px and add a black background color to body */
 function openNav() 
 {
+	document.getElementById("logo").className = "logo";
+	document.getElementById("logo").style.width = "250px";
     document.getElementById("mySidenav").style.width = "250px";
     document.getElementById("main").style.marginLeft = "250px";
 }
@@ -438,6 +443,7 @@ function openNav()
   /* Set the width of the side navigation to 0 and the left margin of the page content to 0, and the background color of body to white */
 function closeNav() 
 {
+	document.getElementById("logo").style.width = "0";
     document.getElementById("mySidenav").style.width = "0";
     document.getElementById("main").style.marginLeft = "0";
 }
