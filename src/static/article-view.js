@@ -7,7 +7,7 @@
  */
 
 import { get_topics, get_articles, get_statistics, get_entity_statistics, get_text, get_statistics_of_article } from "./base_functions.js";
-import { create_pie_plot, create_treemap } from "./article-view-charts.js";
+import { create_pie_plot, create_text_pie_plot, create_treemap } from "./article-view-charts.js";
 import {Topic} from "./topic.js"
 
 /* global definitionsfor the script*/
@@ -182,7 +182,7 @@ function determine_open_articles()
 {
   let row = document.getElementById("articel_view;row")
   let anz = row.childElementCount;
-  if(anz > 3){ anz = 3};
+  if(anz > 2){ anz = 2};
   row.className = "row row-cols-" + anz;
 }
 
@@ -210,24 +210,24 @@ function display_article(article)
 
     //create div element as container for the article
     let div = document.createElement("div");
-    div.className = "col";
+    div.className = "col block";
     div.id = articel_div_id;
 
     let divChild = document.createElement("div");
-    divChild.className = "border bg-light overflow-auto";
-    divChild.style = "padding: 20px; height: 1000px;"
+    divChild.className = "overflow-auto";
+    divChild.style = "padding: 20px; height: 500px;";
 
     //create and append headline
     let headline = article.title;
     let headlineElement = document.createElement("h4");
-    headlineElement.style = "line-height: 2;";
-    headlineElement.appendChild( document.createTextNode(headline))
+    headlineElement.style = "line-height: 1.5;";
+    headlineElement.appendChild( document.createTextNode(headline));
     divChild.appendChild(headlineElement);
 
     //create Close Button
     let closeButton = document.createElement("button");
     closeButton.type = "button";
-    closeButton.className = "btn-close";
+	closeButton.setAttribute("class", "close-button");
     closeButton.setAttribute("aria-label", "Close");
     closeButton.onclick = function ()
     {
@@ -242,12 +242,10 @@ function display_article(article)
     top.className = "row";
 
     let topfChild = document.createElement("div");
-    topfChild.className = "col";
     topfChild.appendChild(headlineElement);
-    top.appendChild( topfChild)
+    top.appendChild(topfChild)
 
     let topsChild = document.createElement("div");
-    topsChild.className = "col-1";
     topsChild.appendChild(closeButton);
     top.appendChild(topsChild)
 
@@ -262,6 +260,7 @@ function display_article(article)
     // accordion item for text
     let accordion_text = document.createElement("div");
     accordion_text.className = "accordion-item";
+	accordion_text.style = "font-size: 17px;";
     accordion.appendChild(accordion_text)
 
     //header for text
@@ -353,6 +352,7 @@ function display_article(article)
     plot.on('click', function(params) {
       entity_in_statistic_click(params);
     })
+
 
     //create a div Element for the treemap
     let div_treemap = document.createElement("div")
