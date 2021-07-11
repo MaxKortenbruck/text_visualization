@@ -3,13 +3,13 @@ let resulution = "width:960px; height:540px;"
 
 
 // returns chart
-function create_pie_plot(key, names, mentiond, parentFromChart, article)
+function create_pie_plot(key, names, mentioned, parentFromChart, article)
 {
     let div = document.createElement("div");
     div.setAttribute("id", "plt;pie;" + key);
 	div.className = "pie-plot";
     div.setAttribute("style", resulution);
-    div.setAttribute("articel", article)
+    div.setAttribute("article", article)
 
     while(parentFromChart.firstChild)
     {
@@ -23,7 +23,7 @@ function create_pie_plot(key, names, mentiond, parentFromChart, article)
     let i = 0;
     names.forEach( name => {
         let dict = {};
-        dict["value"] = mentiond[i];
+        dict["value"] = mentioned[i];
         dict["name"] = name;
         i++;
         array.push(dict);
@@ -80,7 +80,7 @@ function create_pie_plot(key, names, mentiond, parentFromChart, article)
     return myChart;
 }
 
-function create_text_pie_plot(key, names, mentiond, parentFromChart)
+function create_text_pie_plot(key, names, mentioned, parentFromChart)
 {
     let div = document.createElement("div");
     div.setAttribute("id", "plt;pie;" + key);
@@ -99,7 +99,7 @@ function create_text_pie_plot(key, names, mentiond, parentFromChart)
     let i = 0;
     names.forEach( name => {
         let dict = {};
-        dict["value"] = mentiond[i];
+        dict["value"] = mentioned[i];
         dict["name"] = name;
         i++;
         array.push(dict);
@@ -185,7 +185,7 @@ function create_treemap(entity_name, /*data_array*/data, parentFromChart)
 
     let option = {
         title: {
-            text: 'how ' + entity_name + ' is mentiond',
+            text: 'how ' + entity_name + ' is mentioned',
             left: 'center'
         },
         tooltip: {
