@@ -3,13 +3,13 @@ let resulution = "width:960px; height:540px;"
 
 
 // returns chart
-function create_pie_plot(key, names, mentiond, parentFromChart)
+function create_pie_plot(key, names, mentiond, parentFromChart, article)
 {
     let div = document.createElement("div");
     div.setAttribute("id", "plt;pie;" + key);
 	div.className = "pie-plot";
     div.setAttribute("style", resulution);
-    div.setAttribute("articel", articel)
+    div.setAttribute("articel", article)
 
     while(parentFromChart.firstChild)
     {
