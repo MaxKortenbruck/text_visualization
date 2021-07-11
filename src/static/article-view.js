@@ -35,7 +35,7 @@ async function get_json(file="api")
     return data;
 }
 
-async function set_topics(tp) {
+function set_topics() {
   var i = 0;
   let list = document.getElementById("articel_view;available_topics")
     full_data.forEach(topic => {
@@ -55,7 +55,7 @@ async function set_topics(tp) {
     });
 }
 
-async function set_articles(index)
+function set_articles(index)
 {
   //add list with Articles
   let table = document.createElement("table");
@@ -123,29 +123,25 @@ async function set_articles(index)
   div_a_aritcles.appendChild(table);
 }
 
-async function set_statistics(topic)
+function set_statistics(index)
 {
-  let data = await get_statistics(topic);
-
-  document.getElementById("statistics_headline").innerHTML = topic;
+  document.getElementById("statistics_headline").innerHTML = full_data[index].formatted_name;
 
   let plot_parent = document.getElementById("mainChart");
-  let plot = create_pie_plot(topic, data[0], data[1], plot_parent);
+  let dat = full_data[index].statistics_of_entities;
+  let plot = create_pie_plot(full_data[index].formatted_name, dat.names, dat.numbers, plot_parent);
 
-  // handle click event in Chart
+  // handle click event in ChartS
   plot.on('click', function(params) {
-      entity_in_statistic_click(articel, params);
+      entity_in_statistic_click(params);
   })
 
   document.getElementById("statistics_on_load_warning").style.display="none";
 }
 
-function set_entity_statistics(entity, parent, article_direction="")
+function set_entity_statistics(entity, parent, article_direction)
 {
-  //let data = await get_entity_statistics(topic, entity_index, article_direction);
   let data = entity.count_mentions(article_direction)
-  //console.log(data.mention_text)
-  //console.log(data.numbers);
   create_treemap(entity.formatted_name, data, parent);
 }
 
@@ -203,7 +199,7 @@ function close_entity(element)
   document.getElementById("openentitys").removeChild(to_close);
 }
 
-async function display_article(article)
+function display_article(article)
 {
     var articel_div_id = "articlespacer" + article.clean_topic + "spacer" + article.political_direction;  
     //check if the article is already open
@@ -394,11 +390,20 @@ function article_click(article)
 
 function entity_in_statistic_click(params)
 { 
-  console.log(params);
-  console.log(params.seriesName in plotted_articles_dict)
+  let entity = null;
 
+  if(params.seriesName in plotted_articles_dict)
+  {
   let artcl = plotted_articles_dict[params.seriesName];
-  let entity = artcl.entities.find( item => item.formatted_name == params.name );
+  entity = artcl.entities.find( item => item.formatted_name == params.name );
+  }
+  else
+  {
+    console.log("topic")
+    let tpc = full_data.find(item => item.formatted_name == params.seriesName);
+    entity = tpc.entities.find( item => item.formatted_name == params.name);
+    console.log(entity);
+  }
 
   set_entity_statistics(entity, document.getElementById("entityChart") );
   open_entity(entity.formatted_name);
@@ -410,14 +415,13 @@ function entity_in_statistic_click(params)
   {
     // console.log(open_articles[i].id.split("0"))
     let res = open_articles[i].id.split("spacer");
-    console.log(open_articles[i].id);
     let treemap_parent = document.getElementById("treemap;" + res[1] + ";" + res[2]);
     let article_direction = res[2];
     set_entity_statistics(entity, treemap_parent, article_direction)
   }
 }
 
-async function on_load() {
+function on_load() {
   set_topics();
 }
 

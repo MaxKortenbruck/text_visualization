@@ -95,4 +95,17 @@ export class Topic
         var ret = this._identifier;
         return ret.slice(0, -17).replace(/[-,_,.,0,1,2,3,4,5,6,7,8,9]/g, "");
     }
+
+    get statistics_of_entities()
+    {
+        var entity_dict = {
+            names : [],
+            numbers : []
+        }
+        this.entities.forEach( ent => {
+            entity_dict.names.push(ent.formatted_name);
+            entity_dict.numbers.push(ent.mentions_array.length);
+        })
+        return entity_dict;
+    }
 }

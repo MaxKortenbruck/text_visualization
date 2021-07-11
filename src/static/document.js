@@ -26,7 +26,7 @@ export class Document {
 
     /**
      * Build a text out of the provided Jason dataset 
-     * @param {JSON-Object} data - JSON Data 
+     * @param {Object} data - JSON Data 
      * @returns 2-Dimensional array with article text divided in sentences with words
      */
     set_article_text(data)

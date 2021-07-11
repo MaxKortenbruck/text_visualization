@@ -19,7 +19,7 @@ export class Mention {
         }
         else {console.log("Error in phrases and text index")}
 
-        this._normalized_text = this.set_norm_text(this._text);
+        //this._normalized_text = this.set_norm_text(this._text);
 
     }
 
@@ -50,12 +50,7 @@ export class Mention {
 
     get normalized_text()
     {
-        return this._normalized_text;
-    }
-
-    set_norm_text(txt)
-    {
-        let lower = txt.toLowerCase();
+        let lower = this.text.toLowerCase();
         //console.log("normalize");
         //console.log(lower);
         if(lower[0] == "the"){lower.shift()}
@@ -69,7 +64,6 @@ export class Mention {
         if(splt[0] == "the")
         {splt.shift()};
 
-        console.log(splt.join(" "));
         return splt.join(" ");
     }
 
