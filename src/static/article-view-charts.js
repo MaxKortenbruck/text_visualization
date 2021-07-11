@@ -3,7 +3,7 @@ let resulution = "width:960px; height:540px;"
 
 
 // returns chart
-function create_pie_plot(key, names, mentiond, parentFromChart, articel)
+function create_pie_plot(key, names, mentiond, parentFromChart)
 {
     let div = document.createElement("div");
     div.setAttribute("id", "plt;pie;" + key);
