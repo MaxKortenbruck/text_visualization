@@ -232,7 +232,7 @@ async function display_article(id)
     // accordion item for text
     let accordion_text = document.createElement("div");
     accordion_text.className = "accordion-item";
-	accordion_text.style = "font-size: 15px;" ;
+	accordion_text.style = "font-size: 17px;";
     accordion.appendChild(accordion_text)
 
     //header for text
