@@ -91,11 +91,16 @@ export class Document {
         }
         else
         {
-            this._text_array.forEach(sentence => {
+            for([i, sentence] of this._text_array.entries())
+            {  
+                if(!i)
+                {
+                    continue;
+                }  
                 sentence.forEach(word => {
                     text_return += word;
                 });
-            });
+            };
         }
         return text_return;
     }

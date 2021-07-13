@@ -91,7 +91,7 @@ export class Topic
     entities_to_articles()
     {
         this._articles.forEach(art => {
-            this.entities.forEach(ent => {
+            this._entities.forEach(ent => {
                 if(ent.mentions.includes(art.political_direction))
                 {
                     art.add_entity(ent);
