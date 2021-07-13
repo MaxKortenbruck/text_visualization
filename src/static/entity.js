@@ -18,8 +18,10 @@ export class Entity {
         this._type = ent.type;        
         this._size = ent.size;
         this._representative = ent.merging_history.representative;
+        this._colour = null;
         this.set_mentions(ent);
     }
+
     //mentions nach ll und L un R mit Object ordnen
     set_mentions(entity)
     {
@@ -33,29 +35,6 @@ export class Entity {
                 this._all_political_mentions.push(m.political_direction_of_article);
             }
         })
-    }
-
-    get entity_statistics()
-    {
-        
-    }
-
-    get identifier()
-    {
-        return this._identifier;
-    }
-
-    get mentions()
-    {
-        return this._all_political_mentions;
-    }
-
-    get formatted_name()
-    {
-        var ret = this._name;
-        ret = ret.slice(0, -2);
-        ret = ret.replace(/_/g, " ");
-        return ret;
     }
 
     count_mentions(key = "all")
@@ -115,6 +94,11 @@ export class Entity {
         }
     }
 
+    add_colour(colour)
+    {
+        this._colour = colour;
+    }
+
     get mentions_array()
     {
         return this._mentions_array;
@@ -144,6 +128,24 @@ export class Entity {
             text[i] = text[i] + " ";
         }
         return text;
+    }
+
+    get identifier()
+    {
+        return this._identifier;
+    }
+
+    get mentions()
+    {
+        return this._all_political_mentions;
+    }
+
+    get formatted_name()
+    {
+        var ret = this._name;
+        ret = ret.slice(0, -2);
+        ret = ret.replace(/_/g, " ");
+        return ret;
     }
 
 

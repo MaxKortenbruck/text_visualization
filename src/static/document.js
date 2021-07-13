@@ -54,17 +54,27 @@ export class Document {
         });
         return text_array;
     }
+    /**
+     * Adds a reference of an Entity Object to the article
+     * @param {Object} ent - Entity  
+     */
     
     add_entity(ent)
     {
         this._my_entities.push(ent);
     }
-    
+    /**
+     * Passes an Entity Object to to the article that is to be marked
+     * @param {Object} ent - Entity   
+     */
     mark_entity(ent)
     {
         this._marked_entities.push(ent.identifier);
     }
-    
+    /**
+     * 
+     * @param {Object} ent 
+     */
     unmark_entity(ent)
     {
         this._marked_entities = this._marked_entities.filter(function( ele ){
@@ -77,7 +87,7 @@ export class Document {
         var text_return = "";
         if(this._marked_entities > 0)
         {
-            //text_markierung hinzufügen, wird aua
+            
         }
         else
         {

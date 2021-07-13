@@ -36,9 +36,9 @@ async function get_json(file="api")
 }
 
 function set_topics() {
-  var i = 0;
+
   let list = document.getElementById("articel_view;available_topics")
-    full_data.forEach(topic => {
+    for(const [i, topic] of full_data.entries()){
       
       let a = document.createElement("a");
       a.className = "list-group-item list-group-item-action"
@@ -51,8 +51,7 @@ function set_topics() {
       }
       a.appendChild( document.createTextNode(topic.formatted_name) );
       list.appendChild(a);
-      i++;
-    });
+    };
 }
 
 function set_articles(index)
@@ -399,7 +398,6 @@ function entity_in_statistic_click(params)
   }
   else
   {
-    console.log("topic")
     let tpc = full_data.find(item => item.formatted_name == params.seriesName);
     entity = tpc.entities.find( item => item.formatted_name == params.name);
     console.log(entity);
