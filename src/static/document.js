@@ -117,7 +117,7 @@ export class Document {
             mention_dict.names.push(ent.formatted_name);
             mentions = ent.get_mentions_for_article(this.political_direction)
             mention_dict.numbers.push(mentions.length);
-            mention_dict.colour.push(ent.colours);
+            mention_dict.colour.push(ent.colour);
         })
         return mention_dict;
     }
