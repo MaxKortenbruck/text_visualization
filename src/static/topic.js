@@ -6,10 +6,26 @@ import {Document} from "./document.js";
 
 function random_colour()
 {
+    
     let rand_string = Math.floor(Math.random()*16777215).toString(16);
     // ensures a valid colour code by padding the string with a 0, if it is shorter the 6 characters
     const rand_colour = "#" + rand_string.padStart(6, "0");
     return rand_colour;
+    
+   /*
+    var letters = '0123456789ABCDEF';
+    var first = '9ABCDEF';
+    var second_to_last = '0123456';
+    var color = '#';
+    color += first[Math.floor(Math.random() * 7)];
+    for (var i = 0; i < 5; i++) {
+      color += letters[Math.floor(Math.random() * 16)];
+    }
+    //color += second_to_last[Math.floor(Math.random() * 7)];
+    //color += letters[Math.floor(Math.random() * 16)];
+    console.log(color);
+    return color;
+  */
 }
 
 function rainbow(numOfSteps, step) {
@@ -17,7 +33,7 @@ function rainbow(numOfSteps, step) {
     // Adam Cole, 2011-Sept-14
     // HSV to RBG adapted from: http://mjijackson.com/2008/02/rgb-to-hsl-and-rgb-to-hsv-color-model-conversion-algorithms-in-javascript
     var r, g, b;
-    var h = step / numOfSteps;
+    var h = step/ numOfSteps;
     var i = ~~(h * 6);
     var f = h * 6 - i;
     var q = 1 - f;
@@ -104,7 +120,8 @@ export class Topic
     {
         for(const [i , element] of this._entities.entries())
         {
-            element.add_colour(rainbow(this._entities.length, i+1));
+            //element.add_colour(rainbow(this._entities.length, i+1));
+            element.add_colour(random_colour());
         }
     }
 
@@ -139,12 +156,14 @@ export class Topic
     {
         var entity_dict = {
             names : [],
-            numbers : []
+            numbers : [],
+            colour : []
         }
         this.entities.forEach( ent => {
             entity_dict.names.push(ent.formatted_name);
             entity_dict.numbers.push(ent.mentions_array.length);
-        })
+            entity_dict.colour.push(ent.colour);
+        });
         return entity_dict;
     }
 }

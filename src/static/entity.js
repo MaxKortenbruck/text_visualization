@@ -148,6 +148,11 @@ export class Entity {
         return ret;
     }
 
+    get colour()
+    {
+        return this._colour;
+    }
+
 
 
 

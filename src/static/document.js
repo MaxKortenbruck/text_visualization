@@ -91,7 +91,7 @@ export class Document {
         }
         else
         {
-            for([i, sentence] of this._text_array.entries())
+            for(const [i, sentence] of this._text_array.entries())
             {  
                 if(!i)
                 {
@@ -109,13 +109,15 @@ export class Document {
     {   
         var mention_dict = {
             names : [],
-            numbers : []
+            numbers : [],
+            colour : []
         }
         var mentions = [];
         this._my_entities.forEach( ent => {
             mention_dict.names.push(ent.formatted_name);
             mentions = ent.get_mentions_for_article(this.political_direction)
             mention_dict.numbers.push(mentions.length);
+            mention_dict.colour.push(ent.colours);
         })
         return mention_dict;
     }

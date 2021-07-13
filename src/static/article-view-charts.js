@@ -3,7 +3,7 @@ let resulution = "width:960px; height:540px;"
 
 
 // returns chart
-function create_pie_plot(key, names, mentioned, parentFromChart, article)
+function create_pie_plot(key, names, mentioned, colour, parentFromChart, article)
 {
     let div = document.createElement("div");
     div.setAttribute("id", "plt;pie;" + key);
@@ -62,12 +62,14 @@ function create_pie_plot(key, names, mentioned, parentFromChart, article)
                     label: {
                         show: true,
                         fontSize: '40',
-                        fontWeight: 'bold'
+                        fontWeight: 'bold',
+                        color: '#000'
                     }
                 },
                 labelLine: {
                     show: false
                 },
+                color: colour,
                 data: array
             }
         ],

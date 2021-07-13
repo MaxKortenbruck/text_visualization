@@ -128,7 +128,7 @@ function set_statistics(index)
 
   let plot_parent = document.getElementById("mainChart");
   let dat = full_data[index].statistics_of_entities;
-  let plot = create_pie_plot(full_data[index].formatted_name, dat.names, dat.numbers, plot_parent);
+  let plot = create_pie_plot(full_data[index].formatted_name, dat.names, dat.numbers, dat.colour, plot_parent);
 
   // handle click event in ChartS
   plot.on('click', function(params) {
@@ -343,7 +343,7 @@ function display_article(article)
     collapse_stat.appendChild(div_article_statistic);
 
     let dat = article.statistics_of_article;
-    let plot = create_pie_plot(article.title, dat.names, dat.numbers, div_article_statistic);
+    let plot = create_pie_plot(article.title, dat.names, dat.numbers, dat.colour ,div_article_statistic);
     
     // handle click event in Chart
     // add articel to global dict
