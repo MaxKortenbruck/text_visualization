@@ -125,7 +125,7 @@ function create_text_pie_plot(key, names, mentioned, parentFromChart)
             {
                 name: key,
                 type: 'pie',
-                radius: ['40%', '70%'],
+                radius: ['50%', '70%'],
                 avoidLabelOverlap: false,
                 itemStyle: {
                     borderRadius: 10,
