@@ -36,9 +36,9 @@ async function get_json(file="api")
 }
 
 function set_topics() {
-  var i = 0;
+
   let list = document.getElementById("articel_view;available_topics")
-    full_data.forEach(topic => {
+    for(const [i, topic] of full_data.entries()){
       
       let a = document.createElement("a");
       a.className = "list-group-item list-group-item-action"
@@ -51,8 +51,7 @@ function set_topics() {
       }
       a.appendChild( document.createTextNode(topic.formatted_name) );
       list.appendChild(a);
-      i++;
-    });
+    };
 }
 
 function set_articles(index)
@@ -129,7 +128,7 @@ function set_statistics(index)
 
   let plot_parent = document.getElementById("mainChart");
   let dat = full_data[index].statistics_of_entities;
-  let plot = create_pie_plot(full_data[index].formatted_name, dat.names, dat.numbers, plot_parent);
+  let plot = create_pie_plot(full_data[index].formatted_name, dat.names, dat.numbers, dat.colour, plot_parent);
 
   // handle click event in ChartS
   plot.on('click', function(params) {
@@ -344,7 +343,7 @@ function display_article(article)
     collapse_stat.appendChild(div_article_statistic);
 
     let dat = article.statistics_of_article;
-    let plot = create_pie_plot(article.title, dat.names, dat.numbers, div_article_statistic);
+    let plot = create_pie_plot(article.title, dat.names, dat.numbers, dat.colour ,div_article_statistic);
     
     // handle click event in Chart
     // add articel to global dict
@@ -399,7 +398,6 @@ function entity_in_statistic_click(params)
   }
   else
   {
-    console.log("topic")
     let tpc = full_data.find(item => item.formatted_name == params.seriesName);
     entity = tpc.entities.find( item => item.formatted_name == params.name);
     console.log(entity);

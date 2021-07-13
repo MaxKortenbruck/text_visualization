@@ -54,17 +54,27 @@ export class Document {
         });
         return text_array;
     }
+    /**
+     * Adds a reference of an Entity Object to the article
+     * @param {Object} ent - Entity  
+     */
     
     add_entity(ent)
     {
         this._my_entities.push(ent);
     }
-    
+    /**
+     * Passes an Entity Object to to the article that is to be marked
+     * @param {Object} ent - Entity   
+     */
     mark_entity(ent)
     {
         this._marked_entities.push(ent.identifier);
     }
-    
+    /**
+     * 
+     * @param {Object} ent 
+     */
     unmark_entity(ent)
     {
         this._marked_entities = this._marked_entities.filter(function( ele ){
@@ -77,15 +87,20 @@ export class Document {
         var text_return = "";
         if(this._marked_entities > 0)
         {
-            //text_markierung hinzufügen, wird aua
+            
         }
         else
         {
-            this._text_array.forEach(sentence => {
+            for(const [i, sentence] of this._text_array.entries())
+            {  
+                if(!i)
+                {
+                    continue;
+                }  
                 sentence.forEach(word => {
                     text_return += word;
                 });
-            });
+            };
         }
         return text_return;
     }
@@ -94,13 +109,15 @@ export class Document {
     {   
         var mention_dict = {
             names : [],
-            numbers : []
+            numbers : [],
+            colour : []
         }
         var mentions = [];
         this._my_entities.forEach( ent => {
             mention_dict.names.push(ent.formatted_name);
             mentions = ent.get_mentions_for_article(this.political_direction)
             mention_dict.numbers.push(mentions.length);
+            mention_dict.colour.push(ent.colour);
         })
         return mention_dict;
     }
