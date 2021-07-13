@@ -19,6 +19,7 @@ export class Entity {
         this._size = ent.size;
         this._representative = ent.merging_history.representative;
         this._colour = null;
+        this._sentence_dict = this.set_sentence_dict();
         this.set_mentions(ent);
     }
 
@@ -99,6 +100,14 @@ export class Entity {
         this._colour = colour;
     }
 
+    set_sentence_dict()
+    {
+        let dict = {};
+        this._mentions_array.forEach(element => {
+            dict[element.sentence] = element ; 
+        })
+    }
+
     get mentions_array()
     {
         return this._mentions_array;
@@ -151,6 +160,11 @@ export class Entity {
     get colour()
     {
         return this._colour;
+    }
+
+    mentions_in_sentences(sentence)
+    {
+        return this._sentence_dict[sentence];
     }
 
 

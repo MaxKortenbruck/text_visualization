@@ -85,12 +85,31 @@ export class Document {
     get text()
     {
         var text_return = "";
-        if(this._marked_entities > 0)
+        if(this._marked_entities.length > 0)
         {
-            
+            let enti = this._marked_entities[0];
+            let sent_ent = [];
+            console.log("pop");
+
+            for(const [i, sentence] of this._text_array.entries())
+            {  
+                if(!i)
+                {
+                    continue;
+                }
+                sent_ent = enti.mentions_in_sentence(i);  
+                for(const [j, word] of sentence)
+                {
+                    if(sent_ent.length > 0)
+                    {
+                        console.log("pups");
+                    }
+                };
+            };
         }
         else
         {
+            console.log(this._marked_entities.length);
             for(const [i, sentence] of this._text_array.entries())
             {  
                 if(!i)

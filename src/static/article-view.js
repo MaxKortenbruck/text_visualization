@@ -144,23 +144,28 @@ function set_entity_statistics(entity, parent, article_direction)
   create_treemap(entity.formatted_name, data, parent);
 }
 
-function open_entity(name)
+function open_entity(entity, article)
 {
   let parent = document.getElementById("openentitys")
   //check if entity is already open
   for(let i=0; i<parent.children.length; i++)
   {
-    if(parent.children[i].firstChild.data == name)
+    if(parent.children[i].firstChild.data == entity.formatted_name)
     {
       return;
     }
+  }
+
+  if(article)
+  {
+    article.mark_entity(entity);
   }
 
   //create new open entity
   let span = document.createElement("span");
   span.className = "badge bg-primary";
   span.style = "margin: 5px;";
-  span.appendChild(document.createTextNode(name));
+  span.appendChild(document.createTextNode(entity.formatted_name));
 
   //create close-button
   let btn = document.createElement("button");
@@ -170,6 +175,7 @@ function open_entity(name)
   btn.onclick = function()
   {
     close_entity(this);
+    article.unmark_entity(entity);
     return false;
   }
   span.appendChild(btn);
@@ -390,10 +396,11 @@ function article_click(article)
 function entity_in_statistic_click(params)
 { 
   let entity = null;
+  let artcl = false;
 
   if(params.seriesName in plotted_articles_dict)
   {
-  let artcl = plotted_articles_dict[params.seriesName];
+  artcl = plotted_articles_dict[params.seriesName];
   entity = artcl.entities.find( item => item.formatted_name == params.name );
   }
   else
@@ -404,7 +411,7 @@ function entity_in_statistic_click(params)
   }
 
   set_entity_statistics(entity, document.getElementById("entityChart") );
-  open_entity(entity.formatted_name);
+  open_entity(entity, artcl);
 
   //scan "article_view;row" for open articles and update treemaps
   let open_articles = document.getElementById("articel_view;row").children;
