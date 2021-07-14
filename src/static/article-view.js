@@ -305,7 +305,7 @@ function display_article(article)
 
     //create and append text
     let p = document.createElement("p"); 
-    //let pt = document.createTextNode();
+    p.id = "text;" + articel_div_id;
     article.set_text(p);
     //p.appendChild(pt);
     body_text.appendChild(p);
@@ -375,7 +375,6 @@ function display_article(article)
     div.appendChild(divChild);
     document.getElementById("articel_view;row").appendChild(div);
     determine_open_articles();
-    
 }
 
 /*
@@ -423,7 +422,8 @@ function entity_in_statistic_click(params)
   //console.log(open_articles.length)
   for(let i=0; i<open_articles.length; i++)
   {
-    // console.log(open_articles[i].id.split("0"))
+    let art_div = document.getElementById("text;" + open_articles[i].id);
+    artcl.set_text(art_div);
     let res = open_articles[i].id.split("spacer");
     let treemap_parent = document.getElementById("treemap;" + res[1] + ";" + res[2]);
     let article_direction = res[2];
@@ -434,5 +434,33 @@ function entity_in_statistic_click(params)
 function on_load() {
   set_topics();
 }
+
+function update_open_entities(entity = false, article = false)
+{
+  if(!entity)
+  { 
+    let parent = document.getElementById("openentitys");
+    for(let i=0; i<parent.children.length; i++)
+    {
+      let ent = article.entities.find(enti => enti.formatted_name === parent.children[i].firstChild.data);
+      console.log(ent in article.entities);
+      if(typeof ent !== "undefined" && ent in article.entities)
+      {
+        article.mark_entity(ent);
+      }     
+    }
+  }
+  else if(!article)
+  {
+    for(title in  plotted_articles_dict)
+    {
+      var a = plotted_articles_dict[title];
+      if(a.entities.includes(entity))
+      {
+        a.mark_entity(entity);
+      }
+    }
+  }
+} 
 
 on_load();
