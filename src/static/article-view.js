@@ -379,7 +379,7 @@ function display_article(article)
     li_pie_drop.appendChild(a_pie_drop);
 
     //add bar plot
-    // let li_bar_drop = document.createElement("li");git
+    let li_bar_drop = document.createElement("li");
     ul_drop.appendChild(li_bar_drop);
 
     let a_bar_drop = document.createElement("a");
@@ -420,7 +420,6 @@ function display_article(article)
 document.getElementById("close_all_open_entities_button").addEventListener("click", close_all_open_entities)
 function close_all_open_entities()
 {
-  console.log("hallo aus close_all_open_entities");
   let div = document.getElementById("openentitys");
 
   while(div.firstChild)
