@@ -347,8 +347,47 @@ function display_article(article)
     body_stat.className = "accordion-body";
     collapse_stat.appendChild(body_stat);
 
+    //create dropdown for plot kind
+    let div_drop = document.createElement("div");
+    div_drop.className = "dropdown";
+    collapse_stat.appendChild(div_drop);
 
-    //here is the code for the statistics
+    //button for dropdown
+    let button_drop = document.createElement("button");
+    button_drop.type = "button";
+    button_drop.className = "btn btn-secondary dropdown-toggle";
+    button_drop.id = "dropDownMenuButtonspacer" + articel_div_id;
+    button_drop.setAttribute("data-bs-toggle", "dropdown");
+    button_drop.setAttribute("aria-expanded", "false");
+    button_drop.appendChild( document.createTextNode("Views") )
+    div_drop.appendChild(button_drop);
+
+    //dropdown menu list
+    let ul_drop = document.createElement("ul");
+    ul_drop.className = "dropdown-menu";
+    ul_drop.setAttribute("aria-labelledby", "dropDownMenuButtonspacer" + articel_div_id);
+    div_drop.appendChild(ul_drop);
+
+    //create an add statistic elements
+    //add pie plot
+    let li_pie_drop = document.createElement("li");
+    ul_drop.appendChild(li_pie_drop);
+
+    let a_pie_drop = document.createElement("a");
+    a_pie_drop.className = "dropdown-item";
+    a_pie_drop.appendChild( document.createTextNode("pie Plot") );
+    li_pie_drop.appendChild(a_pie_drop);
+
+    //add bar plot
+    // let li_bar_drop = document.createElement("li");git
+    ul_drop.appendChild(li_bar_drop);
+
+    let a_bar_drop = document.createElement("a");
+    a_bar_drop.className = "dropdown-item";
+    a_bar_drop.appendChild( document.createTextNode("bar Plot") );
+    li_bar_drop.appendChild(a_bar_drop);
+
+
     // create the div element for the pie plot
     let div_article_statistic = document.createElement("div");
     collapse_stat.appendChild(div_article_statistic);
@@ -378,6 +417,18 @@ function display_article(article)
     
 }
 
+document.getElementById("close_all_open_entities_button").addEventListener("click", close_all_open_entities)
+function close_all_open_entities()
+{
+  console.log("hallo aus close_all_open_entities");
+  let div = document.getElementById("openentitys");
+
+  while(div.firstChild)
+  {
+    div.removeChild(div.firstChild);
+  }
+}
+
 /*
 function topic_click(element)
 {
@@ -405,8 +456,8 @@ function entity_in_statistic_click(params)
 
   if(params.seriesName in plotted_articles_dict)
   {
-  artcl = plotted_articles_dict[params.seriesName];
-  entity = artcl.entities.find( item => item.formatted_name == params.name );
+    artcl = plotted_articles_dict[params.seriesName];
+    entity = artcl.entities.find( item => item.formatted_name == params.name );
   }
   else
   {
