@@ -144,7 +144,7 @@ function set_entity_statistics(entity, parent, article_direction)
   create_treemap(entity.formatted_name, data, parent);
 }
 
-function open_entity(entity, article)
+function open_entity(entity)
 {
   let parent = document.getElementById("openentitys")
   //check if entity is already open
@@ -156,10 +156,7 @@ function open_entity(entity, article)
     }
   }
 
-  if(article)
-  {
-    article.mark_entity(entity);
-  }
+  update_open_entities(entity);
 
   //create new open entity
   let span = document.createElement("span");
@@ -175,7 +172,7 @@ function open_entity(entity, article)
   btn.onclick = function()
   {
     close_entity(this);
-    article.unmark_entity(entity);
+    update_open_entities(entity, false, true);
     return false;
   }
   span.appendChild(btn);
@@ -362,7 +359,9 @@ function display_article(article)
     plot.on('click', function(params) {
       entity_in_statistic_click(params);
     })
-
+    
+    //update article with opened entities
+    update_open_entities(false, article);
 
     //create a div Element for the treemap
     let div_treemap = document.createElement("div")
@@ -415,7 +414,7 @@ function entity_in_statistic_click(params)
   }
 
   set_entity_statistics(entity, document.getElementById("entityChart") );
-  open_entity(entity, artcl);
+  open_entity(entity);
 
   //scan "article_view;row" for open articles and update treemaps
   let open_articles = document.getElementById("articel_view;row").children;
@@ -435,7 +434,13 @@ function on_load() {
   set_topics();
 }
 
-function update_open_entities(entity = false, article = false)
+/**
+ * Function to mark und and unmark entities in all open articles
+ * @param {Object} entity - entity that needs to be marked in all open articles
+ * @param {Object} article - newly opened article that needs it's entities marked
+ * @param {Boolean} dele - true, if entities need to be deleted fro all articles. If an entity is passed as well, only this entity will be unmarked in all articles 
+ */
+function update_open_entities(entity = false, article = false, dele = false)
 {
   if(!entity)
   { 
@@ -460,6 +465,19 @@ function update_open_entities(entity = false, article = false)
         a.mark_entity(entity);
       }
     }
+  }
+  else if(dele)
+  {
+    for(title in  plotted_articles_dict)
+    {
+      var a = plotted_articles_dict[title];
+      if(a.marked_entities.includes(entity))
+      {
+        if(entity) {a.unmark_entity(entity, true)}
+        else {a.unmark_entity(entity);}
+      }
+    }
+    
   }
 } 
 

@@ -73,13 +73,21 @@ export class Document {
     }
     /**
      * 
-     * @param {Object} ent 
+     * @param {Object} ent
+     * @param {Boolean} all 
      */
-    unmark_entity(ent)
-    {
+    unmark_entity(ent, all = false)
+    {   
+        if(all)
+        {
+            this.marked_entities.length = 0;
+        }
+        else 
+        {
         this._marked_entities = this._marked_entities.filter(function( ele ){
             return ele.identifier !== ent.identifier;
         })
+    }
     }
 
     set_text(node) 
@@ -177,5 +185,10 @@ export class Document {
     get entities()
     {
         return this._my_entities;
+    }
+
+    get marked_entities()
+    {
+        return this._marked_entities;
     }
 }
