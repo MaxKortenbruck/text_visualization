@@ -69,7 +69,7 @@ export class Document {
      */
     mark_entity(ent)
     {
-        this._marked_entities.push(ent.identifier);
+        this._marked_entities.push(ent);
     }
     /**
      * 
@@ -82,14 +82,16 @@ export class Document {
         })
     }
 
-    get text()
+    set_text(node) 
     {
         var text_return = "";
         if(this._marked_entities.length > 0)
         {
-            let enti = this._marked_entities[0];
+            const enti = this._marked_entities[0];
+            console.log(enti);
             let sent_ent = [];
             console.log("pop");
+            //already marked = true/false wenn schon markiert
 
             for(const [i, sentence] of this._text_array.entries())
             {  
@@ -121,7 +123,7 @@ export class Document {
                 });
             };
         }
-        return text_return;
+        node.textContent = text_return;
     }
     
     get statistics_of_article()

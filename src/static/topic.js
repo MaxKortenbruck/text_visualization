@@ -31,6 +31,14 @@ function random_colour(number, total)
 	return '#${f(0)}${f(8)}${f(4)}';
 }
 
+function rand_col()
+{
+    let rand_string = Math.floor(Math.random()*16777215).toString(16);
+    // ensures a valid colour code by padding the string with a 0, if it is shorter the 6 characters
+    const rand_colour = "#" + rand_string.padStart(6, "0");
+    return rand_colour;
+}
+
 function rainbow(numOfSteps, step) {
     // This function generates vibrant, "evenly spaced" colours (i.e. no clustering). This is ideal for creating easily distinguishable vibrant markers in Google Maps and other apps.
     // Adam Cole, 2011-Sept-14
@@ -135,8 +143,9 @@ export class Topic
 			//console.log(colour_array[k]);
 			//k+=10;
 
+            element.add_colour(rand_col());
             //element.add_colour(rainbow(this._entities.length, i+1));
-            element.add_colour(random_colour(j,this._entities.entries().length));
+            //element.add_colour(random_colour(j,this._entities.entries().length));
         }
     }
 

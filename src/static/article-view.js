@@ -232,11 +232,14 @@ function display_article(article)
     //create Close Button
     let closeButton = document.createElement("button");
     closeButton.type = "button";
-	closeButton.setAttribute("class", "close-button");
+	  closeButton.setAttribute("class", "close-button");
     closeButton.setAttribute("aria-label", "Close");
     closeButton.onclick = function ()
     {
       close_text(this);
+      if(plotted_articles_dict.hasOwnProperty(article.title))
+      {delete plotted_articles_dict[article.title];}
+      else {throw Error;}
       return false;
     }
 
@@ -265,7 +268,7 @@ function display_article(article)
     // accordion item for text
     let accordion_text = document.createElement("div");
     accordion_text.className = "accordion-item";
-	accordion_text.style = "font-size: 17px;";
+  	accordion_text.style = "font-size: 17px;";
     accordion.appendChild(accordion_text)
 
     //header for text
@@ -301,8 +304,10 @@ function display_article(article)
     collapse_text.appendChild(body_text);
 
     //create and append text
-    let p = document.createElement("p");
-    p.appendChild( document.createTextNode(article.text));
+    let p = document.createElement("p"); 
+    //let pt = document.createTextNode();
+    article.set_text(p);
+    //p.appendChild(pt);
     body_text.appendChild(p);
 
     //accordion item for statistics
