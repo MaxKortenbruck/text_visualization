@@ -4,7 +4,7 @@
  * 
  * Last Change By : Max Kortenbruck
  * On: 09.07.2021
- */
+**/
 
 import { get_topics, get_articles, get_statistics, get_entity_statistics, get_text, get_statistics_of_article } from "./base_functions.js";
 import { create_pie_plot, create_text_pie_plot, create_treemap } from "./article-view-charts.js";
@@ -144,7 +144,7 @@ function set_entity_statistics(entity, parent, article_direction)
   create_treemap(entity.formatted_name, data, parent);
 }
 
-function open_entity(entity, article)
+function open_entity(entity)
 {
   let parent = document.getElementById("openentitys")
   //check if entity is already open
@@ -156,10 +156,7 @@ function open_entity(entity, article)
     }
   }
 
-  if(article)
-  {
-    article.mark_entity(entity);
-  }
+  update_open_entities(entity);
 
   //create new open entity
   let span = document.createElement("span");
@@ -175,7 +172,7 @@ function open_entity(entity, article)
   btn.onclick = function()
   {
     close_entity(this);
-    article.unmark_entity(entity);
+    update_open_entities(entity, false, true);
     return false;
   }
   span.appendChild(btn);
@@ -305,7 +302,7 @@ function display_article(article)
 
     //create and append text
     let p = document.createElement("p"); 
-    //let pt = document.createTextNode();
+    p.id = "text;" + articel_div_id;
     article.set_text(p);
     //p.appendChild(pt);
     body_text.appendChild(p);
@@ -401,7 +398,9 @@ function display_article(article)
     plot.on('click', function(params) {
       entity_in_statistic_click(params);
     })
-
+    
+    //update article with opened entities
+    update_open_entities(false, article);
 
     //create a div Element for the treemap
     let div_treemap = document.createElement("div")
@@ -414,7 +413,6 @@ function display_article(article)
     div.appendChild(divChild);
     document.getElementById("articel_view;row").appendChild(div);
     determine_open_articles();
-    
 }
 
 document.getElementById("close_all_open_entities_button").addEventListener("click", close_all_open_entities)
@@ -466,14 +464,15 @@ function entity_in_statistic_click(params)
   }
 
   set_entity_statistics(entity, document.getElementById("entityChart") );
-  open_entity(entity, artcl);
+  open_entity(entity);
 
   //scan "article_view;row" for open articles and update treemaps
   let open_articles = document.getElementById("articel_view;row").children;
   //console.log(open_articles.length)
   for(let i=0; i<open_articles.length; i++)
   {
-    // console.log(open_articles[i].id.split("0"))
+    let art_div = document.getElementById("text;" + open_articles[i].id);
+    artcl.set_text(art_div);
     let res = open_articles[i].id.split("spacer");
     let treemap_parent = document.getElementById("treemap;" + res[1] + ";" + res[2]);
     let article_direction = res[2];
@@ -484,5 +483,52 @@ function entity_in_statistic_click(params)
 function on_load() {
   set_topics();
 }
+
+/**
+ * Function to mark und and unmark entities in all open articles
+ * @param {Object} entity - entity that needs to be marked in all open articles
+ * @param {Object} article - newly opened article that needs it's entities marked
+ * @param {Boolean} dele - true, if entities need to be deleted fro all articles. If an entity is passed as well, only this entity will be unmarked in all articles 
+ */
+function update_open_entities(entity = false, article = false, dele = false)
+{
+  if(!entity)
+  { 
+    let parent = document.getElementById("openentitys");
+    for(let i=0; i<parent.children.length; i++)
+    {
+      let ent = article.entities.find(enti => enti.formatted_name === parent.children[i].firstChild.data);
+      console.log(ent in article.entities);
+      if(typeof ent !== "undefined" && ent in article.entities)
+      {
+        article.mark_entity(ent);
+      }     
+    }
+  }
+  else if(!article)
+  {
+    for(title in  plotted_articles_dict)
+    {
+      var a = plotted_articles_dict[title];
+      if(a.entities.includes(entity))
+      {
+        a.mark_entity(entity);
+      }
+    }
+  }
+  else if(dele)
+  {
+    for(title in  plotted_articles_dict)
+    {
+      var a = plotted_articles_dict[title];
+      if(a.marked_entities.includes(entity))
+      {
+        if(entity) {a.unmark_entity(entity, true)}
+        else {a.unmark_entity(entity);}
+      }
+    }
+    
+  }
+} 
 
 on_load();
