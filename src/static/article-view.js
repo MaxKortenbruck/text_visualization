@@ -372,7 +372,7 @@ function display_article(article)
 
     let a_pie_drop = document.createElement("a");
     a_pie_drop.className = "dropdown-item";
-    a_pie_drop.appendChild( document.createTextNode("pie Plot") );
+    a_pie_drop.appendChild( document.createTextNode("Pie Plot") );
     li_pie_drop.appendChild(a_pie_drop);
 
     //add bar plot
@@ -381,7 +381,7 @@ function display_article(article)
 
     let a_bar_drop = document.createElement("a");
     a_bar_drop.className = "dropdown-item";
-    a_bar_drop.appendChild( document.createTextNode("bar Plot") );
+    a_bar_drop.appendChild( document.createTextNode("Bar Plot") );
     li_bar_drop.appendChild(a_bar_drop);
 
 
