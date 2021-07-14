@@ -19,7 +19,9 @@ export class Entity {
         this._size = ent.size;
         this._representative = ent.merging_history.representative;
         this._colour = null;
+        this._sentence_dict = {};
         this.set_mentions(ent);
+        this.set_sentence_dict;
     }
 
     //mentions nach ll und L un R mit Object ordnen
@@ -99,6 +101,15 @@ export class Entity {
         this._colour = colour;
     }
 
+    set_sentence_dict()
+    {
+        this._mentions_array.forEach(element => {
+            console.log(element.sentence);
+            console.log(element);
+            this._sentence_dict[element] = element.sentence ; 
+        })
+    }
+
     get mentions_array()
     {
         return this._mentions_array;
@@ -151,6 +162,12 @@ export class Entity {
     get colour()
     {
         return this._colour;
+    }
+
+    mentions_in_sentence(sentence)
+    {   
+        console.log(this._sentence_dict);
+        return this._sentence_dict[sentence];
     }
 
 

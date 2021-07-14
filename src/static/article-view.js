@@ -144,23 +144,25 @@ function set_entity_statistics(entity, parent, article_direction)
   create_treemap(entity.formatted_name, data, parent);
 }
 
-function open_entity(name)
+function open_entity(entity)
 {
   let parent = document.getElementById("openentitys")
   //check if entity is already open
   for(let i=0; i<parent.children.length; i++)
   {
-    if(parent.children[i].firstChild.data == name)
+    if(parent.children[i].firstChild.data == entity.formatted_name)
     {
       return;
     }
   }
 
+  update_open_entities(entity);
+
   //create new open entity
   let span = document.createElement("span");
   span.className = "badge bg-primary";
   span.style = "margin: 5px;";
-  span.appendChild(document.createTextNode(name));
+  span.appendChild(document.createTextNode(entity.formatted_name));
 
   //create close-button
   let btn = document.createElement("button");
@@ -170,6 +172,7 @@ function open_entity(name)
   btn.onclick = function()
   {
     close_entity(this);
+    update_open_entities(entity, false, true);
     return false;
   }
   span.appendChild(btn);
@@ -226,11 +229,14 @@ function display_article(article)
     //create Close Button
     let closeButton = document.createElement("button");
     closeButton.type = "button";
-	closeButton.setAttribute("class", "close-button");
+	  closeButton.setAttribute("class", "close-button");
     closeButton.setAttribute("aria-label", "Close");
     closeButton.onclick = function ()
     {
       close_text(this);
+      if(plotted_articles_dict.hasOwnProperty(article.title))
+      {delete plotted_articles_dict[article.title];}
+      else {throw Error;}
       return false;
     }
 
@@ -259,7 +265,7 @@ function display_article(article)
     // accordion item for text
     let accordion_text = document.createElement("div");
     accordion_text.className = "accordion-item";
-	accordion_text.style = "font-size: 17px;";
+  	accordion_text.style = "font-size: 17px;";
     accordion.appendChild(accordion_text)
 
     //header for text
@@ -295,8 +301,10 @@ function display_article(article)
     collapse_text.appendChild(body_text);
 
     //create and append text
-    let p = document.createElement("p");
-    p.appendChild( document.createTextNode(article.text));
+    let p = document.createElement("p"); 
+    p.id = "text;" + articel_div_id;
+    article.set_text(p);
+    //p.appendChild(pt);
     body_text.appendChild(p);
 
     //accordion item for statistics
@@ -351,7 +359,9 @@ function display_article(article)
     plot.on('click', function(params) {
       entity_in_statistic_click(params);
     })
-
+    
+    //update article with opened entities
+    update_open_entities(false, article);
 
     //create a div Element for the treemap
     let div_treemap = document.createElement("div")
@@ -364,7 +374,6 @@ function display_article(article)
     div.appendChild(divChild);
     document.getElementById("articel_view;row").appendChild(div);
     determine_open_articles();
-    
 }
 
 /*
@@ -390,10 +399,11 @@ function article_click(article)
 function entity_in_statistic_click(params)
 { 
   let entity = null;
+  let artcl = false;
 
   if(params.seriesName in plotted_articles_dict)
   {
-  let artcl = plotted_articles_dict[params.seriesName];
+  artcl = plotted_articles_dict[params.seriesName];
   entity = artcl.entities.find( item => item.formatted_name == params.name );
   }
   else
@@ -404,14 +414,15 @@ function entity_in_statistic_click(params)
   }
 
   set_entity_statistics(entity, document.getElementById("entityChart") );
-  open_entity(entity.formatted_name);
+  open_entity(entity);
 
   //scan "article_view;row" for open articles and update treemaps
   let open_articles = document.getElementById("articel_view;row").children;
   //console.log(open_articles.length)
   for(let i=0; i<open_articles.length; i++)
   {
-    // console.log(open_articles[i].id.split("0"))
+    let art_div = document.getElementById("text;" + open_articles[i].id);
+    artcl.set_text(art_div);
     let res = open_articles[i].id.split("spacer");
     let treemap_parent = document.getElementById("treemap;" + res[1] + ";" + res[2]);
     let article_direction = res[2];
@@ -422,5 +433,52 @@ function entity_in_statistic_click(params)
 function on_load() {
   set_topics();
 }
+
+/**
+ * Function to mark und and unmark entities in all open articles
+ * @param {Object} entity - entity that needs to be marked in all open articles
+ * @param {Object} article - newly opened article that needs it's entities marked
+ * @param {Boolean} dele - true, if entities need to be deleted fro all articles. If an entity is passed as well, only this entity will be unmarked in all articles 
+ */
+function update_open_entities(entity = false, article = false, dele = false)
+{
+  if(!entity)
+  { 
+    let parent = document.getElementById("openentitys");
+    for(let i=0; i<parent.children.length; i++)
+    {
+      let ent = article.entities.find(enti => enti.formatted_name === parent.children[i].firstChild.data);
+      console.log(ent in article.entities);
+      if(typeof ent !== "undefined" && ent in article.entities)
+      {
+        article.mark_entity(ent);
+      }     
+    }
+  }
+  else if(!article)
+  {
+    for(title in  plotted_articles_dict)
+    {
+      var a = plotted_articles_dict[title];
+      if(a.entities.includes(entity))
+      {
+        a.mark_entity(entity);
+      }
+    }
+  }
+  else if(dele)
+  {
+    for(title in  plotted_articles_dict)
+    {
+      var a = plotted_articles_dict[title];
+      if(a.marked_entities.includes(entity))
+      {
+        if(entity) {a.unmark_entity(entity, true)}
+        else {a.unmark_entity(entity);}
+      }
+    }
+    
+  }
+} 
 
 on_load();

@@ -69,28 +69,57 @@ export class Document {
      */
     mark_entity(ent)
     {
-        this._marked_entities.push(ent.identifier);
+        this._marked_entities.push(ent);
     }
     /**
      * 
-     * @param {Object} ent 
+     * @param {Object} ent
+     * @param {Boolean} all 
      */
-    unmark_entity(ent)
-    {
+    unmark_entity(ent, all = false)
+    {   
+        if(all)
+        {
+            this.marked_entities.length = 0;
+        }
+        else 
+        {
         this._marked_entities = this._marked_entities.filter(function( ele ){
             return ele.identifier !== ent.identifier;
         })
     }
+    }
 
-    get text()
+    set_text(node) 
     {
         var text_return = "";
-        if(this._marked_entities > 0)
+        if(this._marked_entities.length > 0)
         {
-            
+            const enti = this._marked_entities[0];
+            console.log(enti);
+            let sent_ent = [];
+            console.log("pop");
+            //already marked = true/false wenn schon markiert
+
+            for(const [i, sentence] of this._text_array.entries())
+            {  
+                if(!i)
+                {
+                    continue;
+                }
+                sent_ent = enti.mentions_in_sentence(i);  
+                for(const [j, word] of sentence)
+                {
+                    if(sent_ent.length > 0)
+                    {
+                        console.log("pups");
+                    }
+                };
+            };
         }
         else
         {
+            console.log(this._marked_entities.length);
             for(const [i, sentence] of this._text_array.entries())
             {  
                 if(!i)
@@ -102,7 +131,7 @@ export class Document {
                 });
             };
         }
-        return text_return;
+        node.textContent = text_return;
     }
     
     get statistics_of_article()
@@ -156,5 +185,10 @@ export class Document {
     get entities()
     {
         return this._my_entities;
+    }
+
+    get marked_entities()
+    {
+        return this._marked_entities;
     }
 }
