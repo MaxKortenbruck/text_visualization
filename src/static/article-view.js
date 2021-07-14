@@ -4,7 +4,7 @@
  * 
  * Last Change By : Max Kortenbruck
  * On: 09.07.2021
- */
+**/
 
 import { get_topics, get_articles, get_statistics, get_entity_statistics, get_text, get_statistics_of_article } from "./base_functions.js";
 import { create_pie_plot, create_text_pie_plot, create_treemap } from "./article-view-charts.js";
