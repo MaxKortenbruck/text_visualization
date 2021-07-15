@@ -132,7 +132,6 @@ function set_statistics(index)
 
   let plot_parent = document.getElementById("mainChart");
   let dat = full_data[index].statistics_of_entities;
-
   let plot = create_pie_plot(full_data[index].formatted_name, dat.names, dat.numbers, dat.colour, plot_parent);
 
   // handle click event in ChartS
@@ -166,6 +165,11 @@ function set_entities(index)
 	document.getElementById("entities_headline").innerHTML = full_data[index].formatted_name;
 
 	let entities_parent = document.getElementById("entities");
+	
+	while(entities_parent.firstChild)
+    {
+        entities_parent.removeChild(entities_parent.firstChild);
+    }
 
 	for(var entity of full_data[index].entities)
 	{
@@ -220,7 +224,7 @@ function set_entity_statistics_bar(index)
 
 function open_entity(entity)
 {
-  let parent = document.getElementById("openentitys")
+  let parent = document.getElementById("openentities")
   //check if entity is already open
   for(let i=0; i<parent.children.length; i++)
   {
@@ -273,7 +277,7 @@ function close_text(button_element)
 function close_entity(element)
 {
   let to_close = element.parentNode;
-  document.getElementById("openentitys").removeChild(to_close);
+  document.getElementById("openentities").removeChild(to_close);
 }
 
 function display_article(article)
@@ -498,23 +502,23 @@ function display_article(article)
     determine_open_articles();
 }
 
-/*
+
 document.getElementById("open_all_entities_button").addEventListener("click", open_all_entities)
 
 
 function open_all_entities()
 {
-	for (let entity in full_data[open_topic])
+	for (let entity of full_data[open_topic].entities)
 	{
 		open_entity(entity);
 	}
 }
-*/
+
 
 document.getElementById("close_all_open_entities_button").addEventListener("click", close_all_open_entities)
 function close_all_open_entities()
 {
-  let div = document.getElementById("openentitys");
+  let div = document.getElementById("openentities");
 
   while(div.firstChild)
   {
@@ -591,7 +595,7 @@ function update_open_entities(entity = false, article = false, dele = false)
 {
   if(!entity)
   { 
-    let parent = document.getElementById("openentitys");
+    let parent = document.getElementById("openentities");
     for(let i=0; i<parent.children.length; i++)
     {
       let ent = article.entities.find(enti => enti.formatted_name === parent.children[i].firstChild.data);

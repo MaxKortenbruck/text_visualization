@@ -280,3 +280,13 @@ body
 	color: #bababa;
 	box-shadow:0px 0px 10px 0px #adadad !important;
 }
+
+.btn
+{
+	margin: 6px;
+}
+
+.dropdown-item:active
+{
+	background-color: #f0f0f0 !important;
+}
