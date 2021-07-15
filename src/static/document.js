@@ -96,9 +96,7 @@ export class Document {
         if(this._marked_entities.length > 0)
         {
             const enti = this._marked_entities[0];
-            console.log(enti);
             let sent_ent = [];
-            console.log("pop");
             //already marked = true/false wenn schon markiert
 
             for(const [i, sentence] of this._text_array.entries())
@@ -119,7 +117,6 @@ export class Document {
         }
         else
         {
-            console.log(this._marked_entities.length);
             for(const [i, sentence] of this._text_array.entries())
             {  
                 if(!i)

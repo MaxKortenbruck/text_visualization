@@ -165,8 +165,7 @@ export class Entity {
     }
 
     mentions_in_sentence(sentence)
-    {   
-        console.log(this._sentence_dict);
+    {
         return this._sentence_dict[sentence];
     }
 
