@@ -7,12 +7,15 @@
 **/
 
 import { get_topics, get_articles, get_statistics, get_entity_statistics, get_text, get_statistics_of_article } from "./base_functions.js";
-import { create_pie_plot, create_text_pie_plot, create_treemap } from "./article-view-charts.js";
+import { create_pie_plot, create_text_pie_plot, create_treemap, create_bar_plot } from "./article-view-charts.js";
 import {Topic} from "./topic.js"
 
 /* global definitionsfor the script*/
 // globally safes plotted articles in the format { formatted_name : [&topic, &articel] } 
 var plotted_articles_dict = {}
+
+//saves open topic
+let open_topic;
 
 //json data stored in full_data
 var json_data = await get_json();
@@ -124,10 +127,12 @@ function set_articles(index)
 
 function set_statistics(index)
 {
+  console.log("set statistics " + typeof index);
   document.getElementById("statistics_headline").innerHTML = full_data[index].formatted_name;
 
   let plot_parent = document.getElementById("mainChart");
   let dat = full_data[index].statistics_of_entities;
+
   let plot = create_pie_plot(full_data[index].formatted_name, dat.names, dat.numbers, dat.colour, plot_parent);
 
   // handle click event in ChartS
@@ -167,14 +172,50 @@ function set_entities(index)
 		let span = create_entity_button(entity);
 		entities_parent.appendChild(span);
 	}
-
+	
 	document.getElementById("entities_on_load_warning").style.display="none";
+}
+
+
+document.getElementById("mainChart;pie").addEventListener("click", set_statistics_pie)
+
+function set_statistics_pie()
+{
+  document.getElementById("mainChart").innerHTML = "";
+  topic_click(open_topic);
+}
+
+document.getElementById("mainChart;bar").addEventListener("click", set_statistics_bar)
+function set_statistics_bar()
+{
+  let div = document.getElementById("mainChart");
+  let dat = full_data[open_topic].statistics_of_entities;
+  let plot = create_bar_plot(full_data[open_topic].formatted_name, dat.names, dat.numbers, dat.colour, div);
+
+  plot.on('click', function(params) {
+    entity_in_statistic_click(params);
+  })
 }
 
 function set_entity_statistics(entity, parent, article_direction)
 {
   let data = entity.count_mentions(article_direction)
   create_treemap(entity.formatted_name, data, parent);
+}
+
+function set_entity_statistics_bar(index)
+{
+  let res = index.split("spacer");
+  console.log(res)
+  let dat = full_data[open_topic].articles.find(article => article.political_direction == res[2]).statistics_of_article;
+  console.log(dat);
+
+  let id = "statistic;" + index;
+  id = id.slice(0, -13);
+  let div = document.getElementById(id)
+  create_bar_plot("hallo", dat.names, dat.numbers, dat.colors, div);
+  console.log(dat);
+  //woher ein namen array und ein anzahlarray für einen bestimmten Artikel
 }
 
 function open_entity(entity)
@@ -212,6 +253,7 @@ function open_entity(entity)
 
   parent.appendChild(span);
 }
+
 
 function determine_open_articles()
 {
@@ -405,7 +447,8 @@ function display_article(article)
 
     let a_pie_drop = document.createElement("a");
     a_pie_drop.className = "dropdown-item";
-    a_pie_drop.appendChild( document.createTextNode("pie Plot") );
+    a_pie_drop.appendChild( document.createTextNode("Pie Plot") );
+    a_pie_drop.id = article.clean_topic + ";pie";
     li_pie_drop.appendChild(a_pie_drop);
 
     //add bar plot
@@ -414,12 +457,20 @@ function display_article(article)
 
     let a_bar_drop = document.createElement("a");
     a_bar_drop.className = "dropdown-item";
-    a_bar_drop.appendChild( document.createTextNode("bar Plot") );
+    a_bar_drop.appendChild( document.createTextNode("Bar Plot") );
+    a_bar_drop.id = article.clean_topic + ";bar";
+    a_bar_drop.onclick = function() 
+    {
+      set_entity_statistics_bar(articel_div_id + "spacerdropbar");
+      return false;
+    }
     li_bar_drop.appendChild(a_bar_drop);
 
 
     // create the div element for the pie plot
     let div_article_statistic = document.createElement("div");
+    div_article_statistic.id = "statistic;" + articel_div_id; 
+    console.log("statistic;" + articel_div_id)
     collapse_stat.appendChild(div_article_statistic);
 
     let dat = article.statistics_of_article;
@@ -438,7 +489,6 @@ function display_article(article)
     //create a div Element for the treemap
     let div_treemap = document.createElement("div")
     div_treemap.id = "treemap;" + article.clean_topic + ";" + article.political_direction;
-    console.log(article.clean_topic);
     collapse_stat.appendChild(div_treemap);
 
     divChild.appendChild(accordion);
@@ -483,6 +533,7 @@ function topic_click(element)
 
 function topic_click(topic)
 {
+  open_topic = topic;
   set_articles(topic);
   set_statistics(topic);
   set_entities(topic);
@@ -507,7 +558,6 @@ function entity_in_statistic_click(params)
   {
     let tpc = full_data.find(item => item.formatted_name == params.seriesName);
     entity = tpc.entities.find( item => item.formatted_name == params.name);
-    console.log(entity);
   }
 
   set_entity_statistics(entity, document.getElementById("entityChart") );
