@@ -3,7 +3,7 @@
  * On:
  * 
  * Last Change By : Max Kortenbruck
- * On: 09.07.2021
+ * On: 15.07.2021
 **/
 
 import { get_topics, get_articles, get_statistics, get_entity_statistics, get_text, get_statistics_of_article } from "./base_functions.js";
@@ -303,7 +303,7 @@ function display_article(article)
     //create and append text
     let p = document.createElement("p"); 
     p.id = "text;" + articel_div_id;
-    article.set_text(p);
+    text(p, article);
     //p.appendChild(pt);
     body_text.appendChild(p);
 
@@ -472,7 +472,7 @@ function entity_in_statistic_click(params)
   for(let i=0; i<open_articles.length; i++)
   {
     let art_div = document.getElementById("text;" + open_articles[i].id);
-    artcl.set_text(art_div);
+    text(art_div, artcl);
     let res = open_articles[i].id.split("spacer");
     let treemap_parent = document.getElementById("treemap;" + res[1] + ";" + res[2]);
     let article_direction = res[2];
@@ -530,5 +530,20 @@ function update_open_entities(entity = false, article = false, dele = false)
     
   }
 } 
+
+function text(node, article)
+{
+  article.set_text(node);
+  //update_css(article);
+}
+
+function update_css(article)
+{
+    article.marked_entities.forEach( entity => {
+      let name = article.clean_topic.toLowerCase() + "-" + entity.id_number;
+      const css_elem = document.querySelector("[entity=" + name + "]");
+      css_elem.style.background = entity.colour;
+    })
+}
 
 on_load();

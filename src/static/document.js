@@ -1,10 +1,11 @@
 'use strict'
 
 export class Document {
-    constructor(data, article, topic)
+    constructor(data, article, topic, number)
     {
         //complete identifier topic;article
         this._identifier = article;
+        this._number = number;
 
         var tmp = article.split(";");
         
@@ -22,6 +23,7 @@ export class Document {
         this._my_entities = [];
         this._marked_entities = [];
         this._text_array = this.set_article_text(data);
+        this._marked_text = null;
     }
 
     /**
@@ -90,37 +92,75 @@ export class Document {
     }
     }
 
+    mark_text()
+    {
+        let marked_text = new Array([]);
+        let sentence_text = [];
+        const enti = this._marked_entities[0];
+        let sent_ent = [];
+        //already marked = true/false wenn schon markiert
+        //check ob markierter text oder nicht markierteer text verwendet werden soll
+
+            for(let i = 0; i < this._text_array.length; i++)
+            {    
+                sent_ent = enti.mentions_in_sentence(i);
+                let index = 0;  
+                console.log(i);
+                for(let j = 0; j < this._text_array[i].length; j++)
+                {
+                    if(index < sent_ent.length && (sent_ent[index].tokens[0] == j || sent_ent[index].tokens[sent_ent[index].tokens.length -1] == j))
+                    {
+                        console.log("nicht pups");
+                        if(sent_ent[index].tokens[0] == j)
+                        {
+                            let tmp_text = "<mark entity=\"" + this.clean_topic.toLowerCase() +"-" + enti.id_number+ "\">" + this._text_array[i][j];
+                            sentence_text[j] = tmp_text;
+                            //console.log(sentence_text[j] + "   "+j)
+                        }
+                        else
+                        {
+                            let tmp_text = this._text_array[i][j] + ("</mark>");
+                            sentence_text[j] = tmp_text;
+                            index ++;
+                            //console.log(sentence_text[j] + "   "+j)
+                        }
+                        
+                    }
+                    else
+                    {
+                        let temp = this._text_array[i][j];
+                        //console.log("j: " + j +"  temp = " + temp);
+                        sentence_text[j] = temp;
+                    }
+                     
+                };
+                console.log(sentence_text);
+                marked_text.push(sentence_text);
+              
+                sentence_text = [];
+                index = 0;
+            };
+        this._marked_text = marked_text;    
+    }
+
     set_text(node) 
+    // check ob text vorher masrkiert werden muss odfer nicht
     {
         var text_return = "";
-        if(this._marked_entities.length > 0)
-        {
-            const enti = this._marked_entities[0];
-            console.log(enti);
-            let sent_ent = [];
-            console.log("pop");
-            //already marked = true/false wenn schon markiert
-
-            for(const [i, sentence] of this._text_array.entries())
-            {  
-                if(!i)
-                {
-                    continue;
-                }
-                sent_ent = enti.mentions_in_sentence(i);  
-                for(const [j, word] of sentence)
-                {
-                    if(sent_ent.length > 0)
-                    {
-                        console.log("pups");
-                    }
-                };
-            };
+        var parsed_text = [];
+            
+        if(this._marked_entities.length)
+        {   
+            this.mark_text();
+            parsed_text = this._marked_text;
         }
         else
         {
-            console.log(this._marked_entities.length);
-            for(const [i, sentence] of this._text_array.entries())
+            parsed_text = this._text_array;
+        }
+        console.log(parsed_text);
+        //console.log(this._marked_entities.length);
+        for(const [i, sentence] of parsed_text.entries())
             {  
                 if(!i)
                 {
@@ -129,8 +169,7 @@ export class Document {
                 sentence.forEach(word => {
                     text_return += word;
                 });
-            };
-        }
+            };        
         node.textContent = text_return;
     }
     
@@ -190,5 +229,10 @@ export class Document {
     get marked_entities()
     {
         return this._marked_entities;
+    }
+
+    get id_number()
+    {
+        return this._number;
     }
 }
