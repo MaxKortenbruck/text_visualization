@@ -248,7 +248,7 @@ function display_article(article)
 
     let topfChild = document.createElement("div");
     topfChild.appendChild(headlineElement);
-    top.appendChild(topfChild)
+    top.appendChild(topfChild);
 
     let topsChild = document.createElement("div");
     topsChild.appendChild(closeButton);
@@ -472,7 +472,7 @@ function entity_in_statistic_click(params)
   for(let i=0; i<open_articles.length; i++)
   {
     let art_div = document.getElementById("text;" + open_articles[i].id);
-    text(art_div, artcl);
+    text(art_div, artcl, entity);
     let res = open_articles[i].id.split("spacer");
     let treemap_parent = document.getElementById("treemap;" + res[1] + ";" + res[2]);
     let article_direction = res[2];
@@ -531,18 +531,22 @@ function update_open_entities(entity = false, article = false, dele = false)
   }
 } 
 
-function text(node, article)
-{
-  article.set_text(node);
-  //update_css(article);
+function text(node, article, entity = null)
+{ 
+  article.set_text(node, entity);
+  update_css(article);
 }
 
 function update_css(article)
 {
     article.marked_entities.forEach( entity => {
       let name = article.clean_topic.toLowerCase() + "-" + entity.id_number;
-      const css_elem = document.querySelector("[entity=" + name + "]");
-      css_elem.style.background = entity.colour;
+      const css_elem = document.querySelectorAll("[entity=" + name + "]");
+      css_elem.forEach(element =>
+        {
+          element.style.backgroundColor = entity.colour;
+        });
+      
     })
 }
 

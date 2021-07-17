@@ -22,8 +22,9 @@ export class Document {
         this._topic = topic;
         this._my_entities = [];
         this._marked_entities = [];
-        this._text_array = this.set_article_text(data);
-        this._marked_text = null;
+        let text = this.set_article_text(data);
+        this._text_array = text; 
+        this._marked_text = text;
     }
 
     /**
@@ -82,7 +83,7 @@ export class Document {
     {   
         if(all)
         {
-            this.marked_entities.length = 0;
+            this.marked_entities = [];
         }
         else 
         {
@@ -92,58 +93,77 @@ export class Document {
     }
     }
 
-    mark_text()
+    mark_text(entity = null)
     {
-        let marked_text = new Array([]);
+        let marked_text = [];
         let sentence_text = [];
-        const enti = this._marked_entities[0];
         let sent_ent = [];
+        var entities = [];
         //already marked = true/false wenn schon markiert
         //check ob markierter text oder nicht markierteer text verwendet werden soll
+        if(entity != null)
+        {
+            entities.push(entity);
+        }
+        else
+        {
+            entities = this._marked_entities;
+        }
 
-            for(let i = 0; i < this._text_array.length; i++)
+        entities.forEach(enti => {
+            //console.log(this._marked_text);
+            //console.log(this._marked_text[1][0]);
+            for(let i = 0; i < this._marked_text.length; i++)
             {    
                 sent_ent = enti.mentions_in_sentence(i);
                 let index = 0;  
-                console.log(i);
-                for(let j = 0; j < this._text_array[i].length; j++)
+                //console.log(i);
+                for(let j = 0; j < this._marked_text[i].length; j++)
                 {
                     if(index < sent_ent.length && (sent_ent[index].tokens[0] == j || sent_ent[index].tokens[sent_ent[index].tokens.length -1] == j))
                     {
-                        console.log("nicht pups");
+                        //console.log("nicht pups");
                         if(sent_ent[index].tokens[0] == j)
                         {
-                            let tmp_text = "<mark entity=\"" + this.clean_topic.toLowerCase() +"-" + enti.id_number+ "\">" + this._text_array[i][j];
+                            console.log(this._marked_text[i][j]);
+                            let tmp_text = "<span entity=\"" + this.clean_topic.toLowerCase() +"-" + enti.id_number+ "\">" + this._marked_text[i][j];
+                            //console.log(this._marked_text[i][j]);
+                            if(sent_ent[index].tokens.length == 1)
+                            {
+                                tmp_text += "</span>";
+                            }
                             sentence_text[j] = tmp_text;
-                            //console.log(sentence_text[j] + "   "+j)
                         }
                         else
                         {
-                            let tmp_text = this._text_array[i][j] + ("</mark>");
+                            let tmp_text = this._marked_text[i][j] + ("</span>");
                             sentence_text[j] = tmp_text;
                             index ++;
                             //console.log(sentence_text[j] + "   "+j)
                         }
+            
                         
                     }
                     else
                     {
-                        let temp = this._text_array[i][j];
+                        let temp = this._marked_text[i][j];
                         //console.log("j: " + j +"  temp = " + temp);
                         sentence_text[j] = temp;
                     }
                      
                 };
-                console.log(sentence_text);
+                //console.log(sentence_text);
                 marked_text.push(sentence_text);
               
                 sentence_text = [];
                 index = 0;
             };
+        });
+            //console.log(marked_text);
         this._marked_text = marked_text;    
     }
 
-    set_text(node) 
+    set_text(node, entity) 
     // check ob text vorher masrkiert werden muss odfer nicht
     {
         var text_return = "";
@@ -151,7 +171,7 @@ export class Document {
             
         if(this._marked_entities.length)
         {   
-            this.mark_text();
+            this.mark_text(entity);
             parsed_text = this._marked_text;
         }
         else
@@ -170,7 +190,7 @@ export class Document {
                     text_return += word;
                 });
             };        
-        node.textContent = text_return;
+        node.innerHTML = text_return;
     }
     
     get statistics_of_article()
