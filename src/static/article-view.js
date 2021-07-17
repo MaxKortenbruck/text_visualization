@@ -327,7 +327,7 @@ function display_article(article)
     accordion_stat_button.setAttribute("aria-expanded", "false")
     accordion_stat_button.setAttribute("aria-controls", "statCollapse" + articel_div_id);
 
-    accordion_stat_button.appendChild( document.createTextNode("Statistics"));
+    accordion_stat_button.appendChild(document.createTextNode("Statistics"));
 
     accordion_stat_header.appendChild(accordion_stat_button);
 

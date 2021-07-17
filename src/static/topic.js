@@ -23,18 +23,18 @@ function colour_string_to_array(colour_string)
 function random_colour(total, number)
 {
     
-    //let rand_string = Math.floor(Math.random()*16777215).toString(16);
+    let rand_string = Math.floor(Math.random()*16777215).toString(16);
     // ensures a valid colour code by padding the string with a 0, if it is shorter the 6 characters
-    //const rand_colour = "#" + rand_string.padStart(6, "0");
-    //return rand_colour;
+    const rand_colour = "#" + rand_string.padStart(6, "0");
+    return rand_colour;
 
-	var steps = Math.floor(10485760 / total);
-	console.log(steps);
-	var colour = 6291455 + (steps * number)
-	colour = colour.toString(16);
-	console.log('#' + colour);
+	//var steps = Math.floor(10485760 / total);
+	//onsole.log(steps);
+	//var colour = 6291455 + (steps * number)
+	//colour = colour.toString(16);
+	//console.log('#' + colour);
 
-	return '#' + colour;
+	//return '#' + colour;
 }
 
 function rand_col()
@@ -141,7 +141,14 @@ export class Topic
         {	
             //element.add_colour(rainbow(this._entities.length, i+1));
             //element.add_colour(random_colour(this._entities.length, i+1));
-			element.add_colour(colour_array[i]);
+			if ( i >= colour_array.length)
+			{
+				element.add_colour(random_colour());
+			}
+			else
+			{
+				element.add_colour(colour_array[i]);
+			}		
         }
     }
 
