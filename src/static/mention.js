@@ -67,4 +67,8 @@ export class Mention {
         return splt.join(" ");
     }
 
+    get sentence()
+    {
+        return this._sentence;
+    }
 }

@@ -3,7 +3,7 @@
  * On:
  * 
  * Last Change By : Max Kortenbruck
- * On: 09.07.2021
+ * On: 15.07.2021
 **/
 
 import { get_topics, get_articles, get_statistics, get_entity_statistics, get_text, get_statistics_of_article } from "./base_functions.js";
@@ -348,7 +348,7 @@ function display_article(article)
 
     let topfChild = document.createElement("div");
     topfChild.appendChild(headlineElement);
-    top.appendChild(topfChild)
+    top.appendChild(topfChild);
 
     let topsChild = document.createElement("div");
     topsChild.appendChild(closeButton);
@@ -403,7 +403,7 @@ function display_article(article)
     //create and append text
     let p = document.createElement("p"); 
     p.id = "text;" + articel_div_id;
-    article.set_text(p);
+    text(p, article);
     //p.appendChild(pt);
     body_text.appendChild(p);
 
@@ -513,7 +513,7 @@ function display_article(article)
     })
     
     //update article with opened entities
-    update_open_entities(false, article);
+    update_open_entities(false, article, false, false, p);
 
     //create a div Element for the treemap
     let div_treemap = document.createElement("div")
@@ -597,7 +597,7 @@ function entity_in_statistic_click(params)
   for(let i=0; i<open_articles.length; i++)
   {
     let art_div = document.getElementById("text;" + open_articles[i].id);
-    artcl.set_text(art_div);
+    text(art_div, artcl, entity);
     let res = open_articles[i].id.split("spacer");
     let treemap_parent = document.getElementById("treemap;" + res[1] + ";" + res[2]);
     let article_direction = res[2];
@@ -615,10 +615,12 @@ function on_load() {
  * @param {Object} article - newly opened article that needs it's entities marked
  * @param {Boolean} dele - true, if entities need to be deleted fro all articles. If an entity is passed as well, only this entity will be unmarked in all articles 
  */
-function update_open_entities(entity = false, article = false, dele = false)
+function update_open_entities(entity = false, article = false, dele = false, all = false, node = false)
 {
+  // mark all open articles in newly opened article
   if(!entity)
   { 
+    //open_articles = document.getElementById("articel_view;row").children;
     let parent = document.getElementById("openentities");
     for(let i=0; i<parent.children.length; i++)
     {
@@ -629,7 +631,9 @@ function update_open_entities(entity = false, article = false, dele = false)
         article.mark_entity(ent);
       }     
     }
+    text(node, article, false)
   }
+  // mark entity in all open articles
   else if(!article)
   {
     for(title in  plotted_articles_dict)
@@ -638,22 +642,56 @@ function update_open_entities(entity = false, article = false, dele = false)
       if(a.entities.includes(entity))
       {
         a.mark_entity(entity);
+        var node_id = "text;" + "articlespacer" + a.clean_topic + "spacer" + a.political_direction;
+        var nde = document.getElementById(node_id);
+        text(nde, a, entity);
       }
     }
   }
+  // delete marked entities
   else if(dele)
   {
     for(title in  plotted_articles_dict)
     {
       var a = plotted_articles_dict[title];
-      if(a.marked_entities.includes(entity))
+      var node_id = "text;" + "articlespacer" + a.clean_topic + "spacer" + a.political_direction;
+      var nde = document.getElementById(node_id);
+      if(all)
       {
-        if(entity) {a.unmark_entity(entity, true)}
-        else {a.unmark_entity(entity);}
+          a.unmark_entity(entity, all);
+          text(nde, a)
       }
+      else
+      {
+        if(a.marked_entities.includes(entity))
+        {
+          a.unmark_entity(entity);
+          text(nde, a);
+        }
+      }
+
     }
     
   }
 } 
+
+function text(node, article, entity = null)
+{ 
+  article.set_text(node, entity);
+  update_css(article);
+}
+
+function update_css(article)
+{
+    article.marked_entities.forEach( entity => {
+      let name = article.clean_topic.toLowerCase() + "-" + entity.id_number;
+      const css_elem = document.querySelectorAll("[entity=" + name + "]");
+      css_elem.forEach(element =>
+        {
+          element.style.backgroundColor = entity.colour;
+        });
+      
+    })
+}
 
 on_load();
