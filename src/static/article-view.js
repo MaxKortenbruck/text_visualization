@@ -205,11 +205,6 @@ function set_entity_statistics(entity, parent, article_direction)
   create_treemap(entity.formatted_name, data, parent);
 }
 
-function das_kommt_daraus(params)
-{
-  console.log(params)
-}
-
 function set_entity_statistics_bar(index)
 {
   let res = index.split("spacer");
@@ -235,8 +230,9 @@ function set_entity_statistics_pie(index)
   id = id.slice(0, -13);
   let div = document.getElementById(id)
 
+  let title = full_data[open_topic].articles.find(article => article.political_direction == res[2]).title
   let dat = full_data[open_topic].articles.find(article => article.political_direction == res[2]).statistics_of_article;
-  let plot = create_pie_plot("hallo", dat.names, dat.numbers, dat.colour ,div);
+  let plot = create_pie_plot(title, dat.names, dat.numbers, dat.colour ,div);
 
   plot.on('click', function(params) {
     entity_in_statistic_click(params);
