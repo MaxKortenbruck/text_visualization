@@ -205,6 +205,11 @@ function set_entity_statistics(entity, parent, article_direction)
   create_treemap(entity.formatted_name, data, parent);
 }
 
+function das_kommt_daraus(params)
+{
+  console.log(params)
+}
+
 function set_entity_statistics_bar(index)
 {
   let res = index.split("spacer");
@@ -213,7 +218,11 @@ function set_entity_statistics_bar(index)
   let id = "statistic;" + index;
   id = id.slice(0, -13);
   let div = document.getElementById(id)
-  create_bar_plot("hallo", dat.names, dat.numbers, dat.colour, div);
+  let plot = create_bar_plot("hallo", dat.names, dat.numbers, dat.colour, div);
+
+  plot.on('click', function(params) {
+    entity_in_statistic_click(params);
+  })
 }
 
 function set_entity_statistics_pie(index)
@@ -564,6 +573,7 @@ function article_click(article)
 
 function entity_in_statistic_click(params)
 { 
+  console.log(params);
   let entity = null;
   let artcl = false;
 
