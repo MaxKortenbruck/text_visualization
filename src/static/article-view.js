@@ -487,7 +487,7 @@ function display_article(article)
     })
     
     //update article with opened entities
-    update_open_entities(false, article);
+    update_open_entities(false, article, false, false, p);
 
     //create a div Element for the treemap
     let div_treemap = document.createElement("div")
@@ -590,10 +590,12 @@ function on_load() {
  * @param {Object} article - newly opened article that needs it's entities marked
  * @param {Boolean} dele - true, if entities need to be deleted fro all articles. If an entity is passed as well, only this entity will be unmarked in all articles 
  */
-function update_open_entities(entity = false, article = false, dele = false)
+function update_open_entities(entity = false, article = false, dele = false, all = false, node = false)
 {
+  // mark all open articles in newly opened article
   if(!entity)
   { 
+    //open_articles = document.getElementById("articel_view;row").children;
     let parent = document.getElementById("openentities");
     for(let i=0; i<parent.children.length; i++)
     {
@@ -604,7 +606,9 @@ function update_open_entities(entity = false, article = false, dele = false)
         article.mark_entity(ent);
       }     
     }
+    text(node, article, false)
   }
+  // mark entity in all open articles
   else if(!article)
   {
     for(title in  plotted_articles_dict)
@@ -613,19 +617,34 @@ function update_open_entities(entity = false, article = false, dele = false)
       if(a.entities.includes(entity))
       {
         a.mark_entity(entity);
+        var node_id = "text;" + "articlespacer" + a.clean_topic + "spacer" + a.political_direction;
+        var nde = document.getElementById(node_id);
+        text(nde, a, entity);
       }
     }
   }
+  // delete marked entities
   else if(dele)
   {
     for(title in  plotted_articles_dict)
     {
       var a = plotted_articles_dict[title];
-      if(a.marked_entities.includes(entity))
+      var node_id = "text;" + "articlespacer" + a.clean_topic + "spacer" + a.political_direction;
+      var nde = document.getElementById(node_id);
+      if(all)
       {
-        if(entity) {a.unmark_entity(entity, true)}
-        else {a.unmark_entity(entity);}
+          a.unmark_entity(entity, all);
+          text(nde, a)
       }
+      else
+      {
+        if(a.marked_entities.includes(entity))
+        {
+          a.unmark_entity(entity);
+          text(nde, a);
+        }
+      }
+
     }
     
   }

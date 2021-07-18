@@ -89,8 +89,10 @@ export class Document {
         {
         this._marked_entities = this._marked_entities.filter(function( ele ){
             return ele.identifier !== ent.identifier;
-        })
-    }
+        });
+
+        }
+        console.log(this._marked_entities);
     }
 
     mark_text(entity = null)
@@ -169,7 +171,7 @@ export class Document {
         var text_return = "";
         var parsed_text = [];
             
-        if(this._marked_entities.length)
+        if(this._marked_entities.length > 0)
         {   
             this.mark_text(entity);
             parsed_text = this._marked_text;
