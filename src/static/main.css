@@ -275,12 +275,6 @@ body
 	transition: 0.3s;
 }
 
-mark
-{ 
-	background-color:#ff0;
-	color:#000
-}
-
 .container-fluid mark
 {
 	position:relative
@@ -326,3 +320,18 @@ mark
 	vertical-align:middle;
 	margin:0 0 .1rem .5rem
 }*/
+.badge:hover
+{
+	color: #bababa;
+	box-shadow:0px 0px 10px 0px #adadad !important;
+}
+
+.btn
+{
+	margin: 6px;
+}
+
+.dropdown-item:active
+{
+	background-color: #f0f0f0 !important;
+}

@@ -5,17 +5,19 @@ let resulution = "width:960px; height:540px;"
 // returns chart
 function create_pie_plot(key, names, mentioned, colour, parentFromChart, article)
 {
-    let div = document.createElement("div");
-    div.setAttribute("id", "plt;pie;" + key);
-	div.className = "pie-plot";
-    div.setAttribute("style", resulution);
-    div.setAttribute("article", article)
-
     while(parentFromChart.firstChild)
     {
         parentFromChart.removeChild(parentFromChart.firstChild);
     }
+
+    let div = document.createElement("div");
+    div.setAttribute("id", "plt;pie;" + key);
+	//div.className = "pie-plot";
+    div.setAttribute("style", resulution);
+    div.setAttribute("article", article)
+
     parentFromChart.appendChild(div);
+
     // based on prepared DOM, initialize echarts instance
     var myChart = echarts.init(div);
 
@@ -172,17 +174,6 @@ function create_treemap(entity_name, /*data_array*/data, parentFromChart)
     }
     parentFromChart.appendChild(div);
 
-    //create all nodes:
-    /*let data = [];
-    for(let i in data_array[0])
-    {
-        let temp = {};
-        temp['name'] = data_array[0][i];
-        temp['value'] = data_array[1][i];
-        data.push(temp);
-    }
-*/
-
     var myChart = echarts.init(div);
 
     let option = {
@@ -203,4 +194,71 @@ function create_treemap(entity_name, /*data_array*/data, parentFromChart)
 
 }
 
-export { create_pie_plot, create_text_pie_plot, create_treemap }
+function create_bar_plot(key, names, mentioned, colour, parentElement)
+{
+
+    console.log(key, names, mentioned, parentElement);
+    while(parentElement.firstChild)
+    {
+        parentElement.removeChild(parentElement.firstChild);
+    }
+
+    let div = document.createElement("div");
+    div.className = "bar-plot";
+	div.setAttribute("style", resulution);
+    parentElement.appendChild(div);
+	
+
+    let myChart = echarts.init(div);
+	let data = [];
+	for (let [i, mention] of mentioned.entries())
+	{
+		let entry = {
+			value: mention,
+			itemStyle: {color: colour[i]}
+		}
+		data.push(entry);
+	}
+    let option = {
+		tooltip: {
+			trigger: 'axis',
+			axisPointer: {
+				type: 'shadow'
+			}
+		},
+		animation: false,
+		dataZoom: [{
+			type: 'slider',
+			xAxisIndex: 0,
+			zoomLock: true,
+			start: 0,
+			end: 35,
+			handleSize: 0,
+			height: 10
+		}],
+        xAxis: {
+            type: 'category',
+			data: names,
+			axisLabel: {
+				interval: 0,
+				rotate: 25
+			},
+			axisTick: {
+				alignWithLabel: true
+			}
+        },
+        yAxis: {
+            type: 'value'
+        },
+        series: [{
+			data: data,
+            type: 'bar'
+        }]
+    };
+    myChart.setOption(option);
+
+
+    return myChart;
+}
+
+export { create_pie_plot, create_text_pie_plot, create_treemap, create_bar_plot }
