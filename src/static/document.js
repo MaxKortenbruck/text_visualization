@@ -103,6 +103,7 @@ export class Document {
         var entities = [];
         //already marked = true/false wenn schon markiert
         //check ob markierter text oder nicht markierteer text verwendet werden soll
+        console.log(entity);
         if(entity != null)
         {
             entities.push(entity);
@@ -110,6 +111,7 @@ export class Document {
         else
         {
             entities = this._marked_entities;
+            console.log("partypups");
         }
 
         entities.forEach(enti => {
@@ -165,7 +167,7 @@ export class Document {
         this._marked_text = marked_text;    
     }
 
-    set_text(node, entity) 
+    set_text(node, entity = null) 
     // check ob text vorher masrkiert werden muss odfer nicht
     {
         var text_return = "";
@@ -179,6 +181,7 @@ export class Document {
         else
         {
             parsed_text = this._text_array;
+            this._marked_text = this._text_array;
         }
         //console.log(parsed_text);
         //console.log(this._marked_entities.length);

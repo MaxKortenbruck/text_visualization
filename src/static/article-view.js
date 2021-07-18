@@ -314,7 +314,7 @@ function display_article(article)
       close_text(this);
       if(plotted_articles_dict.hasOwnProperty(article.title))
       { 
-        console.log("delete");
+        article.unmark_entity(null, true);
         delete plotted_articles_dict[article.title];
       }
       else {throw Error;}
@@ -576,7 +576,7 @@ function entity_in_statistic_click(params)
   for(let i=0; i<open_articles.length; i++)
   {
     let art_div = document.getElementById("text;" + open_articles[i].id);
-    text(art_div, artcl, entity);
+    //text(art_div, artcl, entity);
     let res = open_articles[i].id.split("spacer");
     let treemap_parent = document.getElementById("treemap;" + res[1] + ";" + res[2]);
     let article_direction = res[2];
@@ -599,19 +599,18 @@ function update_open_entities(entity = false, article = false, dele = false, all
   // mark all open articles in newly opened article
   if(!entity && !dele)
   { 
-    console.log(article);
     //open_articles = document.getElementById("articel_view;row").children;
     let parent = document.getElementById("openentities");
     for(let i=0; i<parent.children.length; i++)
     {
       let ent = article.entities.find(enti => enti.formatted_name === parent.children[i].firstChild.data);
-      console.log(ent in article.entities);
-      if(typeof ent !== "undefined" && ent in article.entities)
+      console.log(ent);
+      if(ent)
       {
-        article.mark_entity(ent);
-      }     
+        article.mark_entity(ent);   
+      }
     }
-    text(node, article, false)
+    text(node, article, null)
   }
   // mark entity in all open articles
   else if(!article && !dele)
@@ -620,7 +619,7 @@ function update_open_entities(entity = false, article = false, dele = false, all
     for(title in  plotted_articles_dict)
     {
       var a = plotted_articles_dict[title];
-      if(a.entities.includes(entity))
+      if(a.entities.includes(entity) && !a.marked_entities.includes(entity))
       {
         a.mark_entity(entity);
         var node_id = "text;" + "articlespacer" + a.clean_topic + "spacer" + a.political_direction;
