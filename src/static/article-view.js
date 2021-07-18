@@ -52,7 +52,7 @@ function set_topics() {
         topic_click(this.index);
         return false;
       }
-      a.appendChild( document.createTextNode(topic.formatted_name) );
+      a.appendChild(document.createTextNode(topic.formatted_name) );
       list.appendChild(a);
     };
 }
@@ -132,7 +132,6 @@ function set_statistics(index)
 
   let plot_parent = document.getElementById("mainChart");
   let dat = full_data[index].statistics_of_entities;
-
   let plot = create_pie_plot(full_data[index].formatted_name, dat.names, dat.numbers, dat.colour, plot_parent);
 
   // handle click event in ChartS
@@ -143,7 +142,47 @@ function set_statistics(index)
   document.getElementById("statistics_on_load_warning").style.display="none";
 }
 
+function create_entity_button(entity)
+{
+	let span = document.createElement("span");
+	span.className = "badge badge-secondary";
+	span.style = "margin: 5px; background-color: " + entity.colour + " !important;" ;
+	span.appendChild(document.createTextNode(entity.formatted_name));
+	span.id = "entity_" + entity.identifier
+	span.onclick = function()
+	{
+		console.log(entity)
+		open_entity(entity);
+		return false;
+	}
+	
+	return span;
+}
+
+function set_entities(index)
+{
+	
+	document.getElementById("entities_headline").innerHTML = full_data[index].formatted_name;
+
+	let entities_parent = document.getElementById("entities");
+	
+	while(entities_parent.firstChild)
+    {
+        entities_parent.removeChild(entities_parent.firstChild);
+    }
+
+	for(var entity of full_data[index].entities)
+	{
+		let span = create_entity_button(entity);
+		entities_parent.appendChild(span);
+	}
+	
+	document.getElementById("entities_on_load_warning").style.display="none";
+}
+
+
 document.getElementById("mainChart;pie").addEventListener("click", set_statistics_pie)
+
 function set_statistics_pie()
 {
   document.getElementById("mainChart").innerHTML = "";
@@ -184,7 +223,7 @@ function set_entity_statistics_bar(index)
 
 function open_entity(entity)
 {
-  let parent = document.getElementById("openentitys")
+  let parent = document.getElementById("openentities")
   //check if entity is already open
   for(let i=0; i<parent.children.length; i++)
   {
@@ -198,13 +237,13 @@ function open_entity(entity)
 
   //create new open entity
   let span = document.createElement("span");
-  span.className = "badge bg-primary";
-  span.style = "margin: 5px;";
+  span.className = "badge";
+  span.style = "margin: 5px; background-color: " + entity.colour + " !important;" ;
   span.appendChild(document.createTextNode(entity.formatted_name));
 
   //create close-button
   let btn = document.createElement("button");
-  btn.type = "button";
+  btn.type = "button button-secondary";
   btn.className = "btn-close";
   btn.setAttribute("aria-label", "close");
   btn.onclick = function()
@@ -215,7 +254,7 @@ function open_entity(entity)
   }
   span.appendChild(btn);
 
-  parent.appendChild( span );
+  parent.appendChild(span);
 }
 
 
@@ -237,7 +276,7 @@ function close_text(button_element)
 function close_entity(element)
 {
   let to_close = element.parentNode;
-  document.getElementById("openentitys").removeChild(to_close);
+  document.getElementById("openentities").removeChild(to_close);
 }
 
 function display_article(article)
@@ -366,7 +405,7 @@ function display_article(article)
     accordion_stat_button.setAttribute("aria-expanded", "false")
     accordion_stat_button.setAttribute("aria-controls", "statCollapse" + articel_div_id);
 
-    accordion_stat_button.appendChild( document.createTextNode("Statistics"));
+    accordion_stat_button.appendChild(document.createTextNode("Statistics"));
 
     accordion_stat_header.appendChild(accordion_stat_button);
 
@@ -462,10 +501,23 @@ function display_article(article)
     determine_open_articles();
 }
 
+
+document.getElementById("open_all_entities_button").addEventListener("click", open_all_entities)
+
+
+function open_all_entities()
+{
+	for (let entity of full_data[open_topic].entities)
+	{
+		open_entity(entity);
+	}
+}
+
+
 document.getElementById("close_all_open_entities_button").addEventListener("click", close_all_open_entities)
 function close_all_open_entities()
 {
-  let div = document.getElementById("openentitys");
+  let div = document.getElementById("openentities");
 
   while(div.firstChild)
   {
@@ -487,6 +539,7 @@ function topic_click(topic)
   open_topic = topic;
   set_articles(topic);
   set_statistics(topic);
+  set_entities(topic);
 }
 
 function article_click(article)
@@ -541,7 +594,7 @@ function update_open_entities(entity = false, article = false, dele = false)
 {
   if(!entity)
   { 
-    let parent = document.getElementById("openentitys");
+    let parent = document.getElementById("openentities");
     for(let i=0; i<parent.children.length; i++)
     {
       let ent = article.entities.find(enti => enti.formatted_name === parent.children[i].firstChild.data);
