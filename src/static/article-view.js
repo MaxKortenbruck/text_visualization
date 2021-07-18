@@ -179,7 +179,6 @@ function set_entity_statistics_bar(index)
   id = id.slice(0, -13);
   let div = document.getElementById(id)
   create_bar_plot("hallo", dat.names, dat.numbers, dat.colors, div);
-  console.log(dat);
   //woher ein namen array und ein anzahlarray für einen bestimmten Artikel
 }
 
