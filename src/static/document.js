@@ -83,7 +83,7 @@ export class Document {
     {   
         if(all)
         {
-            this.marked_entities = [];
+            this._marked_entities = [];
         }
         else 
         {
@@ -127,7 +127,7 @@ export class Document {
                         //console.log("nicht pups");
                         if(sent_ent[index].tokens[0] == j)
                         {
-                            console.log(this._marked_text[i][j]);
+                            //console.log(this._marked_text[i][j]);
                             let tmp_text = "<span entity=\"" + this.clean_topic.toLowerCase() +"-" + enti.id_number+ "\">" + this._marked_text[i][j];
                             //console.log(this._marked_text[i][j]);
                             if(sent_ent[index].tokens.length == 1)
@@ -180,7 +180,7 @@ export class Document {
         {
             parsed_text = this._text_array;
         }
-        console.log(parsed_text);
+        //console.log(parsed_text);
         //console.log(this._marked_entities.length);
         for(const [i, sentence] of parsed_text.entries())
             {  

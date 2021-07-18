@@ -249,7 +249,7 @@ function open_entity(entity)
   btn.onclick = function()
   {
     close_entity(this);
-    update_open_entities(entity, false, true);
+    update_open_entities(entity, false, true, false);
     return false;
   }
   span.appendChild(btn);
@@ -313,7 +313,10 @@ function display_article(article)
     {
       close_text(this);
       if(plotted_articles_dict.hasOwnProperty(article.title))
-      {delete plotted_articles_dict[article.title];}
+      { 
+        console.log("delete");
+        delete plotted_articles_dict[article.title];
+      }
       else {throw Error;}
       return false;
     }
@@ -523,6 +526,7 @@ function close_all_open_entities()
   {
     div.removeChild(div.firstChild);
   }
+  update_open_entities(false, false, true, true);
 }
 
 /*
@@ -593,8 +597,9 @@ function on_load() {
 function update_open_entities(entity = false, article = false, dele = false, all = false, node = false)
 {
   // mark all open articles in newly opened article
-  if(!entity)
+  if(!entity && !dele)
   { 
+    console.log(article);
     //open_articles = document.getElementById("articel_view;row").children;
     let parent = document.getElementById("openentities");
     for(let i=0; i<parent.children.length; i++)
@@ -609,8 +614,9 @@ function update_open_entities(entity = false, article = false, dele = false, all
     text(node, article, false)
   }
   // mark entity in all open articles
-  else if(!article)
+  else if(!article && !dele)
   {
+    console.log(entity);
     for(title in  plotted_articles_dict)
     {
       var a = plotted_articles_dict[title];
