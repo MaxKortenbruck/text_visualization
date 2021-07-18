@@ -197,7 +197,7 @@ function create_treemap(entity_name, /*data_array*/data, parentFromChart)
 function create_bar_plot(key, names, mentioned, colour, parentElement)
 {
 
-    console.log(key, names, mentioned, parentElement);
+    console.log(key, names, mentioned, colour, parentElement);
     while(parentElement.firstChild)
     {
         parentElement.removeChild(parentElement.firstChild);

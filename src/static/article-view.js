@@ -127,7 +127,6 @@ function set_articles(index)
 
 function set_statistics(index)
 {
-  console.log("set statistics " + typeof index);
   document.getElementById("statistics_headline").innerHTML = full_data[index].formatted_name;
 
   let plot_parent = document.getElementById("mainChart");
@@ -182,7 +181,6 @@ function set_entities(index)
 
 
 document.getElementById("mainChart;pie").addEventListener("click", set_statistics_pie)
-
 function set_statistics_pie()
 {
   document.getElementById("mainChart").innerHTML = "";
@@ -203,22 +201,37 @@ function set_statistics_bar()
 
 function set_entity_statistics(entity, parent, article_direction)
 {
-  let data = entity.count_mentions(article_direction)
+  let data = entity.count_mentions(article_direction);
   create_treemap(entity.formatted_name, data, parent);
 }
 
 function set_entity_statistics_bar(index)
 {
   let res = index.split("spacer");
-  console.log(res)
   let dat = full_data[open_topic].articles.find(article => article.political_direction == res[2]).statistics_of_article;
-  console.log(dat);
 
   let id = "statistic;" + index;
   id = id.slice(0, -13);
   let div = document.getElementById(id)
-  create_bar_plot("hallo", dat.names, dat.numbers, dat.colors, div);
-  //woher ein namen array und ein anzahlarray für einen bestimmten Artikel
+  create_bar_plot("hallo", dat.names, dat.numbers, dat.colour, div);
+}
+
+function set_entity_statistics_pie(index)
+{
+
+  let res = index.split("spacer");
+  console.log("hallo aus pie plot");
+
+  let id = "statistic;" + index;
+  id = id.slice(0, -13);
+  let div = document.getElementById(id)
+
+  let dat = full_data[open_topic].articles.find(article => article.political_direction == res[2]).statistics_of_article;
+  let plot = create_pie_plot("hallo", dat.names, dat.numbers, dat.colour ,div);
+
+  plot.on('click', function(params) {
+    entity_in_statistic_click(params);
+  })
 }
 
 function open_entity(entity)
@@ -452,6 +465,11 @@ function display_article(article)
     a_pie_drop.className = "dropdown-item";
     a_pie_drop.appendChild( document.createTextNode("Pie Plot") );
     a_pie_drop.id = article.clean_topic + ";pie";
+    a_pie_drop.onclick = function()
+    {
+      set_entity_statistics_pie(articel_div_id + "spacerdroppie");
+      return false;
+    }
     li_pie_drop.appendChild(a_pie_drop);
 
     //add bar plot
@@ -472,8 +490,7 @@ function display_article(article)
 
     // create the div element for the pie plot
     let div_article_statistic = document.createElement("div");
-    div_article_statistic.id = "statistic;" + articel_div_id; 
-    console.log("statistic;" + articel_div_id)
+    div_article_statistic.id = "statistic;" + articel_div_id;
     collapse_stat.appendChild(div_article_statistic);
 
     let dat = article.statistics_of_article;
@@ -502,9 +519,7 @@ function display_article(article)
 }
 
 
-document.getElementById("open_all_entities_button").addEventListener("click", open_all_entities)
-
-
+document.getElementById("open_all_entities_button").addEventListener("click", open_all_entities);
 function open_all_entities()
 {
 	for (let entity of full_data[open_topic].entities)
