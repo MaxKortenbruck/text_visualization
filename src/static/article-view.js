@@ -212,8 +212,9 @@ function set_entity_statistics_bar(index)
 
   let id = "statistic;" + index;
   id = id.slice(0, -13);
+  let title = full_data[open_topic].articles.find(article => article.political_direction == res[2]).title
   let div = document.getElementById(id)
-  let plot = create_bar_plot("hallo", dat.names, dat.numbers, dat.colour, div);
+  let plot = create_bar_plot(title, dat.names, dat.numbers, dat.colour, div);
 
   plot.on('click', function(params) {
     entity_in_statistic_click(params);
@@ -224,7 +225,6 @@ function set_entity_statistics_pie(index)
 {
 
   let res = index.split("spacer");
-  console.log("hallo aus pie plot");
 
   let id = "statistic;" + index;
   id = id.slice(0, -13);
@@ -584,7 +584,7 @@ function entity_in_statistic_click(params)
   }
   else
   {
-    let tpc = full_data.find(item => item.formatted_name == params.seriesName);
+    let tpc = full_data[open_topic];
     entity = tpc.entities.find( item => item.formatted_name == params.name);
   }
 
@@ -625,7 +625,6 @@ function update_open_entities(entity = false, article = false, dele = false, all
     for(let i=0; i<parent.children.length; i++)
     {
       let ent = article.entities.find(enti => enti.formatted_name === parent.children[i].firstChild.data);
-      console.log(ent);
       if(ent)
       {
         article.mark_entity(ent);   
@@ -636,7 +635,6 @@ function update_open_entities(entity = false, article = false, dele = false, all
   // mark entity in all open articles
   else if(!article && !dele)
   {
-    console.log(entity);
     for(title in  plotted_articles_dict)
     {
       var a = plotted_articles_dict[title];

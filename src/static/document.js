@@ -103,7 +103,6 @@ export class Document {
         var entities = [];
         //already marked = true/false wenn schon markiert
         //check ob markierter text oder nicht markierteer text verwendet werden soll
-        console.log(entity);
         if(entity != null)
         {
             entities.push(entity);
