@@ -7,7 +7,7 @@
 **/
 
 import { get_topics, get_articles, get_statistics, get_entity_statistics, get_text, get_statistics_of_article } from "./base_functions.js";
-import { create_pie_plot, create_text_pie_plot, create_treemap, create_bar_plot } from "./article-view-charts.js";
+import { create_pie_plot, create_text_pie_plot, create_treemap, create_bar_plot, RGBToHex, hexToRGB } from "./article-view-charts.js";
 import {Topic} from "./topic.js"
 
 /* global definitionsfor the script*/
@@ -52,7 +52,7 @@ function set_topics() {
         topic_click(this.index);
         return false;
       }
-      a.appendChild(document.createTextNode(topic.formatted_name) );
+      a.appendChild(document.createTextNode(topic.formatted_name));
       list.appendChild(a);
     };
 }
@@ -130,11 +130,12 @@ function set_statistics(index)
   console.log("set statistics " + typeof index);
   document.getElementById("statistics_headline").innerHTML = full_data[index].formatted_name;
 
-  let plot_parent = document.getElementById("mainChart");
+  let parent = document.getElementById("mainChart");
+  console.log(parent);
   let dat = full_data[index].statistics_of_entities;
-  let plot = create_pie_plot(full_data[index].formatted_name, dat.names, dat.numbers, dat.colour, plot_parent);
+  let plot = create_pie_plot(full_data[index].formatted_name, dat.names, dat.numbers, dat.colour, parent);
 
-  // handle click event in ChartS
+  // handle click event in Charts
   plot.on('click', function(params) {
       entity_in_statistic_click(params);
   })
@@ -148,13 +149,13 @@ function create_entity_button(entity)
 	span.className = "badge badge-secondary";
 	span.style = "margin: 5px; background-color: " + entity.colour + " !important;" ;
 	span.appendChild(document.createTextNode(entity.formatted_name));
-	span.id = "entity_" + entity.identifier
+	span.id = "entity_" + entity.identifier;
 	span.onclick = function()
 	{
 		console.log(entity)
 		open_entity(entity);
 		return false;
-	}
+	}	
 	
 	return span;
 }
@@ -165,7 +166,7 @@ function set_entities(index)
 	document.getElementById("entities_headline").innerHTML = full_data[index].formatted_name;
 
 	let entities_parent = document.getElementById("entities");
-	
+		
 	while(entities_parent.firstChild)
     {
         entities_parent.removeChild(entities_parent.firstChild);
@@ -203,8 +204,8 @@ function set_statistics_bar()
 
 function set_entity_statistics(entity, parent, article_direction)
 {
-  let data = entity.count_mentions(article_direction)
-  create_treemap(entity.formatted_name, data, parent);
+  let data = entity.count_mentions(article_direction);
+  create_treemap(entity.formatted_name, data, entity.colour, parent);
 }
 
 function set_entity_statistics_bar(index)
@@ -224,7 +225,7 @@ function set_entity_statistics_bar(index)
 
 function open_entity(entity)
 {
-  let parent = document.getElementById("openentities")
+  let parent = document.getElementById("openentities");
   //check if entity is already open
   for(let i=0; i<parent.children.length; i++)
   {
@@ -539,8 +540,8 @@ function topic_click(topic)
 {
   open_topic = topic;
   set_articles(topic);
-  set_statistics(topic);
   set_entities(topic);
+  set_statistics(topic);
 }
 
 function article_click(article)

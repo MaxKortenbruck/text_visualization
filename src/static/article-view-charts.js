@@ -1,6 +1,37 @@
 let resulution = "width:960px; height:540px;"
 //let resulution = "width:1920px; height:1080px;"
 
+function hexToRGB(h){
+	let r = 0, g = 0, b = 0;
+
+	r = parseInt('0x' + h[1] + h[2], 16);
+	g = parseInt('0x' + h[3] + h[4], 16);
+	b = parseInt('0x' + h[5] + h[6], 16);
+
+	return [r, g, b];
+}
+
+function RGBToHex(r, g, b){
+
+	r = r.toString(16);
+	g = g.toString(16);
+	b = b.toString(16);
+
+	if (r.length == 1)
+	{
+		r = '0' + r;
+	}
+	if (g.length == 1)
+	{
+		g = '0' + g;
+	}
+	if (b.length == 1)
+	{
+		b = '0' + b;
+	}
+
+	return '#' + r + g + b;
+}
 
 // returns chart
 function create_pie_plot(key, names, mentioned, colour, parentFromChart, article)
@@ -8,12 +39,13 @@ function create_pie_plot(key, names, mentioned, colour, parentFromChart, article
     while(parentFromChart.firstChild)
     {
         parentFromChart.removeChild(parentFromChart.firstChild);
-    }
+	}
 
     let div = document.createElement("div");
     div.setAttribute("id", "plt;pie;" + key);
-	//div.className = "pie-plot";
+	div.className = "pie-plot";
     div.setAttribute("style", resulution);
+	div.style.width = '100% !important';
     div.setAttribute("article", article)
 
     parentFromChart.appendChild(div);
@@ -161,12 +193,43 @@ function create_text_pie_plot(key, names, mentioned, parentFromChart)
 }
 
 // creates the Plot for the entities
-function create_treemap(entity_name, /*data_array*/data, parentFromChart)
+function create_treemap(entity_name, /*data_array*/data, colour, parentFromChart)
 {
     let div = document.createElement("div");
     div.setAttribute("id", "plt;pie;" + entity_name);
 	div.className = "tree-map";
     div.setAttribute("style", resulution);
+
+	let colours = [];
+	let rgb = hexToRGB(colour);
+	let r = rgb[0];
+	let g = rgb[1];
+	let b = rgb[2];
+
+	for (let i = 0; i<10; i++)
+	{
+		if (Math.floor((7 + i) * r / 10) <= 255)
+		{
+			r = Math.floor((7 + i) * r / 10);
+		}
+		if (Math.floor((7 + i) * g / 10) <= 255)
+		{
+			g = Math.floor((7 + i) * g / 10);
+		}
+		if (Math.floor((7 + i) * b / 10) <= 255)
+		{
+			b = Math.floor((7 + i) * b / 10);
+		}
+		
+		colours[i] = RGBToHex(r,g,b);
+	}
+
+	let j = colours.length;
+	for (let i = 0; i < data.length; i++)
+	{
+		colours[i] = colours[i%j]
+		console.log(colours[i])
+	}
 
     while(parentFromChart.firstChild)
     {
@@ -178,7 +241,7 @@ function create_treemap(entity_name, /*data_array*/data, parentFromChart)
 
     let option = {
         title: {
-            text: 'how ' + entity_name + ' is mentioned',
+            text: 'how \'' + entity_name + '\' is mentioned',
             left: 'center'
         },
         tooltip: {
@@ -186,7 +249,10 @@ function create_treemap(entity_name, /*data_array*/data, parentFromChart)
         },
         series: [{
             type: 'treemap',
-            data: data
+            data: data,
+			levels: [{
+				color: colours
+			}]
         }]
     };
 
@@ -219,6 +285,7 @@ function create_bar_plot(key, names, mentioned, colour, parentElement)
 		}
 		data.push(entry);
 	}
+
     let option = {
 		tooltip: {
 			trigger: 'axis',
@@ -232,7 +299,7 @@ function create_bar_plot(key, names, mentioned, colour, parentElement)
 			xAxisIndex: 0,
 			zoomLock: true,
 			start: 0,
-			end: 35,
+			end: 25,
 			handleSize: 0,
 			height: 10
 		}],
@@ -261,4 +328,4 @@ function create_bar_plot(key, names, mentioned, colour, parentElement)
     return myChart;
 }
 
-export { create_pie_plot, create_text_pie_plot, create_treemap, create_bar_plot }
+export { create_pie_plot, create_text_pie_plot, create_treemap, create_bar_plot, hexToRGB, RGBToHex }
