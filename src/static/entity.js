@@ -92,6 +92,7 @@ export class Entity {
                     ret_array.push(element);
                 }
             }); 
+            console.log(ret_array);
             return ret_array;
         }
     }

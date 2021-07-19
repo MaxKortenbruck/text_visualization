@@ -630,7 +630,7 @@ function update_open_entities(entity = false, article = false, dele = false, all
         article.mark_entity(ent);   
       }
     }
-    text(node, article, null)
+    text(node, article, false)
   }
   // mark entity in all open articles
   else if(!article && !dele)
@@ -677,11 +677,12 @@ function update_open_entities(entity = false, article = false, dele = false, all
 function text(node, article, entity = null)
 { 
   article.set_text(node, entity);
-  update_css(article);
+  //update_css(article);
 }
 
 function update_css(article)
 {
+  console.log("update");
     article.marked_entities.forEach( entity => {
       let name = article.clean_topic.toLowerCase() + "-" + entity.id_number;
       const css_elem = document.querySelectorAll("[entity=" + name + "]");

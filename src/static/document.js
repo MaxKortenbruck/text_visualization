@@ -95,22 +95,23 @@ export class Document {
         console.log(this._marked_entities);
     }
 
-    mark_text(entity = null)
+    mark_text(entity = false)
     {
+        console.log(this._name);
         let marked_text = [];
         let sentence_text = [];
         let sent_ent = [];
         var entities = [];
         //already marked = true/false wenn schon markiert
         //check ob markierter text oder nicht markierteer text verwendet werden soll
-        if(entity != null)
+        console.log(entity);
+        if(entity)
         {
             entities.push(entity);
         }
         else
         {
             entities = this._marked_entities;
-            console.log("partypups");
         }
 
         entities.forEach(enti => {
@@ -119,6 +120,13 @@ export class Document {
             for(let i = 0; i < this._marked_text.length; i++)
             {    
                 sent_ent = enti.mentions_in_sentence(i);
+                console.log(sent_ent)
+                if(sent_ent.length > 1)
+                {   
+                    console.log("sort")
+                    sent_ent.sort(this.compare);
+                }
+                console.log(sent_ent)
                 let index = 0;  
                 //console.log(i);
                 for(let j = 0; j < this._marked_text[i].length; j++)
@@ -129,8 +137,8 @@ export class Document {
                         if(sent_ent[index].tokens[0] == j)
                         {
                             //console.log(this._marked_text[i][j]);
-                            let tmp_text = "<span entity=\"" + this.clean_topic.toLowerCase() +"-" + enti.id_number+ "\">" + this._marked_text[i][j];
-                            //console.log(this._marked_text[i][j]);
+                            let tmp_text = "<span entity=\"" + this.clean_topic.toLowerCase() +"-" + enti.id_number+ "\" style=background-color:"+ enti.colour +">" + this._marked_text[i][j];
+                            console.log(this._marked_text[i][j]);
                             if(sent_ent[index].tokens.length == 1)
                             {
                                 tmp_text += "</span>";
@@ -142,10 +150,8 @@ export class Document {
                             let tmp_text = this._marked_text[i][j] + ("</span>");
                             sentence_text[j] = tmp_text;
                             index ++;
-                            //console.log(sentence_text[j] + "   "+j)
-                        }
-            
-                        
+                            console.log(sentence_text[j] + "   "+j)
+                        }     
                     }
                     else
                     {
@@ -157,13 +163,24 @@ export class Document {
                 };
                 //console.log(sentence_text);
                 marked_text.push(sentence_text);
-              
+                
+                sent_ent = [];
                 sentence_text = [];
                 index = 0;
             };
         });
             //console.log(marked_text);
         this._marked_text = marked_text;    
+    }
+
+    compare(b, a)
+    {
+        console.log("sortfunktion");
+        console.log(a.tokens[0] +" < "+ b.tokens[0]);
+        console.log(a.tokens[0] < b.tokens[0]);
+        if(a.tokens[0] < b.tokens[0]){return 1;}
+        if(a.tokens[0] > b.tokens[0]){return -1;}
+        return 0;      
     }
 
     set_text(node, entity = null) 
