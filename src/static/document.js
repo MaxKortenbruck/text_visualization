@@ -1,10 +1,11 @@
 'use strict'
 
 export class Document {
-    constructor(data, article, topic)
+    constructor(data, article, topic, number)
     {
         //complete identifier topic;article
         this._identifier = article;
+        this._number = number;
 
         var tmp = article.split(";");
         
@@ -21,7 +22,9 @@ export class Document {
         this._topic = topic;
         this._my_entities = [];
         this._marked_entities = [];
-        this._text_array = this.set_article_text(data);
+        let text = this.set_article_text(data);
+        this._text_array = text; 
+        this._marked_text = text;
     }
 
     /**
@@ -54,53 +57,176 @@ export class Document {
         });
         return text_array;
     }
+    /**
+     * Adds a reference of an Entity Object to the article
+     * @param {Object} ent - Entity  
+     */
     
     add_entity(ent)
     {
         this._my_entities.push(ent);
     }
-    
+    /**
+     * Passes an Entity Object to to the article that is to be marked
+     * @param {Object} ent - Entity   
+     */
     mark_entity(ent)
     {
-        this._marked_entities.push(ent.identifier);
+        this._marked_entities.push(ent);
     }
-    
-    unmark_entity(ent)
-    {
+    /**
+     * 
+     * @param {Object} ent
+     * @param {Boolean} all 
+     */
+    unmark_entity(ent, all = false)
+    {   
+        if(all)
+        {
+            this._marked_entities = [];
+        }
+        else 
+        {
         this._marked_entities = this._marked_entities.filter(function( ele ){
             return ele.identifier !== ent.identifier;
-        })
+        });
+
+        }
+        console.log(this._marked_entities);
     }
 
-    get text()
+    mark_text(entity = false)
     {
-        var text_return = "";
-        if(this._marked_entities > 0)
+        console.log(this._name);
+        let marked_text = [];
+        let sentence_text = [];
+        let sent_ent = [];
+        var entities = [];
+        //already marked = true/false wenn schon markiert
+        //check ob markierter text oder nicht markierteer text verwendet werden soll
+        console.log(entity);
+        if(entity)
         {
-            //text_markierung hinzufügen, wird aua
+            entities.push(entity);
         }
         else
         {
-            this._text_array.forEach(sentence => {
+            entities = this._marked_entities;
+        }
+
+        entities.forEach(enti => {
+            //console.log(this._marked_text);
+            //console.log(this._marked_text[1][0]);
+            for(let i = 0; i < this._marked_text.length; i++)
+            {    
+                sent_ent = enti.mentions_in_sentence(i);
+                console.log(sent_ent)
+                if(sent_ent.length > 1)
+                {   
+                    console.log("sort")
+                    sent_ent.sort(this.compare);
+                }
+                console.log(sent_ent)
+                let index = 0;  
+                //console.log(i);
+                for(let j = 0; j < this._marked_text[i].length; j++)
+                {
+                    if(index < sent_ent.length && (sent_ent[index].tokens[0] == j || sent_ent[index].tokens[sent_ent[index].tokens.length -1] == j))
+                    {
+                        //console.log("nicht pups");
+                        if(sent_ent[index].tokens[0] == j)
+                        {
+                            //console.log(this._marked_text[i][j]);
+                            let tmp_text = "<span entity=\"" + this.clean_topic.toLowerCase() +"-" + enti.id_number+ "\" style=background-color:"+ enti.colour +">" + this._marked_text[i][j];
+                            console.log(this._marked_text[i][j]);
+                            if(sent_ent[index].tokens.length == 1)
+                            {
+                                tmp_text += "</span>";
+                            }
+                            sentence_text[j] = tmp_text;
+                        }
+                        else
+                        {
+                            let tmp_text = this._marked_text[i][j] + ("</span>");
+                            sentence_text[j] = tmp_text;
+                            index ++;
+                            console.log(sentence_text[j] + "   "+j)
+                        }     
+                    }
+                    else
+                    {
+                        let temp = this._marked_text[i][j];
+                        //console.log("j: " + j +"  temp = " + temp);
+                        sentence_text[j] = temp;
+                    }
+                     
+                };
+                //console.log(sentence_text);
+                marked_text.push(sentence_text);
+                
+                sent_ent = [];
+                sentence_text = [];
+                index = 0;
+            };
+        });
+            //console.log(marked_text);
+        this._marked_text = marked_text;    
+    }
+
+    compare(b, a)
+    {
+        console.log("sortfunktion");
+        console.log(a.tokens[0] +" < "+ b.tokens[0]);
+        console.log(a.tokens[0] < b.tokens[0]);
+        if(a.tokens[0] < b.tokens[0]){return 1;}
+        if(a.tokens[0] > b.tokens[0]){return -1;}
+        return 0;      
+    }
+
+    set_text(node, entity = null) 
+    // check ob text vorher masrkiert werden muss odfer nicht
+    {
+        var text_return = "";
+        var parsed_text = [];
+            
+        if(this._marked_entities.length > 0)
+        {   
+            this.mark_text(entity);
+            parsed_text = this._marked_text;
+        }
+        else
+        {
+            parsed_text = this._text_array;
+            this._marked_text = this._text_array;
+        }
+        //console.log(parsed_text);
+        //console.log(this._marked_entities.length);
+        for(const [i, sentence] of parsed_text.entries())
+            {  
+                if(!i)
+                {
+                    continue;
+                }  
                 sentence.forEach(word => {
                     text_return += word;
                 });
-            });
-        }
-        return text_return;
+            };        
+        node.innerHTML = text_return;
     }
     
     get statistics_of_article()
     {   
         var mention_dict = {
             names : [],
-            numbers : []
+            numbers : [],
+            colour : []
         }
         var mentions = [];
         this._my_entities.forEach( ent => {
             mention_dict.names.push(ent.formatted_name);
             mentions = ent.get_mentions_for_article(this.political_direction)
             mention_dict.numbers.push(mentions.length);
+            mention_dict.colour.push(ent.colour);
         })
         return mention_dict;
     }
@@ -139,5 +265,15 @@ export class Document {
     get entities()
     {
         return this._my_entities;
+    }
+
+    get marked_entities()
+    {
+        return this._marked_entities;
+    }
+
+    get id_number()
+    {
+        return this._number;
     }
 }

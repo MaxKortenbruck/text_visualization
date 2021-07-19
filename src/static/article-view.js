@@ -3,16 +3,19 @@
  * On:
  * 
  * Last Change By : Max Kortenbruck
- * On: 09.07.2021
- */
+ * On: 15.07.2021
+**/
 
 import { get_topics, get_articles, get_statistics, get_entity_statistics, get_text, get_statistics_of_article } from "./base_functions.js";
-import { create_pie_plot, create_text_pie_plot, create_treemap } from "./article-view-charts.js";
+import { create_pie_plot, create_text_pie_plot, create_treemap, create_bar_plot } from "./article-view-charts.js";
 import {Topic} from "./topic.js"
 
 /* global definitionsfor the script*/
 // globally safes plotted articles in the format { formatted_name : [&topic, &articel] } 
 var plotted_articles_dict = {}
+
+//saves open topic
+let open_topic;
 
 //json data stored in full_data
 var json_data = await get_json();
@@ -36,9 +39,9 @@ async function get_json(file="api")
 }
 
 function set_topics() {
-  var i = 0;
+
   let list = document.getElementById("articel_view;available_topics")
-    full_data.forEach(topic => {
+    for(const [i, topic] of full_data.entries()){
       
       let a = document.createElement("a");
       a.className = "list-group-item list-group-item-action"
@@ -49,10 +52,9 @@ function set_topics() {
         topic_click(this.index);
         return false;
       }
-      a.appendChild( document.createTextNode(topic.formatted_name) );
+      a.appendChild(document.createTextNode(topic.formatted_name) );
       list.appendChild(a);
-      i++;
-    });
+    };
 }
 
 function set_articles(index)
@@ -129,7 +131,7 @@ function set_statistics(index)
 
   let plot_parent = document.getElementById("mainChart");
   let dat = full_data[index].statistics_of_entities;
-  let plot = create_pie_plot(full_data[index].formatted_name, dat.names, dat.numbers, plot_parent);
+  let plot = create_pie_plot(full_data[index].formatted_name, dat.names, dat.numbers, dat.colour, plot_parent);
 
   // handle click event in ChartS
   plot.on('click', function(params) {
@@ -139,44 +141,140 @@ function set_statistics(index)
   document.getElementById("statistics_on_load_warning").style.display="none";
 }
 
+function create_entity_button(entity)
+{
+	let span = document.createElement("span");
+	span.className = "badge badge-secondary";
+	span.style = "margin: 5px; background-color: " + entity.colour + " !important;" ;
+	span.appendChild(document.createTextNode(entity.formatted_name));
+	span.id = "entity_" + entity.identifier
+	span.onclick = function()
+	{
+		console.log(entity)
+		open_entity(entity);
+		return false;
+	}
+	
+	return span;
+}
+
+function set_entities(index)
+{
+	
+	document.getElementById("entities_headline").innerHTML = full_data[index].formatted_name;
+
+	let entities_parent = document.getElementById("entities");
+	
+	while(entities_parent.firstChild)
+    {
+        entities_parent.removeChild(entities_parent.firstChild);
+    }
+
+	for(var entity of full_data[index].entities)
+	{
+		let span = create_entity_button(entity);
+		entities_parent.appendChild(span);
+	}
+	
+	document.getElementById("entities_on_load_warning").style.display="none";
+}
+
+
+document.getElementById("mainChart;pie").addEventListener("click", set_statistics_pie)
+function set_statistics_pie()
+{
+  document.getElementById("mainChart").innerHTML = "";
+  topic_click(open_topic);
+}
+
+document.getElementById("mainChart;bar").addEventListener("click", set_statistics_bar)
+function set_statistics_bar()
+{
+  let div = document.getElementById("mainChart");
+  let dat = full_data[open_topic].statistics_of_entities;
+  let plot = create_bar_plot(full_data[open_topic].formatted_name, dat.names, dat.numbers, dat.colour, div);
+
+  plot.on('click', function(params) {
+    entity_in_statistic_click(params);
+  })
+}
+
 function set_entity_statistics(entity, parent, article_direction)
 {
-  let data = entity.count_mentions(article_direction)
+  let data = entity.count_mentions(article_direction);
   create_treemap(entity.formatted_name, data, parent);
 }
 
-function open_entity(name)
+function set_entity_statistics_bar(index)
 {
-  let parent = document.getElementById("openentitys")
+  let res = index.split("spacer");
+  let dat = full_data[open_topic].articles.find(article => article.political_direction == res[2]).statistics_of_article;
+
+  let id = "statistic;" + index;
+  id = id.slice(0, -13);
+  let title = full_data[open_topic].articles.find(article => article.political_direction == res[2]).title
+  let div = document.getElementById(id)
+  let plot = create_bar_plot(title, dat.names, dat.numbers, dat.colour, div);
+
+  plot.on('click', function(params) {
+    entity_in_statistic_click(params);
+  })
+}
+
+function set_entity_statistics_pie(index)
+{
+
+  let res = index.split("spacer");
+
+  let id = "statistic;" + index;
+  id = id.slice(0, -13);
+  let div = document.getElementById(id)
+
+  let title = full_data[open_topic].articles.find(article => article.political_direction == res[2]).title
+  let dat = full_data[open_topic].articles.find(article => article.political_direction == res[2]).statistics_of_article;
+  let plot = create_pie_plot(title, dat.names, dat.numbers, dat.colour ,div);
+
+  plot.on('click', function(params) {
+    entity_in_statistic_click(params);
+  })
+}
+
+function open_entity(entity)
+{
+  let parent = document.getElementById("openentities")
   //check if entity is already open
   for(let i=0; i<parent.children.length; i++)
   {
-    if(parent.children[i].firstChild.data == name)
+    if(parent.children[i].firstChild.data == entity.formatted_name)
     {
       return;
     }
   }
 
+  update_open_entities(entity);
+
   //create new open entity
   let span = document.createElement("span");
-  span.className = "badge bg-primary";
-  span.style = "margin: 5px;";
-  span.appendChild(document.createTextNode(name));
+  span.className = "badge";
+  span.style = "margin: 5px; background-color: " + entity.colour + " !important;" ;
+  span.appendChild(document.createTextNode(entity.formatted_name));
 
   //create close-button
   let btn = document.createElement("button");
-  btn.type = "button";
+  btn.type = "button button-secondary";
   btn.className = "btn-close";
   btn.setAttribute("aria-label", "close");
   btn.onclick = function()
   {
     close_entity(this);
+    update_open_entities(entity, false, true, false);
     return false;
   }
   span.appendChild(btn);
 
-  parent.appendChild( span );
+  parent.appendChild(span);
 }
+
 
 function determine_open_articles()
 {
@@ -196,7 +294,7 @@ function close_text(button_element)
 function close_entity(element)
 {
   let to_close = element.parentNode;
-  document.getElementById("openentitys").removeChild(to_close);
+  document.getElementById("openentities").removeChild(to_close);
 }
 
 function display_article(article)
@@ -227,11 +325,17 @@ function display_article(article)
     //create Close Button
     let closeButton = document.createElement("button");
     closeButton.type = "button";
-	closeButton.setAttribute("class", "close-button");
+	  closeButton.setAttribute("class", "close-button");
     closeButton.setAttribute("aria-label", "Close");
     closeButton.onclick = function ()
     {
       close_text(this);
+      if(plotted_articles_dict.hasOwnProperty(article.title))
+      { 
+        article.unmark_entity(null, true);
+        delete plotted_articles_dict[article.title];
+      }
+      else {throw Error;}
       return false;
     }
 
@@ -243,7 +347,7 @@ function display_article(article)
 
     let topfChild = document.createElement("div");
     topfChild.appendChild(headlineElement);
-    top.appendChild(topfChild)
+    top.appendChild(topfChild);
 
     let topsChild = document.createElement("div");
     topsChild.appendChild(closeButton);
@@ -260,7 +364,7 @@ function display_article(article)
     // accordion item for text
     let accordion_text = document.createElement("div");
     accordion_text.className = "accordion-item";
-	accordion_text.style = "font-size: 17px;";
+  	accordion_text.style = "font-size: 17px;";
     accordion.appendChild(accordion_text)
 
     //header for text
@@ -296,8 +400,10 @@ function display_article(article)
     collapse_text.appendChild(body_text);
 
     //create and append text
-    let p = document.createElement("p");
-    p.appendChild( document.createTextNode(article.text));
+    let p = document.createElement("p"); 
+    p.id = "text;" + articel_div_id;
+    text(p, article);
+    //p.appendChild(pt);
     body_text.appendChild(p);
 
     //accordion item for statistics
@@ -320,7 +426,7 @@ function display_article(article)
     accordion_stat_button.setAttribute("aria-expanded", "false")
     accordion_stat_button.setAttribute("aria-controls", "statCollapse" + articel_div_id);
 
-    accordion_stat_button.appendChild( document.createTextNode("Statistics"));
+    accordion_stat_button.appendChild(document.createTextNode("Statistics"));
 
     accordion_stat_header.appendChild(accordion_stat_button);
 
@@ -337,14 +443,66 @@ function display_article(article)
     body_stat.className = "accordion-body";
     collapse_stat.appendChild(body_stat);
 
+    //create dropdown for plot kind
+    let div_drop = document.createElement("div");
+    div_drop.className = "dropdown";
+    collapse_stat.appendChild(div_drop);
 
-    //here is the code for the statistics
+    //button for dropdown
+    let button_drop = document.createElement("button");
+    button_drop.type = "button";
+    button_drop.className = "btn btn-secondary dropdown-toggle";
+    button_drop.id = "dropDownMenuButtonspacer" + articel_div_id;
+    button_drop.setAttribute("data-bs-toggle", "dropdown");
+    button_drop.setAttribute("aria-expanded", "false");
+    button_drop.appendChild( document.createTextNode("Views") )
+    div_drop.appendChild(button_drop);
+
+    //dropdown menu list
+    let ul_drop = document.createElement("ul");
+    ul_drop.className = "dropdown-menu";
+    ul_drop.setAttribute("aria-labelledby", "dropDownMenuButtonspacer" + articel_div_id);
+    div_drop.appendChild(ul_drop);
+
+    //create an add statistic elements
+    //add pie plot
+    let li_pie_drop = document.createElement("li");
+    ul_drop.appendChild(li_pie_drop);
+
+    let a_pie_drop = document.createElement("a");
+    a_pie_drop.className = "dropdown-item";
+    a_pie_drop.appendChild( document.createTextNode("Pie Plot") );
+    a_pie_drop.id = article.clean_topic + ";pie";
+    a_pie_drop.onclick = function()
+    {
+      set_entity_statistics_pie(articel_div_id + "spacerdroppie");
+      return false;
+    }
+    li_pie_drop.appendChild(a_pie_drop);
+
+    //add bar plot
+    let li_bar_drop = document.createElement("li");
+    ul_drop.appendChild(li_bar_drop);
+
+    let a_bar_drop = document.createElement("a");
+    a_bar_drop.className = "dropdown-item";
+    a_bar_drop.appendChild( document.createTextNode("Bar Plot") );
+    a_bar_drop.id = article.clean_topic + ";bar";
+    a_bar_drop.onclick = function() 
+    {
+      set_entity_statistics_bar(articel_div_id + "spacerdropbar");
+      return false;
+    }
+    li_bar_drop.appendChild(a_bar_drop);
+
+
     // create the div element for the pie plot
     let div_article_statistic = document.createElement("div");
+    div_article_statistic.id = "statistic;" + articel_div_id;
     collapse_stat.appendChild(div_article_statistic);
 
     let dat = article.statistics_of_article;
-    let plot = create_pie_plot(article.title, dat.names, dat.numbers, div_article_statistic);
+    let plot = create_pie_plot(article.title, dat.names, dat.numbers, dat.colour ,div_article_statistic);
     
     // handle click event in Chart
     // add articel to global dict
@@ -352,12 +510,13 @@ function display_article(article)
     plot.on('click', function(params) {
       entity_in_statistic_click(params);
     })
-
+    
+    //update article with opened entities
+    update_open_entities(false, article, false, false, p);
 
     //create a div Element for the treemap
     let div_treemap = document.createElement("div")
     div_treemap.id = "treemap;" + article.clean_topic + ";" + article.political_direction;
-    console.log(article.clean_topic);
     collapse_stat.appendChild(div_treemap);
 
     divChild.appendChild(accordion);
@@ -365,7 +524,29 @@ function display_article(article)
     div.appendChild(divChild);
     document.getElementById("articel_view;row").appendChild(div);
     determine_open_articles();
-    
+}
+
+
+document.getElementById("open_all_entities_button").addEventListener("click", open_all_entities);
+function open_all_entities()
+{
+	for (let entity of full_data[open_topic].entities)
+	{
+		open_entity(entity);
+	}
+}
+
+
+document.getElementById("close_all_open_entities_button").addEventListener("click", close_all_open_entities)
+function close_all_open_entities()
+{
+  let div = document.getElementById("openentities");
+
+  while(div.firstChild)
+  {
+    div.removeChild(div.firstChild);
+  }
+  update_open_entities(false, false, true, true);
 }
 
 /*
@@ -379,8 +560,10 @@ function topic_click(element)
 
 function topic_click(topic)
 {
+  open_topic = topic;
   set_articles(topic);
   set_statistics(topic);
+  set_entities(topic);
 }
 
 function article_click(article)
@@ -390,30 +573,31 @@ function article_click(article)
 
 function entity_in_statistic_click(params)
 { 
+  console.log(params);
   let entity = null;
+  let artcl = false;
 
   if(params.seriesName in plotted_articles_dict)
   {
-  let artcl = plotted_articles_dict[params.seriesName];
-  entity = artcl.entities.find( item => item.formatted_name == params.name );
+    artcl = plotted_articles_dict[params.seriesName];
+    entity = artcl.entities.find( item => item.formatted_name == params.name );
   }
   else
   {
-    console.log("topic")
-    let tpc = full_data.find(item => item.formatted_name == params.seriesName);
+    let tpc = full_data[open_topic];
     entity = tpc.entities.find( item => item.formatted_name == params.name);
-    console.log(entity);
   }
 
   set_entity_statistics(entity, document.getElementById("entityChart") );
-  open_entity(entity.formatted_name);
+  open_entity(entity);
 
   //scan "article_view;row" for open articles and update treemaps
   let open_articles = document.getElementById("articel_view;row").children;
   //console.log(open_articles.length)
   for(let i=0; i<open_articles.length; i++)
   {
-    // console.log(open_articles[i].id.split("0"))
+    let art_div = document.getElementById("text;" + open_articles[i].id);
+    //text(art_div, artcl, entity);
     let res = open_articles[i].id.split("spacer");
     let treemap_parent = document.getElementById("treemap;" + res[1] + ";" + res[2]);
     let article_direction = res[2];
@@ -423,6 +607,91 @@ function entity_in_statistic_click(params)
 
 function on_load() {
   set_topics();
+}
+
+/**
+ * Function to mark und and unmark entities in all open articles
+ * @param {Object} entity - entity that needs to be marked in all open articles
+ * @param {Object} article - newly opened article that needs it's entities marked
+ * @param {Boolean} dele - true, if entities need to be deleted fro all articles. If an entity is passed as well, only this entity will be unmarked in all articles 
+ */
+function update_open_entities(entity = false, article = false, dele = false, all = false, node = false)
+{
+  // mark all open articles in newly opened article
+  if(!entity && !dele)
+  { 
+    //open_articles = document.getElementById("articel_view;row").children;
+    let parent = document.getElementById("openentities");
+    for(let i=0; i<parent.children.length; i++)
+    {
+      let ent = article.entities.find(enti => enti.formatted_name === parent.children[i].firstChild.data);
+      if(ent)
+      {
+        article.mark_entity(ent);   
+      }
+    }
+    text(node, article, false)
+  }
+  // mark entity in all open articles
+  else if(!article && !dele)
+  {
+    for(title in  plotted_articles_dict)
+    {
+      var a = plotted_articles_dict[title];
+      if(a.entities.includes(entity) && !a.marked_entities.includes(entity))
+      {
+        a.mark_entity(entity);
+        var node_id = "text;" + "articlespacer" + a.clean_topic + "spacer" + a.political_direction;
+        var nde = document.getElementById(node_id);
+        text(nde, a, entity);
+      }
+    }
+  }
+  // delete marked entities
+  else if(dele)
+  {
+    for(title in  plotted_articles_dict)
+    {
+      var a = plotted_articles_dict[title];
+      var node_id = "text;" + "articlespacer" + a.clean_topic + "spacer" + a.political_direction;
+      var nde = document.getElementById(node_id);
+      if(all)
+      {
+          a.unmark_entity(entity, all);
+          text(nde, a)
+      }
+      else
+      {
+        if(a.marked_entities.includes(entity))
+        {
+          a.unmark_entity(entity);
+          text(nde, a);
+        }
+      }
+
+    }
+    
+  }
+} 
+
+function text(node, article, entity = null)
+{ 
+  article.set_text(node, entity);
+  //update_css(article);
+}
+
+function update_css(article)
+{
+  console.log("update");
+    article.marked_entities.forEach( entity => {
+      let name = article.clean_topic.toLowerCase() + "-" + entity.id_number;
+      const css_elem = document.querySelectorAll("[entity=" + name + "]");
+      css_elem.forEach(element =>
+        {
+          element.style.backgroundColor = entity.colour;
+        });
+      
+    })
 }
 
 on_load();

@@ -11,11 +11,14 @@ export class Mention {
         this._political_direction_of_article = null;
         
         //noch zu try catch ummodelieren
+        //console.log(txt)
+        //console.log(this._sentence);
         let temp = ent.merging_history.original.phrases[ind];
         if(this._text == ent.merging_history.original.phrases[ind][0])
         {
             let ph = temp[1].split("_");
             this._political_direction_of_article = ph[1];
+            //console.log(this._political_direction_of_article);
         }
         else {console.log("Error in phrases and text index")}
 
@@ -67,4 +70,8 @@ export class Mention {
         return splt.join(" ");
     }
 
+    get sentence()
+    {
+        return this._sentence;
+    }
 }

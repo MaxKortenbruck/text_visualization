@@ -3,12 +3,13 @@
 import {Mention} from "./mention.js";
 
 export class Entity {
-    constructor(data, topic, entity_name, identifier)
+    constructor(data, topic, entity_name, identifier, number)
     {   
         var self = this;
         this._identifier = identifier
         this._name = entity_name;
         this._topic = topic;
+        this._number = number;
 
         var ent = data[topic].entities.find(item => item.name === entity_name);
       
@@ -18,8 +19,11 @@ export class Entity {
         this._type = ent.type;        
         this._size = ent.size;
         this._representative = ent.merging_history.representative;
+        this._colour = null;
         this.set_mentions(ent);
+       // console.log(this._all_political_mentions);
     }
+
     //mentions nach ll und L un R mit Object ordnen
     set_mentions(entity)
     {
@@ -33,29 +37,6 @@ export class Entity {
                 this._all_political_mentions.push(m.political_direction_of_article);
             }
         })
-    }
-
-    get entity_statistics()
-    {
-        
-    }
-
-    get identifier()
-    {
-        return this._identifier;
-    }
-
-    get mentions()
-    {
-        return this._all_political_mentions;
-    }
-
-    get formatted_name()
-    {
-        var ret = this._name;
-        ret = ret.slice(0, -2);
-        ret = ret.replace(/_/g, " ");
-        return ret;
     }
 
     count_mentions(key = "all")
@@ -111,8 +92,14 @@ export class Entity {
                     ret_array.push(element);
                 }
             }); 
+            console.log(ret_array);
             return ret_array;
         }
+    }
+
+    add_colour(colour)
+    {
+        this._colour = colour;
     }
 
     get mentions_array()
@@ -144,6 +131,51 @@ export class Entity {
             text[i] = text[i] + " ";
         }
         return text;
+    }
+
+    get identifier()
+    {
+        return this._identifier;
+    }
+
+    get mentions()
+    {
+        return this._all_political_mentions;
+    }
+
+    get formatted_name()
+    {
+        var ret = this._name;
+        ret = ret.slice(0, -2);
+        ret = ret.replace(/_/g, " ");
+        return ret;
+    }
+
+    get colour()
+    {
+        return this._colour;
+    }
+
+    get id_number()
+    {
+        return this._number;
+    }
+
+    mentions_in_sentence(sentence)
+    {   
+        let ret = [];
+        for(let i = 0; i < this._mentions_array.length; i ++)
+        {
+            if(this._mentions_array[i].sentence == sentence)
+            {
+                ret.push(this._mentions_array[i])
+            }
+            else if(this._mentions_array[i].sentence > sentence)
+            {
+                break;
+            }
+        }
+        return ret;
     }
 
 
