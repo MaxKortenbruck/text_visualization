@@ -184,12 +184,14 @@ export class Topic
         var entity_dict = {
             names : [],
             numbers : [],
-            colour : []
+            colour : [],
+            phrasing_complexity : []
         }
         this.entities.forEach( ent => {
             entity_dict.names.push(ent.formatted_name);
             entity_dict.numbers.push(ent.mentions_array.length);
             entity_dict.colour.push(ent.colour);
+            entity_dict.push(ent.phrasing_complexity);
         });
         return entity_dict;
     }

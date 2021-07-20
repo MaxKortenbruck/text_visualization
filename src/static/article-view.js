@@ -531,6 +531,7 @@ function display_article(article)
 }
 
 
+
 document.getElementById("open_all_entities_button").addEventListener("click", open_all_entities);
 function open_all_entities()
 {
