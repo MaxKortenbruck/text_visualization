@@ -127,6 +127,7 @@ function set_articles(index)
 
 function set_statistics(index)
 {
+  //create pie plot
   document.getElementById("statistics_headline").innerHTML = full_data[index].formatted_name;
 
   let plot_parent = document.getElementById("mainChart");
@@ -139,6 +140,9 @@ function set_statistics(index)
   })
 
   document.getElementById("statistics_on_load_warning").style.display="none";
+
+  //create scatter Plot
+  
 }
 
 function create_entity_button(entity)
