@@ -191,7 +191,7 @@ export class Topic
             entity_dict.names.push(ent.formatted_name);
             entity_dict.numbers.push(ent.mentions_array.length);
             entity_dict.colour.push(ent.colour);
-            entity_dict.push(ent.phrasing_complexity);
+            entity_dict.phrasing_complexity.push(ent.phrasing_complexity);
         });
         return entity_dict;
     }

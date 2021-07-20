@@ -185,7 +185,7 @@ function set_entities(index)
 document.getElementById("mainChart;pie").addEventListener("click", set_statistics_pie)
 function set_statistics_pie()
 {
-  topic_click(open_topic);
+  set_statistics(open_topic);
 }
 
 document.getElementById("mainChart;bar").addEventListener("click", set_statistics_bar)

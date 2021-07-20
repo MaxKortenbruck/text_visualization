@@ -111,6 +111,9 @@ function create_pie_plot(key, names, mentioned, colour, parentFromChart, article
     };
     // use configuration item and data specified to show chart
     myChart.setOption(option);
+	window.onresize = function() {
+		myChart.resize();
+	  };
 	return myChart;
 }
 
@@ -192,6 +195,10 @@ function create_text_pie_plot(key, names, mentioned, colour, parentFromChart, ar
     // use configuration item and data specified to show chart
     myChart.setOption(option);
 
+	window.onresize = function() {
+		myChart.resize();
+	};
+
 	return myChart;
 }
 
@@ -261,6 +268,9 @@ function create_treemap(entity_name, /*data_array*/data, colour, parentFromChart
 
     myChart.setOption(option);
 
+	window.onresize = function() {
+		myChart.resize();
+	};
 }
 
 function create_bar_plot(key, names, mentioned, colour, parentElement)
@@ -329,6 +339,9 @@ function create_bar_plot(key, names, mentioned, colour, parentElement)
     };
     myChart.setOption(option);
 
+	window.onresize = function() {
+		myChart.resize();
+	};
 
     return myChart;
 }
