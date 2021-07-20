@@ -52,6 +52,8 @@ function create_pie_plot(key, names, mentioned, colour, parentFromChart, article
     // based on prepared DOM, initialize echarts instance
     var myChart = echarts.init(div)
 
+    // myChart.resize(width="960px", height="540px")
+
     let array = [];
     let i = 0;
     names.forEach( name => {
@@ -398,6 +400,8 @@ function create_scatter_plot(key, names, mentioned, colour, phrasing_complexity,
     };
 
     myChart.setOption(option);
+
+    return myChart;
 }
 
 export { create_pie_plot, create_text_pie_plot, create_treemap, create_bar_plot, create_scatter_plot,  }
