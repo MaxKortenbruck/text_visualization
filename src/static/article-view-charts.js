@@ -45,9 +45,8 @@ function create_pie_plot(key, names, mentioned, colour, parentFromChart, article
     div.setAttribute("id", "plt;pie;" + key);
 	div.className = "pie-plot";
     div.setAttribute("style", resulution);
-	div.style.width = '100% !important';
     div.setAttribute("article", article)
-
+	
     parentFromChart.appendChild(div);
 
     // based on prepared DOM, initialize echarts instance

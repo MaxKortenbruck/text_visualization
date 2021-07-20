@@ -250,7 +250,7 @@ body
 .pie-plot
 {
 	position: relative;
-	width: 100% !important;
+	align-self: left;
 }
 
 .text-pie-plot

@@ -127,17 +127,15 @@ function set_articles(index)
 
 function set_statistics(index)
 {
-  console.log("set statistics " + typeof index);
   document.getElementById("statistics_headline").innerHTML = full_data[index].formatted_name;
 
-  let parent = document.getElementById("mainChart");
-  console.log(parent);
+  let div = document.getElementById("mainChart");
   let dat = full_data[index].statistics_of_entities;
-  let plot = create_pie_plot(full_data[index].formatted_name, dat.names, dat.numbers, dat.colour, parent);
+  let plot = create_pie_plot(full_data[index].formatted_name, dat.names, dat.numbers, dat.colour, div);
 
   // handle click event in Charts
   plot.on('click', function(params) {
-      entity_in_statistic_click(params);
+    entity_in_statistic_click(params);
   })
 
   document.getElementById("statistics_on_load_warning").style.display="none";
@@ -186,8 +184,16 @@ document.getElementById("mainChart;pie").addEventListener("click", set_statistic
 
 function set_statistics_pie()
 {
-  document.getElementById("mainChart").innerHTML = "";
-  topic_click(open_topic);
+  //document.getElementById("mainChart").innerHTML = "";
+  //topic_click(open_topic);
+
+  let div = document.getElementById("mainChart");
+  let dat = full_data[open_topic].statistics_of_entities;
+  let plot = create_pie_plot(full_data[open_topic].formatted_name, dat.names, dat.numbers, dat.colour, div);
+
+  plot.on('click', function(params) {
+    entity_in_statistic_click(params);
+  })
 }
 
 document.getElementById("mainChart;bar").addEventListener("click", set_statistics_bar)
