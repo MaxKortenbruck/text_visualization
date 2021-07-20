@@ -140,12 +140,6 @@ function set_statistics(index)
   })
 
   document.getElementById("statistics_on_load_warning").style.display="none";
-
-  //create scatter Plot
-  plot_parent = document.getElementById("scatterChart");
-  console.log(dat)
-  create_scatter_plot(full_data[index].formatted_name, dat.names, dat.numbers, dat.colour, dat.phrasing_complexity, plot_parent);
-  
 }
 
 function create_entity_button(entity)
@@ -200,6 +194,18 @@ function set_statistics_bar()
   let div = document.getElementById("mainChart");
   let dat = full_data[open_topic].statistics_of_entities;
   let plot = create_bar_plot(full_data[open_topic].formatted_name, dat.names, dat.numbers, dat.colour, div);
+
+  plot.on('click', function(params) {
+    entity_in_statistic_click(params);
+  })
+}
+
+document.getElementById("mainChart;scatter").addEventListener("click", set_statistics_scatter);
+function set_statistics_scatter()
+{
+  let div = document.getElementById("mainChart");
+  let dat = full_data[open_topic].statistics_of_entities;
+  let plot = create_scatter_plot(full_data[open_topic].formatted_name, dat.names, dat.numbers, dat.colour, dat.phrasing_complexity, div);
 
   plot.on('click', function(params) {
     entity_in_statistic_click(params);
@@ -585,7 +591,12 @@ function entity_in_statistic_click(params)
   let entity = null;
   let artcl = false;
 
-  if(params.seriesName in plotted_articles_dict)
+  if(params.seriesType == "scatter")
+  {
+    let tpc = full_data[open_topic];
+    entity = tpc.entities.find( item => item.formatted_name == params.seriesName);
+  }
+  else if(params.seriesName in plotted_articles_dict)
   {
     artcl = plotted_articles_dict[params.seriesName];
     entity = artcl.entities.find( item => item.formatted_name == params.name );
@@ -595,6 +606,8 @@ function entity_in_statistic_click(params)
     let tpc = full_data[open_topic];
     entity = tpc.entities.find( item => item.formatted_name == params.name);
   }
+
+  console.log(entity);
 
   set_entity_statistics(entity, document.getElementById("entityChart") );
   open_entity(entity);
