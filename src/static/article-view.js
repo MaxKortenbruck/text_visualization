@@ -7,7 +7,7 @@
 **/
 
 import { get_topics, get_articles, get_statistics, get_entity_statistics, get_text, get_statistics_of_article } from "./base_functions.js";
-import { create_pie_plot, create_text_pie_plot, create_treemap, create_bar_plot } from "./article-view-charts.js";
+import { create_pie_plot, create_text_pie_plot, create_treemap, create_bar_plot, create_scatter_plot } from "./article-view-charts.js";
 import {Topic} from "./topic.js"
 
 /* global definitionsfor the script*/
@@ -142,6 +142,9 @@ function set_statistics(index)
   document.getElementById("statistics_on_load_warning").style.display="none";
 
   //create scatter Plot
+  plot_parent = document.getElementById("scatterChart");
+  console.log(dat)
+  create_scatter_plot(full_data[index].formatted_name, dat.names, dat.numbers, dat.colour, dat.phrasing_complexity, plot_parent);
   
 }
 
