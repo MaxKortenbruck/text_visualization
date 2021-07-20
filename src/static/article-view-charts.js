@@ -12,7 +12,7 @@ function create_pie_plot(key, names, mentioned, colour, parentFromChart, article
 
     let div = document.createElement("div");
     div.setAttribute("id", "plt;pie;" + key);
-	//div.className = "pie-plot";
+	div.className = "pie-plot";
     div.setAttribute("style", resulution);
     div.setAttribute("article", article)
 

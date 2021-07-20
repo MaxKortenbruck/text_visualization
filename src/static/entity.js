@@ -161,6 +161,11 @@ export class Entity {
         return this._number;
     }
 
+    get phrasing_complexity()
+    {
+        return this._phrasing_complexity;
+    }
+
     mentions_in_sentence(sentence)
     {   
         let ret = [];

@@ -288,9 +288,10 @@ body
 	display:inline-block;
 	border-radius:.25em;
 	border:1px solid;
-	filter:brightness(120%)
+	filter:brightness(120%);
+	color:white
 }
-
+/*
 .entity
 {
 	padding:.25em .25em;
@@ -301,7 +302,7 @@ body
 	border:1px solid;
 	filter:brightness(120%)
 }
-
+*/
 
 [entity]:hover
 {
