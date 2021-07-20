@@ -129,7 +129,9 @@ function set_statistics(index)
 {
   document.getElementById("statistics_headline").innerHTML = full_data[index].formatted_name;
 
+
   let div = document.getElementById("mainChart");
+  div.innerHTML = "";
   let dat = full_data[index].statistics_of_entities;
   let plot = create_pie_plot(full_data[index].formatted_name, dat.names, dat.numbers, dat.colour, div);
 
@@ -184,16 +186,7 @@ document.getElementById("mainChart;pie").addEventListener("click", set_statistic
 
 function set_statistics_pie()
 {
-  //document.getElementById("mainChart").innerHTML = "";
-  //topic_click(open_topic);
-
-  let div = document.getElementById("mainChart");
-  let dat = full_data[open_topic].statistics_of_entities;
-  let plot = create_pie_plot(full_data[open_topic].formatted_name, dat.names, dat.numbers, dat.colour, div);
-
-  plot.on('click', function(params) {
-    entity_in_statistic_click(params);
-  })
+  topic_click(open_topic);
 }
 
 document.getElementById("mainChart;bar").addEventListener("click", set_statistics_bar)
@@ -485,7 +478,7 @@ function display_article(article)
     collapse_stat.appendChild(div_article_statistic);
 
     let dat = article.statistics_of_article;
-    let plot = create_pie_plot(article.title, dat.names, dat.numbers, dat.colour ,div_article_statistic);
+    let plot = create_text_pie_plot(article.title, dat.names, dat.numbers, dat.colour ,div_article_statistic);
     
     // handle click event in Chart
     // add articel to global dict
@@ -500,6 +493,7 @@ function display_article(article)
     //create a div Element for the treemap
     let div_treemap = document.createElement("div")
     div_treemap.id = "treemap;" + article.clean_topic + ";" + article.political_direction;
+	console.log(div_treemap.id);
     collapse_stat.appendChild(div_treemap);
 
     divChild.appendChild(accordion);
@@ -545,9 +539,9 @@ function topic_click(element)
 function topic_click(topic)
 {
   open_topic = topic;
+  setTimeout(function(){set_statistics(topic)}, 1250);
   set_articles(topic);
   set_entities(topic);
-  set_statistics(topic);
 }
 
 function article_click(article)
