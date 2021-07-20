@@ -346,4 +346,58 @@ function create_bar_plot(key, names, mentioned, colour, parentElement)
     return myChart;
 }
 
-export { create_pie_plot, create_text_pie_plot, create_treemap, create_bar_plot, hexToRGB, RGBToHex }
+function create_scatter_plot(key, names, mentioned, colour, phrasing_complexity, parentElement)
+{
+    let series = [];
+    for(let i in names)
+    {
+        let dict = {};
+        dict["name"] = names[i];
+        dict["type"] = "scatter";
+        dict["symbolSize"] = 20;
+        dict["data"] = [[Math.sqrt(mentioned[i]), Math.sqrt(phrasing_complexity[i])]];
+        dict["itemStyle"] =  {color: colour[i]}
+        
+        series.push(dict);
+    }
+
+    console.log(series);
+
+    while(parentElement.firstChild)
+    {
+        parentElement.removeChild(parentElement.firstChild);
+    }
+
+    let div = document.createElement("div");
+    div.className = "bar-plot";
+	div.setAttribute("style", resulution);
+    parentElement.appendChild(div);
+	
+
+    let myChart = echarts.init(div);
+
+    let option = {
+        tooltip: {
+            position: 'top',
+            formatter: function(obj)
+            {
+                var m = Math.round(obj.value[0] * obj.value[0]);
+                var c = Math.round(obj.value[1] * obj.value[1] * 1000) / 1000;
+                var dot = "<span style='display: inline-block; margin-right: 5px; border-radius: 10px; width: 10px; height: 10px; background-color: " + obj.color + "'></span>";
+                return "Complexity: " + c + "<br>" + dot + m;
+            }
+
+        },
+        xAxis: {
+            name: "mentioned"
+        },
+        yAxis: {
+            name: "phrasing_complexity"
+        },
+        series: series
+    };
+
+    myChart.setOption(option);
+}
+
+export { create_pie_plot, create_text_pie_plot, create_treemap, create_bar_plot, create_scatter_plot,  }
