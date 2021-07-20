@@ -107,19 +107,21 @@ export class Topic
     */
     set_entities(data)
     {
-        data[this._identifier].entities.forEach(element => {
-            var id = this._identifier + ";" + element.name;
-            var en = new Entity(data, this._identifier, element.name, id);
-            this.entities.push(en);
-        })
+        for(const  [i, ent] of data[this._identifier].entities.entries())
+        {
+            var id = this._identifier + ";" + ent.name;
+            var entity = new Entity(data, this._identifier, ent.name, id, i);
+            this._entities.push(entity);
+        }
     }
     set_articles(data)
     {
-        data[this._identifier].documents.forEach(art => {
-            let article_name = this._identifier + ";" + art.title;
-            var doc = new Document(data, article_name, this._identifier);
-            this._articles.push(doc);
-        });
+        for(const [i, doc] of data[this._identifier].documents.entries())
+        {
+            let article_name = this._identifier + ";" + doc.title;
+            var article = new Document(data, article_name, this._identifier, i);
+            this._articles.push(article);
+        }
     }
     entities_to_articles()
     {
@@ -182,12 +184,14 @@ export class Topic
         var entity_dict = {
             names : [],
             numbers : [],
-            colour : []
+            colour : [],
+            phrasing_complexity : []
         }
         this.entities.forEach( ent => {
             entity_dict.names.push(ent.formatted_name);
             entity_dict.numbers.push(ent.mentions_array.length);
             entity_dict.colour.push(ent.colour);
+            entity_dict.push(ent.phrasing_complexity);
         });
         return entity_dict;
     }

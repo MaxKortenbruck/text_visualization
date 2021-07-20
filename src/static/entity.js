@@ -3,12 +3,13 @@
 import {Mention} from "./mention.js";
 
 export class Entity {
-    constructor(data, topic, entity_name, identifier)
+    constructor(data, topic, entity_name, identifier, number)
     {   
         var self = this;
         this._identifier = identifier
         this._name = entity_name;
         this._topic = topic;
+        this._number = number;
 
         var ent = data[topic].entities.find(item => item.name === entity_name);
       
@@ -19,9 +20,8 @@ export class Entity {
         this._size = ent.size;
         this._representative = ent.merging_history.representative;
         this._colour = null;
-        this._sentence_dict = {};
         this.set_mentions(ent);
-        this.set_sentence_dict;
+       // console.log(this._all_political_mentions);
     }
 
     //mentions nach ll und L un R mit Object ordnen
@@ -92,6 +92,7 @@ export class Entity {
                     ret_array.push(element);
                 }
             }); 
+            console.log(ret_array);
             return ret_array;
         }
     }
@@ -99,15 +100,6 @@ export class Entity {
     add_colour(colour)
     {
         this._colour = colour;
-    }
-
-    set_sentence_dict()
-    {
-        this._mentions_array.forEach(element => {
-            console.log(element.sentence);
-            console.log(element);
-            this._sentence_dict[element] = element.sentence ; 
-        })
     }
 
     get mentions_array()
@@ -164,9 +156,31 @@ export class Entity {
         return this._colour;
     }
 
-    mentions_in_sentence(sentence)
+    get id_number()
     {
-        return this._sentence_dict[sentence];
+        return this._number;
+    }
+
+    get phrasing_complexity()
+    {
+        return this._phrasing_complexity;
+    }
+
+    mentions_in_sentence(sentence)
+    {   
+        let ret = [];
+        for(let i = 0; i < this._mentions_array.length; i ++)
+        {
+            if(this._mentions_array[i].sentence == sentence)
+            {
+                ret.push(this._mentions_array[i])
+            }
+            else if(this._mentions_array[i].sentence > sentence)
+            {
+                break;
+            }
+        }
+        return ret;
     }
 
 

@@ -265,8 +265,6 @@ function create_treemap(entity_name, /*data_array*/data, colour, parentFromChart
 
 function create_bar_plot(key, names, mentioned, colour, parentElement)
 {
-
-    console.log(key, names, mentioned, parentElement);
     while(parentElement.firstChild)
     {
         parentElement.removeChild(parentElement.firstChild);
@@ -290,6 +288,10 @@ function create_bar_plot(key, names, mentioned, colour, parentElement)
 	}
 
     let option = {
+        title: {
+            text: key,
+            left: 'center'
+        },
 		tooltip: {
 			trigger: 'axis',
 			axisPointer: {

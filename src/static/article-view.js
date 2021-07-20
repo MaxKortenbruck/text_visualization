@@ -3,7 +3,7 @@
  * On:
  * 
  * Last Change By : Max Kortenbruck
- * On: 09.07.2021
+ * On: 15.07.2021
 **/
 
 import { get_topics, get_articles, get_statistics, get_entity_statistics, get_text, get_statistics_of_article } from "./base_functions.js";
@@ -183,7 +183,6 @@ function set_entities(index)
 
 
 document.getElementById("mainChart;pie").addEventListener("click", set_statistics_pie)
-
 function set_statistics_pie()
 {
   topic_click(open_topic);
@@ -210,16 +209,35 @@ function set_entity_statistics(entity, parent, article_direction)
 function set_entity_statistics_bar(index)
 {
   let res = index.split("spacer");
-  console.log(res)
   let dat = full_data[open_topic].articles.find(article => article.political_direction == res[2]).statistics_of_article;
-  console.log(dat);
+
+  let id = "statistic;" + index;
+  id = id.slice(0, -13);
+  let title = full_data[open_topic].articles.find(article => article.political_direction == res[2]).title
+  let div = document.getElementById(id)
+  let plot = create_bar_plot(title, dat.names, dat.numbers, dat.colour, div);
+
+  plot.on('click', function(params) {
+    entity_in_statistic_click(params);
+  })
+}
+
+function set_entity_statistics_pie(index)
+{
+
+  let res = index.split("spacer");
 
   let id = "statistic;" + index;
   id = id.slice(0, -13);
   let div = document.getElementById(id)
-  create_bar_plot("hallo", dat.names, dat.numbers, dat.colors, div);
-  console.log(dat);
-  //woher ein namen array und ein anzahlarray für einen bestimmten Artikel
+
+  let title = full_data[open_topic].articles.find(article => article.political_direction == res[2]).title
+  let dat = full_data[open_topic].articles.find(article => article.political_direction == res[2]).statistics_of_article;
+  let plot = create_pie_plot(title, dat.names, dat.numbers, dat.colour ,div);
+
+  plot.on('click', function(params) {
+    entity_in_statistic_click(params);
+  })
 }
 
 function open_entity(entity)
@@ -250,7 +268,7 @@ function open_entity(entity)
   btn.onclick = function()
   {
     close_entity(this);
-    update_open_entities(entity, false, true);
+    update_open_entities(entity, false, true, false);
     return false;
   }
   span.appendChild(btn);
@@ -314,7 +332,10 @@ function display_article(article)
     {
       close_text(this);
       if(plotted_articles_dict.hasOwnProperty(article.title))
-      {delete plotted_articles_dict[article.title];}
+      { 
+        article.unmark_entity(null, true);
+        delete plotted_articles_dict[article.title];
+      }
       else {throw Error;}
       return false;
     }
@@ -327,7 +348,7 @@ function display_article(article)
 
     let topfChild = document.createElement("div");
     topfChild.appendChild(headlineElement);
-    top.appendChild(topfChild)
+    top.appendChild(topfChild);
 
     let topsChild = document.createElement("div");
     topsChild.appendChild(closeButton);
@@ -382,7 +403,7 @@ function display_article(article)
     //create and append text
     let p = document.createElement("p"); 
     p.id = "text;" + articel_div_id;
-    article.set_text(p);
+    text(p, article);
     //p.appendChild(pt);
     body_text.appendChild(p);
 
@@ -453,6 +474,11 @@ function display_article(article)
     a_pie_drop.className = "dropdown-item";
     a_pie_drop.appendChild( document.createTextNode("Pie Plot") );
     a_pie_drop.id = article.clean_topic + ";pie";
+    a_pie_drop.onclick = function()
+    {
+      set_entity_statistics_pie(articel_div_id + "spacerdroppie");
+      return false;
+    }
     li_pie_drop.appendChild(a_pie_drop);
 
     //add bar plot
@@ -473,8 +499,7 @@ function display_article(article)
 
     // create the div element for the pie plot
     let div_article_statistic = document.createElement("div");
-    div_article_statistic.id = "statistic;" + articel_div_id; 
-    console.log("statistic;" + articel_div_id)
+    div_article_statistic.id = "statistic;" + articel_div_id;
     collapse_stat.appendChild(div_article_statistic);
 
     let dat = article.statistics_of_article;
@@ -488,7 +513,7 @@ function display_article(article)
     })
     
     //update article with opened entities
-    update_open_entities(false, article);
+    update_open_entities(false, article, false, false, p);
 
     //create a div Element for the treemap
     let div_treemap = document.createElement("div")
@@ -504,9 +529,8 @@ function display_article(article)
 }
 
 
-document.getElementById("open_all_entities_button").addEventListener("click", open_all_entities)
 
-
+document.getElementById("open_all_entities_button").addEventListener("click", open_all_entities);
 function open_all_entities()
 {
 	for (let entity of full_data[open_topic].entities)
@@ -525,6 +549,7 @@ function close_all_open_entities()
   {
     div.removeChild(div.firstChild);
   }
+  update_open_entities(false, false, true, true);
 }
 
 /*
@@ -551,6 +576,7 @@ function article_click(article)
 
 function entity_in_statistic_click(params)
 { 
+  console.log(params);
   let entity = null;
   let artcl = false;
 
@@ -561,7 +587,7 @@ function entity_in_statistic_click(params)
   }
   else
   {
-    let tpc = full_data.find(item => item.formatted_name == params.seriesName);
+    let tpc = full_data[open_topic];
     entity = tpc.entities.find( item => item.formatted_name == params.name);
   }
 
@@ -574,7 +600,7 @@ function entity_in_statistic_click(params)
   for(let i=0; i<open_articles.length; i++)
   {
     let art_div = document.getElementById("text;" + open_articles[i].id);
-    artcl.set_text(art_div);
+    //text(art_div, artcl, entity);
     let res = open_articles[i].id.split("spacer");
     let treemap_parent = document.getElementById("treemap;" + res[1] + ";" + res[2]);
     let article_direction = res[2];
@@ -592,45 +618,83 @@ function on_load() {
  * @param {Object} article - newly opened article that needs it's entities marked
  * @param {Boolean} dele - true, if entities need to be deleted fro all articles. If an entity is passed as well, only this entity will be unmarked in all articles 
  */
-function update_open_entities(entity = false, article = false, dele = false)
+function update_open_entities(entity = false, article = false, dele = false, all = false, node = false)
 {
-  if(!entity)
+  // mark all open articles in newly opened article
+  if(!entity && !dele)
   { 
+    //open_articles = document.getElementById("articel_view;row").children;
     let parent = document.getElementById("openentities");
     for(let i=0; i<parent.children.length; i++)
     {
       let ent = article.entities.find(enti => enti.formatted_name === parent.children[i].firstChild.data);
-      console.log(ent in article.entities);
-      if(typeof ent !== "undefined" && ent in article.entities)
+      if(ent)
       {
-        article.mark_entity(ent);
-      }     
+        article.mark_entity(ent);   
+      }
     }
+    text(node, article, false)
   }
-  else if(!article)
+  // mark entity in all open articles
+  else if(!article && !dele)
   {
     for(title in  plotted_articles_dict)
     {
       var a = plotted_articles_dict[title];
-      if(a.entities.includes(entity))
+      if(a.entities.includes(entity) && !a.marked_entities.includes(entity))
       {
         a.mark_entity(entity);
+        var node_id = "text;" + "articlespacer" + a.clean_topic + "spacer" + a.political_direction;
+        var nde = document.getElementById(node_id);
+        text(nde, a, entity);
       }
     }
   }
+  // delete marked entities
   else if(dele)
   {
     for(title in  plotted_articles_dict)
     {
       var a = plotted_articles_dict[title];
-      if(a.marked_entities.includes(entity))
+      var node_id = "text;" + "articlespacer" + a.clean_topic + "spacer" + a.political_direction;
+      var nde = document.getElementById(node_id);
+      if(all)
       {
-        if(entity) {a.unmark_entity(entity, true)}
-        else {a.unmark_entity(entity);}
+          a.unmark_entity(entity, all);
+          text(nde, a)
       }
+      else
+      {
+        if(a.marked_entities.includes(entity))
+        {
+          a.unmark_entity(entity);
+          text(nde, a);
+        }
+      }
+
     }
     
   }
 } 
+
+function text(node, article, entity = null)
+{ 
+  article.set_text(node, entity);
+  //update_css(article);
+}
+
+function update_css(article)
+{
+  console.log("update");
+    article.marked_entities.forEach( entity => {
+      let name = article.clean_topic.toLowerCase() + "-" + entity.id_number;
+      const css_elem = document.querySelectorAll("[entity=" + name + "]");
+      css_elem.forEach(element =>
+        {
+          element.style.backgroundColor = entity.colour;
+        });
+      
+    })
+}
 
 on_load();
