@@ -250,7 +250,7 @@ body
 .pie-plot
 {
 	position: relative;
-	width: 550% !important;
+	width: 100% !important;
 }
 
 .text-pie-plot
@@ -335,4 +335,10 @@ body
 .dropdown-item:active
 {
 	background-color: #f0f0f0 !important;
+}
+
+.bar-plot
+{
+	position: relative;
+	width: 100% !important;
 }

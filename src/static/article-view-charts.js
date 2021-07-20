@@ -1,6 +1,37 @@
 let resulution = "width:960px; height:540px;"
 //let resulution = "width:1920px; height:1080px;"
 
+function hexToRGB(h){
+	let r = 0, g = 0, b = 0;
+
+	r = parseInt('0x' + h[1] + h[2], 16);
+	g = parseInt('0x' + h[3] + h[4], 16);
+	b = parseInt('0x' + h[5] + h[6], 16);
+
+	return [r, g, b];
+}
+
+function RGBToHex(r, g, b){
+
+	r = r.toString(16);
+	g = g.toString(16);
+	b = b.toString(16);
+
+	if (r.length == 1)
+	{
+		r = '0' + r;
+	}
+	if (g.length == 1)
+	{
+		g = '0' + g;
+	}
+	if (b.length == 1)
+	{
+		b = '0' + b;
+	}
+
+	return '#' + r + g + b;
+}
 
 // returns chart
 function create_pie_plot(key, names, mentioned, colour, parentFromChart, article)
@@ -8,18 +39,103 @@ function create_pie_plot(key, names, mentioned, colour, parentFromChart, article
     while(parentFromChart.firstChild)
     {
         parentFromChart.removeChild(parentFromChart.firstChild);
-    }
+	}
 
     let div = document.createElement("div");
     div.setAttribute("id", "plt;pie;" + key);
 	div.className = "pie-plot";
     div.setAttribute("style", resulution);
     div.setAttribute("article", article)
-
+	
     parentFromChart.appendChild(div);
 
     // based on prepared DOM, initialize echarts instance
-    var myChart = echarts.init(div);
+    var myChart = echarts.init(div)
+
+    // myChart.resize(width="960px", height="540px")
+
+    let array = [];
+    let i = 0;
+    names.forEach( name => {
+        let dict = {};
+        dict["value"] = mentioned[i];
+        dict["name"] = name;
+        i++;
+        array.push(dict);
+    })
+
+    // specify chart configuration item and data
+    let option = {
+        title: {
+            text: 'Entities from ' + key,
+            left: 'center'
+        },
+        tooltip: {
+            trigger: 'item'
+        },
+        legend: {
+            show: false,
+            top: '5%',
+            left: 'center'
+        },
+        series: [
+            {
+                name: key,
+                type: 'pie',
+                radius: ['40%', '70%'],
+                avoidLabelOverlap: false,
+                itemStyle: {
+                    borderRadius: 10,
+                    borderColor: '#fff',
+                    borderWidth: 2
+                },
+                label: {
+                    show: false,
+                    position: 'center'
+                },
+                emphasis: {
+                    label: {
+                        show: true,
+                        fontSize: '40',
+                        fontWeight: 'bold',
+                        color: '#000'
+                    }
+                },
+                labelLine: {
+                    show: false
+                },
+                color: colour,
+                data: array
+            }
+        ],
+		responsive: true,
+		maintainAspectRatio: false
+    };
+    // use configuration item and data specified to show chart
+    myChart.setOption(option);
+	window.onresize = function() {
+		myChart.resize();
+	  };
+	return myChart;
+}
+
+function create_text_pie_plot(key, names, mentioned, colour, parentFromChart, article)
+{
+    while(parentFromChart.firstChild)
+    {
+        parentFromChart.removeChild(parentFromChart.firstChild);
+	}
+
+    let div = document.createElement("div");
+    div.setAttribute("id", "plt;pie;" + key);
+	div.className = "text-pie-plot";
+    div.setAttribute("style", resulution);
+    div.setAttribute("article", article)
+	
+    parentFromChart.appendChild(div);
+
+    // based on prepared DOM, initialize echarts instance
+    var myChart = echarts.init(div)
 
     let array = [];
     let i = 0;
@@ -81,93 +197,52 @@ function create_pie_plot(key, names, mentioned, colour, parentFromChart, article
     // use configuration item and data specified to show chart
     myChart.setOption(option);
 
-    return myChart;
-}
+	window.onresize = function() {
+		myChart.resize();
+	};
 
-function create_text_pie_plot(key, names, mentioned, parentFromChart)
-{
-    let div = document.createElement("div");
-    div.setAttribute("id", "plt;pie;" + key);
-	div.className = "text-pie-plot";
-    div.setAttribute("style", resulution);
-
-    while(parentFromChart.firstChild)
-    {
-        parentFromChart.removeChild(parentFromChart.firstChild);
-    }
-    parentFromChart.appendChild(div);
-    // based on prepared DOM, initialize echarts instance
-    var myChart = echarts.init(div);
-
-    let array = [];
-    let i = 0;
-    names.forEach( name => {
-        let dict = {};
-        dict["value"] = mentioned[i];
-        dict["name"] = name;
-        i++;
-        array.push(dict);
-    })
-
-    // specify chart configuration item and data
-    let option = {
-        title: {
-            text: 'Entities from ' + key,
-            left: 'center'
-        },
-        tooltip: {
-            trigger: 'item'
-        },
-        legend: {
-            show: false,
-            top: '5%',
-            left: 'center'
-        },
-        series: [
-            {
-                name: key,
-                type: 'pie',
-                radius: ['50%', '70%'],
-                avoidLabelOverlap: false,
-                itemStyle: {
-                    borderRadius: 10,
-                    borderColor: '#fff',
-                    borderWidth: 2
-                },
-                label: {
-                    show: false,
-                    position: 'center'
-                },
-                emphasis: {
-                    label: {
-                        show: true,
-                        fontSize: '40',
-                        fontWeight: 'bold'
-                    }
-                },
-                labelLine: {
-                    show: false
-                },
-                data: array
-            }
-        ],
-		responsive: true,
-		maintainAspectRatio: false
-    };
-    // use configuration item and data specified to show chart
-    myChart.setOption(option);
-
-    return myChart;
+	return myChart;
 }
 
 // creates the Plot for the entities
-function create_treemap(entity_name, /*data_array*/data, parentFromChart)
+function create_treemap(entity_name, /*data_array*/data, colour, parentFromChart)
 {
     let div = document.createElement("div");
     div.setAttribute("id", "plt;pie;" + entity_name);
 	div.className = "tree-map";
     div.setAttribute("style", resulution);
 
+	let colours = [];
+	let rgb = hexToRGB(colour);
+	let r = rgb[0];
+	let g = rgb[1];
+	let b = rgb[2];
+
+	for (let i = 0; i<10; i++)
+	{
+		if (Math.floor((7 + i) * r / 10) <= 255)
+		{
+			r = Math.floor((7 + i) * r / 10);
+		}
+		if (Math.floor((7 + i) * g / 10) <= 255)
+		{
+			g = Math.floor((7 + i) * g / 10);
+		}
+		if (Math.floor((7 + i) * b / 10) <= 255)
+		{
+			b = Math.floor((7 + i) * b / 10);
+		}
+		
+		colours[i] = RGBToHex(r,g,b);
+	}
+
+	let j = colours.length;
+	for (let i = 0; i < data.length; i++)
+	{
+		colours[i] = colours[i%j]
+		console.log(colours[i])
+	}
+
     while(parentFromChart.firstChild)
     {
         parentFromChart.removeChild(parentFromChart.firstChild);
@@ -178,7 +253,7 @@ function create_treemap(entity_name, /*data_array*/data, parentFromChart)
 
     let option = {
         title: {
-            text: 'how ' + entity_name + ' is mentioned',
+            text: 'how \'' + entity_name + '\' is mentioned',
             left: 'center'
         },
         tooltip: {
@@ -186,12 +261,18 @@ function create_treemap(entity_name, /*data_array*/data, parentFromChart)
         },
         series: [{
             type: 'treemap',
-            data: data
+            data: data,
+			levels: [{
+				color: colours
+			}]
         }]
     };
 
     myChart.setOption(option);
 
+	window.onresize = function() {
+		myChart.resize();
+	};
 }
 
 function create_bar_plot(key, names, mentioned, colour, parentElement)
@@ -217,6 +298,7 @@ function create_bar_plot(key, names, mentioned, colour, parentElement)
 		}
 		data.push(entry);
 	}
+
     let option = {
         title: {
             text: key,
@@ -234,7 +316,7 @@ function create_bar_plot(key, names, mentioned, colour, parentElement)
 			xAxisIndex: 0,
 			zoomLock: true,
 			start: 0,
-			end: 35,
+			end: 25,
 			handleSize: 0,
 			height: 10
 		}],
@@ -259,8 +341,67 @@ function create_bar_plot(key, names, mentioned, colour, parentElement)
     };
     myChart.setOption(option);
 
+	window.onresize = function() {
+		myChart.resize();
+	};
 
     return myChart;
 }
 
-export { create_pie_plot, create_text_pie_plot, create_treemap, create_bar_plot }
+function create_scatter_plot(key, names, mentioned, colour, phrasing_complexity, parentElement)
+{
+    let series = [];
+    for(let i in names)
+    {
+        let dict = {};
+        dict["name"] = names[i];
+        dict["type"] = "scatter";
+        dict["symbolSize"] = 20;
+        dict["data"] = [[Math.sqrt(mentioned[i]), Math.sqrt(phrasing_complexity[i])]];
+        dict["itemStyle"] =  {color: colour[i]}
+        
+        series.push(dict);
+    }
+
+    console.log(series);
+
+    while(parentElement.firstChild)
+    {
+        parentElement.removeChild(parentElement.firstChild);
+    }
+
+    let div = document.createElement("div");
+    div.className = "bar-plot";
+	div.setAttribute("style", resulution);
+    parentElement.appendChild(div);
+	
+
+    let myChart = echarts.init(div);
+
+    let option = {
+        tooltip: {
+            position: 'top',
+            formatter: function(obj)
+            {
+                var m = Math.round(obj.value[0] * obj.value[0]);
+                var c = Math.round(obj.value[1] * obj.value[1] * 1000) / 1000;
+                var dot = "<span style='display: inline-block; margin-right: 5px; border-radius: 10px; width: 10px; height: 10px; background-color: " + obj.color + "'></span>";
+                return "Complexity: " + c + "<br>" + dot + m;
+            }
+
+        },
+        xAxis: {
+            name: "mentioned"
+        },
+        yAxis: {
+            name: "phrasing_complexity"
+        },
+        series: series
+    };
+
+    myChart.setOption(option);
+
+    return myChart;
+}
+
+export { create_pie_plot, create_text_pie_plot, create_treemap, create_bar_plot, create_scatter_plot,  }
