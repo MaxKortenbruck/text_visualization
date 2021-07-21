@@ -586,8 +586,7 @@ function article_click(article)
 }
 
 function entity_in_statistic_click(params)
-{ 
-  console.log(params);
+{
   let entity = null;
   let artcl = false;
 
@@ -606,8 +605,6 @@ function entity_in_statistic_click(params)
     let tpc = full_data[open_topic];
     entity = tpc.entities.find( item => item.formatted_name == params.name);
   }
-
-  console.log(entity);
 
   set_entity_statistics(entity, document.getElementById("entityChart") );
   open_entity(entity);
@@ -698,21 +695,6 @@ function update_open_entities(entity = false, article = false, dele = false, all
 function text(node, article, entity = null)
 { 
   article.set_text(node, entity);
-  //update_css(article);
-}
-
-function update_css(article)
-{
-  console.log("update");
-    article.marked_entities.forEach( entity => {
-      let name = article.clean_topic.toLowerCase() + "-" + entity.id_number;
-      const css_elem = document.querySelectorAll("[entity=" + name + "]");
-      css_elem.forEach(element =>
-        {
-          element.style.backgroundColor = entity.colour;
-        });
-      
-    })
 }
 
 on_load();

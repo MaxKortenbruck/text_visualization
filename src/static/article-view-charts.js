@@ -221,7 +221,7 @@ function create_bar_plot(key, names, mentioned, colour, parentElement)
 	}
     let option = {
         title: {
-            text: key,
+            text: 'Entities from ' + key,
             left: 'center'
         },
 		tooltip: {
@@ -296,6 +296,10 @@ function create_scatter_plot(key, names, mentioned, colour, phrasing_complexity,
     let myChart = echarts.init(div);
 
     let option = {
+        title: {
+            text: 'Entities from ' + key,
+            left: 'center'
+        },
         tooltip: {
             position: 'top',
             formatter: function(obj)
