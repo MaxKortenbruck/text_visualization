@@ -115,7 +115,16 @@ function rainbow(numOfSteps, step) {
     return (c);
 }
 
-
+/**
+ * The Topic class creates a Topic Object that holds the representive Articles and Entities 
+ * belonging to this Topic. It instantiates ech article anf Entity and provides access via
+ * the ''articles'' and ''entities'' array.
+ * The Topic class also holds functions for data retrival and sets basic variables such as the colourscheme. 
+ * 
+ * @param {Object} data - Object that holds the JSON data   
+ * @param {String} topic_id - Short compressed id
+ * @param {Any} topic_name - Name of the Topic
+ */
 export class Topic
 {
     constructor(data, topic_id, topic_name)
@@ -123,8 +132,6 @@ export class Topic
 
         this._identifier = topic_id;
         this._name = topic_name;
-        //this.name = this.set_topic_name(topic_name);
-        //this.index = this.set_topic_index(data, topic_name);
         this._articles = [];
         this._entities = [];
         this.set_articles(data);
@@ -135,7 +142,7 @@ export class Topic
     
     /**
      * Returns the internal index of this topic in the json data
-     * @param {JSON-Oject} data - JSON data 
+     * @param {Oject} data - JSON data 
      * @param {String} topic_name - Topic Indentificator     
      * @returns - Integer of topic index
      *//*
@@ -154,24 +161,38 @@ export class Topic
         return index;
     }
     */
+
+    /**
+     * Creates all Entity class Objects belonging to this topic.
+     * @param {Objet} data - JSON Data 
+     */
     set_entities(data)
     {
         for(const  [i, ent] of data[this._identifier].entities.entries())
         {
             var id = this._identifier + ";" + ent.name;
+            //Create new Entity Object
             var entity = new Entity(data, this._identifier, ent.name, id, i);
             this._entities.push(entity);
         }
     }
+    /**
+     * Creates all Document class Objects belonging to this topic. 
+     * @param {Objet} data - JSON Data
+     */
     set_articles(data)
     {
         for(const [i, doc] of data[this._identifier].documents.entries())
         {
             let article_name = this._identifier + ";" + doc.title;
+            // Create new Document/Article Object
             var article = new Document(data, article_name, this._identifier, i);
             this._articles.push(article);
         }
     }
+    /**
+     * Assings each Article a refrence to their respective Entity class Object  
+     */
     entities_to_articles()
     {
         this._articles.forEach(art => {
@@ -183,7 +204,10 @@ export class Topic
             });
         });
     }
-
+    /**
+     * Sets the colour scheme for the entities from an array.
+     * If the number of entities exceeds the size of the array, a random colour is picked.
+     */
     set_colours()
     {	
         for(const [i , element] of this._entities.entries())

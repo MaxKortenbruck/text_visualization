@@ -638,8 +638,8 @@ function on_load() {
 
 /**
  * Function to mark und and unmark entities in all open articles
- * @param {Object} entity - entity that needs to be marked in all open articles
- * @param {Object} article - newly opened article that needs it's entities marked
+ * @param {Object} entity - entity class Object that needs to be marked in all open articles
+ * @param {Object} article - newly opened article class Object that needs it's entities marked
  * @param {Boolean} dele - true, if entities need to be deleted fro all articles. If an entity is passed as well, only this entity will be unmarked in all articles 
  */
 function update_open_entities(entity = false, article = false, dele = false, all = false, node = false)
