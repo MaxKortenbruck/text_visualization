@@ -146,7 +146,7 @@ export class Entity {
     {
         var ret = this._name;
         ret = ret.slice(0, -2);
-        ret = ret.replace(/_/g, " ");
+        ret = ret.replace(/[_,0,1,2,3,4,5,6,7,8,9]/g, " ");
         return ret;
     }
 

@@ -248,12 +248,13 @@ export class Topic
     get_statistics_of_article_with_zero(article)
     {
         var entity_dict = article.statistics_of_article;
-
         this.entities.forEach( ent => {
-            if(!(ent.formatted_name in entity_dict))
-            entity_dict.names.push(ent.formatted_name);
-            entity_dict.numbers.push(0);
-            entity_dict.colour.push(ent.colour);
+            if(!(ent.formatted_name in entity_dict.names))
+            {
+                entity_dict.names.push(ent.formatted_name);
+                entity_dict.numbers.push(0);
+                entity_dict.colour.push(ent.colour);
+            }
         });
         return entity_dict;
 
