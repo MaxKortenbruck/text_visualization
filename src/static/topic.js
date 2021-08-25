@@ -144,7 +144,7 @@ export class Topic
      * Returns the internal index of this topic in the json data
      * @param {Oject} data - JSON data 
      * @param {String} topic_name - Topic Indentificator     
-     * @returns - Integer of topic index
+     * @returns Integer of topic index
      *//*
     set_topic_index(data, topic_name)
     {
@@ -224,23 +224,31 @@ export class Topic
 			}		
         }
     }
-
+    /**
+     * @returns {String} Indentifier of the topic
+     */
     get identifier()
     {
         return this._identifier;
     }
-
+    /**
+     * @returns {String} The topics' name without any special caracters
+     */
     get formatted_name()
     {
         let text = this._name.split("_");
         return text[1];
     }
-
+    /**
+     * @returns {Array} Returns Array with all the topics' entities
+     */
     get entities()
     {
         return this._entities;
     }
-
+    /**
+     * @returns {Array} Returns Array with all the topics' articles
+     */
     get articles()
     {
         return this._articles;
@@ -251,7 +259,14 @@ export class Topic
         var ret = this._identifier;
         return ret.slice(0, -17).replace(/[-,_,.,0,1,2,3,4,5,6,7,8,9]/g, "");
     }
-
+    /**
+     * @returns 
+     *              Dictionary style Object where the three keys 
+     *                  < names, numbers, colour, phrasing_complexity >
+     *              each hold an array with the attributes of the articles' entities.
+     *              The arrays are initialiased, so names[k], numbers[k] and colour[k] each
+     *              reference the same entity.
+     */
     get statistics_of_entities()
     {
         var entity_dict = {
@@ -268,7 +283,15 @@ export class Topic
         });
         return entity_dict;
     }
-
+    /**
+     * 
+     * @param {Object} article - Object of the Article class  
+     * @returns {Object} Dictionary style Object where the three keys 
+     *                      < names, numbers, colour >
+     *                   each hold an array with the attributes of the articles' entities.
+     *                   The arrays are initialiased, so names[k], numbers[k] and colour[k] each
+     *                   reference the same entity.
+     */
     get_statistics_of_article_with_zero(article)
     {
         var entity_dict = article.statistics_of_article;
