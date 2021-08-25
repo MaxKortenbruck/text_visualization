@@ -195,6 +195,8 @@ function set_statistics_bar()
   let div = document.getElementById("mainChart");
   let dat = full_data[open_topic].statistics_of_entities;
   let plot = create_bar_plot(full_data[open_topic].formatted_name, dat.names, dat.numbers, dat.colour, div);
+  console.log("bar: ")
+  console.log(dat.numbers)
 
   plot.on('click', function(params) {
     entity_in_statistic_click(params);
@@ -222,13 +224,18 @@ function set_entity_statistics(entity, parent, article_direction)
 function set_entity_statistics_bar(index)
 {
   let res = index.split("spacer");
-  let dat = full_data[open_topic].articles.find(article => article.political_direction == res[2]).statistics_of_article;
+  let dat = full_data[open_topic].get_statistics_of_article_with_zero(
+                                  full_data[open_topic].articles.find(article => article.political_direction == res[2]))
+  // let dat = full_data[open_topic].articles.find(article => article.political_direction == res[2]).statistics_of_article;
 
   let id = "statistic;" + index;
   id = id.slice(0, -13);
   let title = full_data[open_topic].articles.find(article => article.political_direction == res[2]).title
   let div = document.getElementById(id)
   let plot = create_bar_plot(title, dat.names, dat.numbers, dat.colour, div);
+  console.log("bar_art: ")
+  console.log(dat.numbers)
+
 
   plot.on('click', function(params) {
     entity_in_statistic_click(params);

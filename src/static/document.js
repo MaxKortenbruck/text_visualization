@@ -34,8 +34,8 @@ export class Document {
      */
     set_article_text(data)
     {
-        let temp_text = "";
-        let sentence_symbols = [".",",","?","!",";",":","%","€","$","\’","\""];
+        var temp_text = "";
+        //let sentence_symbols = [".",",","?","!",";",":","%","€","$","\’","\""];
         let sentence_array = [], text_array = [];
         
         let article = data[this._topic].documents.find( art => {
@@ -44,13 +44,9 @@ export class Document {
         let text = article.text;
         text.forEach(sentence => {
             sentence.forEach(word => { 
-                if(!sentence_symbols.includes(word["word"]))
-                {
-                    temp_text += " ";
-                }
-                temp_text += word["word"];
-                sentence_array.push(temp_text);
-                temp_text = "";    
+                temp_text = word["word"];
+                temp_text += word["after"];
+                sentence_array.push(temp_text);   
             });
         text_array.push(sentence_array);
         sentence_array = [];
@@ -87,10 +83,7 @@ export class Document {
         }
         else 
         {
-        this._marked_entities = this._marked_entities.filter(function( ele ){
-            return ele.identifier !== ent.identifier;
-        });
-
+        this._marked_entities.splice(this._marked_entities.indexOf(ent), 1);
         }
         console.log(this._marked_entities);
     }
@@ -101,19 +94,19 @@ export class Document {
         let marked_text = [];
         let sentence_text = [];
         let sent_ent = [];
-        var entities = [];
+        var entities = this._marked_entities;
         //already marked = true/false wenn schon markiert
         //check ob markierter text oder nicht markierteer text verwendet werden soll
         console.log(entity);
-        if(entity)
-        {
-            entities.push(entity);
-        }
-        else
-        {
-            entities = this._marked_entities;
-        }
-
+        // if(entity)
+        // {
+        //     entities.push(entity);
+        // }
+        // else
+        // {
+        //     entities = this._marked_entities;
+        // }
+        console.log(this._text_array);
         entities.forEach(enti => {
             //console.log(this._marked_text);
             //console.log(this._marked_text[1][0]);
@@ -137,6 +130,7 @@ export class Document {
                         if(sent_ent[index].tokens[0] == j)
                         {
                             //console.log(this._marked_text[i][j]);
+                            console.log("i: " +i+" j: "+j);
                             let tmp_text = "<span entity=\"" + this.clean_topic.toLowerCase() +"-" + enti.id_number+ "\" style=background-color:"+ enti.colour +">" + this._marked_text[i][j];
                             console.log(this._marked_text[i][j]);
                             if(sent_ent[index].tokens.length == 1)
@@ -162,15 +156,16 @@ export class Document {
                      
                 };
                 //console.log(sentence_text);
-                marked_text.push(sentence_text);
+                marked_text[i] = sentence_text;
                 
                 sent_ent = [];
                 sentence_text = [];
                 index = 0;
             };
+            this._marked_text = marked_text; 
         });
             //console.log(marked_text);
-        this._marked_text = marked_text;    
+           
     }
 
     compare(b, a)
@@ -191,6 +186,7 @@ export class Document {
             
         if(this._marked_entities.length > 0)
         {   
+            this._marked_text = this._text_array;
             this.mark_text(entity);
             parsed_text = this._marked_text;
         }
