@@ -95,17 +95,9 @@ export class Document {
         let sentence_text = [];
         let sent_ent = [];
         var entities = this._marked_entities;
-        //already marked = true/false wenn schon markiert
-        //check ob markierter text oder nicht markierteer text verwendet werden soll
+   
         console.log(entity);
-        // if(entity)
-        // {
-        //     entities.push(entity);
-        // }
-        // else
-        // {
-        //     entities = this._marked_entities;
-        // }
+
         console.log(this._text_array);
         entities.forEach(enti => {
             //console.log(this._marked_text);
