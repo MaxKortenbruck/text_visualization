@@ -88,28 +88,14 @@ export class Document {
         console.log(this._marked_entities);
     }
 
-    mark_text(entity = false)
+    mark_text()
     {
-        console.log(this._name);
         let marked_text = [];
         let sentence_text = [];
         let sent_ent = [];
         var entities = this._marked_entities;
-        //already marked = true/false wenn schon markiert
-        //check ob markierter text oder nicht markierteer text verwendet werden soll
-        console.log(entity);
-        // if(entity)
-        // {
-        //     entities.push(entity);
-        // }
-        // else
-        // {
-        //     entities = this._marked_entities;
-        // }
-        console.log(this._text_array);
+        
         entities.forEach(enti => {
-            //console.log(this._marked_text);
-            //console.log(this._marked_text[1][0]);
             for(let i = 0; i < this._marked_text.length; i++)
             {    
                 sent_ent = enti.mentions_in_sentence(i, this._political_direction);
@@ -121,15 +107,12 @@ export class Document {
                 }
                 console.log(sent_ent)
                 let index = 0;  
-                //console.log(i);
                 for(let j = 0; j < this._marked_text[i].length; j++)
                 {
                     if(index < sent_ent.length && (sent_ent[index].tokens[0] == j || sent_ent[index].tokens[sent_ent[index].tokens.length -1] == j))
                     {
-                        //console.log("nicht pups");
                         if(sent_ent[index].tokens[0] == j)
                         {
-                            //console.log(this._marked_text[i][j]);
                             console.log("i: " +i+" j: "+j);
                             let tmp_text = "<span entity=\"" + this.clean_topic.toLowerCase() +"-" + enti.id_number+ "\" style=background-color:"+ enti.colour +">" + this._marked_text[i][j];
                             console.log(this._marked_text[i][j]);
@@ -150,12 +133,10 @@ export class Document {
                     else
                     {
                         let temp = this._marked_text[i][j];
-                        //console.log("j: " + j +"  temp = " + temp);
                         sentence_text[j] = temp;
                     }
                      
                 };
-                //console.log(sentence_text);
                 marked_text[i] = sentence_text;
                 
                 sent_ent = [];
@@ -163,9 +144,7 @@ export class Document {
                 index = 0;
             };
             this._marked_text = marked_text; 
-        });
-            //console.log(marked_text);
-           
+        });  
     }
 
     compare(b, a)
@@ -178,7 +157,7 @@ export class Document {
         return 0;      
     }
 
-    set_text(node, entity = null) 
+    set_text(node) 
     // check ob text vorher masrkiert werden muss odfer nicht
     {
         var text_return = "";
@@ -187,7 +166,7 @@ export class Document {
         if(this._marked_entities.length > 0)
         {   
             this._marked_text = this._text_array;
-            this.mark_text(entity);
+            this.mark_text();
             parsed_text = this._marked_text;
         }
         else

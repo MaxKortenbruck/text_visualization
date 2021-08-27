@@ -657,7 +657,7 @@ function update_open_entities(entity = false, article = false, dele = false, all
         article.mark_entity(ent);   
       }
     }
-    text(node, article, false)
+    text(node, article)
   }
   // mark entity in all open articles
   else if(!article && !dele)
@@ -670,7 +670,7 @@ function update_open_entities(entity = false, article = false, dele = false, all
         a.mark_entity(entity);
         var node_id = "text;" + "articlespacer" + a.clean_topic + "spacer" + a.political_direction;
         var nde = document.getElementById(node_id);
-        text(nde, a, entity);
+        text(nde, a);
       }
     }
   }
@@ -701,9 +701,9 @@ function update_open_entities(entity = false, article = false, dele = false, all
   }
 } 
 
-function text(node, article, entity = null)
+function text(node, article)
 { 
-  article.set_text(node, entity);
+  article.set_text(node);
 }
 
 on_load();
