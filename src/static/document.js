@@ -83,7 +83,7 @@ export class Document {
         }
         else 
         {
-        this._marked_entities.splice(this._marked_entities.indexOf(ent), 1);
+            this._marked_entities.splice(this._marked_entities.indexOf(ent), 1);
         }
         console.log(this._marked_entities);
     }
@@ -112,7 +112,7 @@ export class Document {
             //console.log(this._marked_text[1][0]);
             for(let i = 0; i < this._marked_text.length; i++)
             {    
-                sent_ent = enti.mentions_in_sentence(i);
+                sent_ent = enti.mentions_in_sentence(i, this._political_direction);
                 console.log(sent_ent)
                 if(sent_ent.length > 1)
                 {   

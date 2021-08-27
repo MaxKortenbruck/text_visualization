@@ -1,6 +1,7 @@
 'use strict'
 
 import {Mention} from "./mention.js";
+import { DefaultDict } from "./default_dict.js";
 
 export class Entity {
     constructor(data, topic, entity_name, identifier, number)
@@ -13,15 +14,16 @@ export class Entity {
 
         var ent = data[topic].entities.find(item => item.name === entity_name);
       
-        this._all_political_mentions = []
         this._mentions_array = [];
         this._phrasing_complexity = ent.phrasing_complexity;       
         this._type = ent.type;        
         this._size = ent.size;
         this._representative = ent.merging_history.representative;
         this._colour = null;
+        this._political_mentions_dict = {
+            directions : []
+        };
         this.set_mentions(ent);
-       // console.log(this._all_political_mentions);
     }
 
     //mentions nach ll und L un R mit Object ordnen
@@ -31,12 +33,18 @@ export class Entity {
         entity.mentions.forEach(element => {            
             var m = new Mention(element.sentence, element.text, element.tokens, element.annot_type, index, entity);
             index ++;
-            this.mentions_array.push(m);
-            if(!this._all_political_mentions.includes(m.political_direction_of_article))
+            this._mentions_array.push(m);
+            if(!this._political_mentions_dict.directions.includes(m.political_direction_of_article))
             {
-                this._all_political_mentions.push(m.political_direction_of_article);
+                this._political_mentions_dict.directions.push(m.political_direction_of_article);
+                this._political_mentions_dict[m.political_direction_of_article] = [m];
+            }
+            else
+            {
+                this._political_mentions_dict[m.political_direction_of_article].push(m);
             }
         })
+        console.log(this._political_mentions_dict);
     }
 
     count_mentions(key = "all")
@@ -139,7 +147,7 @@ export class Entity {
 
     get mentions()
     {
-        return this._all_political_mentions;
+        return this._political_mentions_dict.directions;
     }
 
     get formatted_name()
@@ -165,16 +173,16 @@ export class Entity {
         return this._phrasing_complexity;
     }
 
-    mentions_in_sentence(sentence)
+    mentions_in_sentence(sentence, direction)
     {   
         let ret = [];
-        for(let i = 0; i < this._mentions_array.length; i ++)
+        for(let i = 0; i < this._political_mentions_dict[direction].length; i ++)
         {
-            if(this._mentions_array[i].sentence == sentence)
+            if(this._political_mentions_dict[direction][i].sentence == sentence)
             {
-                ret.push(this._mentions_array[i])
+                ret.push(this._political_mentions_dict[direction][i])
             }
-            else if(this._mentions_array[i].sentence > sentence)
+            else if(this._political_mentions_dict[direction][i].sentence > sentence)
             {
                 break;
             }
