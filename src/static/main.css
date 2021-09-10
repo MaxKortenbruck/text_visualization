@@ -291,6 +291,15 @@ body
 	filter:brightness(120%);
 	color:white
 }
+.acc-text
+{
+	background-color: lavender !important;
+}
+.acc-stat
+{
+	background-color: lightgreen !important;
+	color: lightgreen !important;
+}
 /*
 .entity
 {

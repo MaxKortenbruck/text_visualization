@@ -384,7 +384,7 @@ function display_article(article)
 
     // accordion item for text
     let accordion_text = document.createElement("div");
-    accordion_text.className = "accordion-item";
+    accordion_text.className = "accordion-item acc-text";
   	accordion_text.style = "font-size: 17px;";
     accordion.appendChild(accordion_text)
 
@@ -429,7 +429,7 @@ function display_article(article)
 
     //accordion item for statistics
     let accordion_stat = document.createElement("div");
-    accordion_stat.className = "accordion-item";
+    accordion_stat.className = "accordion-item acc-stat";
     accordion.appendChild(accordion_stat)
 
     //header for statistics
