@@ -31,17 +31,19 @@ export class Entity {
     {
         var index = 0;
         entity.mentions.forEach(element => {            
-            var m = new Mention(element.sentence, element.text, element.tokens, element.annot_type, index, entity);
+            let pol = entity.merging_history.original.phrases[index][1].split("_");
+            var m = new Mention(element.sentence, element.text, element.tokens, element.annot_type, element.head_token_index,
+                                element.head_toke_word, index, pol[1]);
             index ++;
             this._mentions_array.push(m);
-            if(!this._political_mentions_dict.directions.includes(m.political_direction_of_article))
+            if(!this._political_mentions_dict.directions.includes(pol[1]))
             {
-                this._political_mentions_dict.directions.push(m.political_direction_of_article);
-                this._political_mentions_dict[m.political_direction_of_article] = [m];
+                this._political_mentions_dict.directions.push(pol[1]);
+                this._political_mentions_dict[pol[1]] = [m];
             }
             else
             {
-                this._political_mentions_dict[m.political_direction_of_article].push(m);
+                this._political_mentions_dict[pol[1]].push(m);
             }
         })
         console.log(this._political_mentions_dict);
