@@ -92,9 +92,18 @@ function set_articles(index)
 
   full_data[index].articles.forEach( article => {
     let trChild = document.createElement("tr");
+    trChild.className = "";
     trChild.id = "row;" + article.id;
     trChild.onclick = function()
     {
+        if(trChild.className == '')
+        {
+          trChild.className = 'table-click'
+        }
+        else
+        {
+          trChild.className = ""
+        }
         article_click(article);
         return false;
     }
@@ -308,6 +317,7 @@ function determine_open_articles()
 function close_text(button_element)
 {
   let to_close = button_element.parentNode.parentNode.parentNode.parentNode.parentNode;
+  console.log(to_close)
   document.getElementById("articel_view;row").removeChild(to_close);
   determine_open_articles();
 }
@@ -324,6 +334,8 @@ function display_article(article)
     //check if the article is already open
     if(document.getElementById(articel_div_id))
     {
+      document.getElementById("articel_view;row").removeChild(document.getElementById(articel_div_id));
+      determine_open_articles();
       return;
     }
 
