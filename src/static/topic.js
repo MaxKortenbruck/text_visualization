@@ -192,13 +192,16 @@ export class Topic
             var id = this._identifier + ";" + ent.name;
             var entity = new Entity(ent, this._identifier, ent.name, id, i);
 
-            var annot = entity.type;
-
+            var an = entity.type.split('-');
+            var annot = an[0]
             if(!this._entities_type.includes(annot))
             {
-                this._entities_type.push(annot);
+                //this._entities_type.push(annot);
+                this._entities_type[annot] = [entity];
             }
-            this._entities.push(entity);
+            else{
+                this._entities_type[annot].push(entity);
+            }
         }
     }
     set_articles(data)
@@ -224,39 +227,48 @@ export class Topic
 
     set_colours()
     {	
-        var i = this._entities_type.length() % 4
-        for(const [i , element] of this._entities.entries())
-        {	
+        console.log('col')
+        var fr = 0, i = 0;
+        console.log(this._entities_type);
+        for (const [key, value] of Object.entries(this._entities_type))
+        {  
+            console.log("1.f")
             if( !(4 % i) )
-            {
+            {   
+                console.log(i)
+                fr ++;
+                console.log(fr)
                 switch (fr) {
                     case 1:
-                        var f1 = 0.1
-                        var f2 = 0.1
-                        var f3 = 0.1
+                        var f1 = .1
+                        var f2 = .1
+                        var f3 = .1
                         break;
                     case 2:
-                        var f1 = 0.15
-                        var f2 = 0.1
-                        var f3 = 0.1
+                        var f1 = .15
+                        var f2 = .1
+                        var f3 = .1
                         break;
                     case 3:
-                        var f1 = 0.1
-                        var f2 = 0.15
-                        var f3 = 0.1
+                        var f1 = .1
+                        var f2 = .15
+                        var f3 = .1
                         break;
                     case 4:
-                        var f1 = 0.1
-                        var f2 = 0.1
-                        var f3 = 0.15
+                        var f1 = .1
+                        var f2 = .1
+                        var f3 = .15
                     default:
                         break;
                 }
-                col_arr =  makeColorGradient(f1, f2, f3,
-                    0, 2, 4,
-                    170, 75, 125)   
+                var col_arr = makeColorGradient(f1,f2,f3,0,2,4, 170,75, 125)
             }
-            element.add_colour(rainbow(this._entities.length, i+1));
+            for( var j = 0; j < value.length; j++)
+            {       
+                console.log(value)
+                value[j].add_colour(col_arr[(i+1)*8 + j]);
+            }     
+            //element.add_colour(rainbow(this._entities.length, i+1));
             // //element.add_colour(random_colour(this._entities.length, i+1));
 			// if ( i >= colour_array.length)
 			// {
@@ -266,9 +278,8 @@ export class Topic
 			// {
 			// 	element.add_colour(colour_array[i]);
 			// }	
-        }
-        let col = makeColorGradient(.3,.3,.3,0,2,4, 170,55)	
-        console.log(col);
+        i++;
+        };
     }
 
     get identifier()
