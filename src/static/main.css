@@ -247,6 +247,15 @@ body
 	overflow-y: scroll;
 }
 
+.table-click
+{
+	background-color: #f0f0f0 !important;
+	border: 1px solid #d6d6d6 !important;
+	outline: none !important;
+	box-shadow:0px 0px 7px 0px #dfdfdf !important;
+	color: black !important
+}
+
 .pie-plot
 {
 	position: relative;
@@ -290,6 +299,15 @@ body
 	border:1px solid;
 	filter:brightness(120%);
 	color:white
+}
+.acc-text
+{
+	background-color: lavender !important;
+}
+.acc-stat
+{
+	background-color: lightgreen !important;
+	color: lightgreen !important;
 }
 /*
 .entity
