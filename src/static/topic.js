@@ -127,6 +127,7 @@ export class Topic
         //this.index = this.set_topic_index(data, topic_name);
         this._articles = [];
         this._entities = [];
+        this._entitie_colors = {};
         this.set_articles(data);
         this.set_entities(data);
         this.entities_to_articles();
@@ -159,7 +160,7 @@ export class Topic
         for(const  [i, ent] of data[this._identifier].entities.entries())
         {
             var id = this._identifier + ";" + ent.name;
-            var entity = new Entity(data, this._identifier, ent.name, id, i);
+            var entity = new Entity(ent, this._identifier, ent.name, id, i);
             this._entities.push(entity);
         }
     }
@@ -168,7 +169,7 @@ export class Topic
         for(const [i, doc] of data[this._identifier].documents.entries())
         {
             let article_name = this._identifier + ";" + doc.title;
-            var article = new Document(data, article_name, this._identifier, i);
+            var article = new Document(doc, data, article_name, this._identifier, i);
             this._articles.push(article);
         }
     }
@@ -188,16 +189,16 @@ export class Topic
     {	
         for(const [i , element] of this._entities.entries())
         {	
-            //element.add_colour(rainbow(this._entities.length, i+1));
-            //element.add_colour(random_colour(this._entities.length, i+1));
-			if ( i >= colour_array.length)
-			{
-				element.add_colour(random_colour());
-			}
-			else
-			{
-				element.add_colour(colour_array[i]);
-			}		
+            element.add_colour(rainbow(this._entities.length, i+1));
+            // //element.add_colour(random_colour(this._entities.length, i+1));
+			// if ( i >= colour_array.length)
+			// {
+			// 	element.add_colour(random_colour());
+			// }
+			// else
+			// {
+			// 	element.add_colour(colour_array[i]);
+			// }		
         }
     }
 

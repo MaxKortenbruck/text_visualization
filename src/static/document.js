@@ -1,7 +1,7 @@
 'use strict'
 
 export class Document {
-    constructor(data, article, topic, number)
+    constructor(doc, data, article, topic, number)
     {
         //complete identifier topic;article
         this._identifier = article;
@@ -10,11 +10,7 @@ export class Document {
         var tmp = article.split(";");
         
         this._title = tmp[1];
-        
-        var result = data[tmp[0]].documents.find( art =>{
-            return art.title === tmp[1];
-        });
-        this._name = result.name;
+        this._name = doc.name;
         
         tmp = this._name.split("_");
         this._political_direction = tmp[1];

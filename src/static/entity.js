@@ -4,26 +4,25 @@ import {Mention} from "./mention.js";
 import { DefaultDict } from "./default_dict.js";
 
 export class Entity {
-    constructor(data, topic, entity_name, identifier, number)
+    constructor(entity, topic, entity_name, identifier, number)
     {   
-        var self = this;
         this._identifier = identifier
         this._name = entity_name;
         this._topic = topic;
         this._number = number;
 
-        var ent = data[topic].entities.find(item => item.name === entity_name);
+        //var ent = data[topic].entities.find(item => item.name === entity_name);
       
         this._mentions_array = [];
-        this._phrasing_complexity = ent.phrasing_complexity;       
-        this._type = ent.type;        
-        this._size = ent.size;
-        this._representative = ent.merging_history.representative;
+        this._phrasing_complexity = entity.phrasing_complexity;       
+        this._type = entity.type;        
+        this._size = entity.size;
+        this._representative = entity.merging_history.representative;
         this._colour = null;
         this._political_mentions_dict = {
             directions : []
         };
-        this.set_mentions(ent);
+        this.set_mentions(entity);
     }
 
     //mentions nach ll und L un R mit Object ordnen
@@ -173,6 +172,11 @@ export class Entity {
     get phrasing_complexity()
     {
         return this._phrasing_complexity;
+    }
+
+    get representative()
+    {
+        return this._representative;
     }
 
     mentions_in_sentence(sentence, direction)
