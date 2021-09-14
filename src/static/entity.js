@@ -45,7 +45,6 @@ export class Entity {
                 this._political_mentions_dict[pol[1]].push(m);
             }
         })
-        console.log(this._political_mentions_dict);
     }
 
     count_mentions(key = "all")

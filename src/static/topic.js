@@ -115,6 +115,36 @@ function rainbow(numOfSteps, step) {
     return (c);
 }
 
+function RGB2Color(r,g,b)
+{
+  return '#' + byte2Hex(r) + byte2Hex(g) + byte2Hex(b);
+}
+
+function byte2Hex(n)
+  {
+    var nybHexString = "0123456789ABCDEF";
+    return String(nybHexString.substr((n >> 4) & 0x0F,1)) + nybHexString.substr(n & 0x0F,1);
+  }
+
+function makeColorGradient(frequency1, frequency2, frequency3,
+    phase1, phase2, phase3,
+    center, width, len)
+{
+    var c_arr = [];
+    if (center == undefined)   center = 128;
+    if (width == undefined)    width = 127;
+    if (len == undefined)      len = 50;
+
+    for (var i = 0; i < len; ++i)
+    {
+        var r = Math.sin(frequency1*i + phase1) * width + center;
+        var g = Math.sin(frequency2*i + phase2) * width + center;
+        var b = Math.sin(frequency3*i + phase3) * width + center;
+        var c = RGB2Color(r,g,b)
+        c_arr.push(c)
+    }
+    return c_arr;
+}
 
 export class Topic
 {
@@ -127,7 +157,7 @@ export class Topic
         //this.index = this.set_topic_index(data, topic_name);
         this._articles = [];
         this._entities = [];
-        this._entitie_colors = {};
+        this._entities_type = [];
         this.set_articles(data);
         this.set_entities(data);
         this.entities_to_articles();
@@ -161,6 +191,13 @@ export class Topic
         {
             var id = this._identifier + ";" + ent.name;
             var entity = new Entity(ent, this._identifier, ent.name, id, i);
+
+            var annot = entity.type;
+
+            if(!this._entities_type.includes(annot))
+            {
+                this._entities_type.push(annot);
+            }
             this._entities.push(entity);
         }
     }
@@ -187,8 +224,38 @@ export class Topic
 
     set_colours()
     {	
+        var i = this._entities_type.length() % 4
         for(const [i , element] of this._entities.entries())
         {	
+            if( !(4 % i) )
+            {
+                switch (fr) {
+                    case 1:
+                        var f1 = 0.1
+                        var f2 = 0.1
+                        var f3 = 0.1
+                        break;
+                    case 2:
+                        var f1 = 0.15
+                        var f2 = 0.1
+                        var f3 = 0.1
+                        break;
+                    case 3:
+                        var f1 = 0.1
+                        var f2 = 0.15
+                        var f3 = 0.1
+                        break;
+                    case 4:
+                        var f1 = 0.1
+                        var f2 = 0.1
+                        var f3 = 0.15
+                    default:
+                        break;
+                }
+                col_arr =  makeColorGradient(f1, f2, f3,
+                    0, 2, 4,
+                    170, 75, 125)   
+            }
             element.add_colour(rainbow(this._entities.length, i+1));
             // //element.add_colour(random_colour(this._entities.length, i+1));
 			// if ( i >= colour_array.length)
@@ -198,8 +265,10 @@ export class Topic
 			// else
 			// {
 			// 	element.add_colour(colour_array[i]);
-			// }		
+			// }	
         }
+        let col = makeColorGradient(.3,.3,.3,0,2,4, 170,55)	
+        console.log(col);
     }
 
     get identifier()
