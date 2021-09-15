@@ -158,6 +158,7 @@ function create_entity_button(entity)
 	let span = document.createElement("span");
 	span.className = "badge badge-secondary";
 	span.style = "margin: 5px; background-color: " + entity.colour + " !important;" ;
+  span.setAttribute("data-rep", entity.representative);
 	span.appendChild(document.createTextNode(entity.formatted_name));
 	span.id = "entity_" + entity.identifier;
 	span.onclick = function()
