@@ -157,7 +157,7 @@ export class Topic
         //this.index = this.set_topic_index(data, topic_name);
         this._articles = [];
         this._entities = [];
-        this._entities_type = [];
+        this._entities_type = {};
         this.set_articles(data);
         this.set_entities(data);
         this.entities_to_articles();
@@ -193,15 +193,16 @@ export class Topic
             var entity = new Entity(ent, this._identifier, ent.name, id, i);
 
             var an = entity.type.split('-');
-            var annot = an[0]
-            if(!this._entities_type.includes(annot))
+            if(!(this._entities_type[an[0]]))
             {
-                //this._entities_type.push(annot);
-                this._entities_type[annot] = [entity];
+                this._entities_type[an[0]] = {};
             }
-            else{
-                this._entities_type[annot].push(entity);
+            if(!(this._entities_type[an[0]][entity.type]))
+            {
+                this._entities_type[an[0]][entity.type] = [];
             }
+            this._entities_type[an[0]][entity.type].push(entity);
+            this._entities.push(entity);
         }
     }
     set_articles(data)
@@ -227,62 +228,75 @@ export class Topic
 
     set_colours()
     {	
-        // console.log('col')
-        // var fr = 0, i = 0;
-        // console.log(this._entities_type);
-        // for (const [key, value] of Object.entries(this._entities_type))
-        // {  
-        //     console.log("1.f")
-        //     if( !(4 % i) )
-        //     {   
-        //         console.log(i)
-        //         fr ++;
-        //         console.log(fr)
-        //         switch (fr) {
-        //             case 1:
-        //                 var f1 = .1
-        //                 var f2 = .1
-        //                 var f3 = .1
-        //                 break;
-        //             case 2:
-        //                 var f1 = .15
-        //                 var f2 = .1
-        //                 var f3 = .1
-        //                 break;
-        //             case 3:
-        //                 var f1 = .1
-        //                 var f2 = .15
-        //                 var f3 = .1
-        //                 break;
-        //             case 4:
-        //                 var f1 = .1
-        //                 var f2 = .1
-        //                 var f3 = .15
-        //             default:
-        //                 break;
-        //         }
-        //         var col_arr = makeColorGradient(f1,f2,f3,0,2,4, 170,75, 125)
-        //     }
-        //     for( var j = 0; j < value.length; j++)
-        //     {       
-        //         console.log(value)
-        //         value[j].add_colour(col_arr[(i+1)*8 + j]);
-        //     }
-        for(let i = 0; i < this._entities.length; i++)
-        {     
-            element.add_colour(rainbow(this._entities.length, i+1));
-            // //element.add_colour(random_colour(this._entities.length, i+1));
-			// if ( i >= colour_array.length)
-			// {
-			// 	element.add_colour(random_colour());
-			// }
-			// else
-			// {
-			// 	element.add_colour(colour_array[i]);
-			// }
-        }	
-        // i++;
-        // };
+        var fr = 1;
+        var f1, f2, f3;
+        var i = 0;
+        var col_arr = [];
+        console.log(this._entities_type);
+        for (const [o, element] of Object.entries(this._entities_type))
+        {  
+            if( i % 5 == 0 )
+            {   
+                console.log(fr)
+                console.log('switch  ' + i)    
+                switch (fr) {
+                    case 1:
+                        f1 = .1
+                        f2 = .1
+                        f3 = .1
+                        break;
+                    case 2:
+                        f1 = .15
+                        f2 = .1
+                        f3 = .1
+                        break;
+                    case 3:
+                        f1 = .1
+                        f2 = .15
+                        f3 = .1
+                        break;
+                    case 4:
+                        var f1 = .1
+                        var f2 = .1
+                        var f3 = .15
+                    default:
+                        break;
+                }
+                console.log(f1)
+                console.log(f2)
+                console.log(f3)
+                col_arr = makeColorGradient(f1,f2,f3,0,2,4, 170,75, 125);
+                fr ++;
+                console.log(fr)
+                i+=1;
+            }
+            for(const [p, entity_arr] of Object.entries(element))
+            {
+                var j = 0;
+                entity_arr.forEach(pol =>{
+                    // console.log(pol + '  ' + col_arr[((i-1) * 8 + j)]);
+                    pol.add_colour(col_arr[((i-1)*8 + j)]);
+                    j+= 3;
+                });        
+            }
+        i+=1;
+        // console.log(i)
+        
+        };
+
+        // for(const [i , element] of this._entities.entries())
+        // {	
+        //     //element.add_colour(rainbow(this._entities.length, i+1));
+        //     //element.add_colour(random_colour(this._entities.length, i+1));
+		// 	if ( i >= colour_array.length)
+		// 	{
+		// 		element.add_colour(random_colour());
+		// 	}
+		// 	else
+		// 	{
+		// 		element.add_colour(colour_array[i]);
+		// 	}		
+        // }
     }
 
     get identifier()
