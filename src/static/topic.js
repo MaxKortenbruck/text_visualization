@@ -241,8 +241,8 @@ export class Topic
                 console.log('switch  ' + i)    
                 switch (fr) {
                     case 1:
-                        f1 = .2
-                        f2 = .15
+                        f1 = .1
+                        f2 = .1
                         f3 = .1
                         break;
                     case 2:
@@ -275,7 +275,7 @@ export class Topic
                 entity_arr.forEach(pol =>{
                     // console.log(pol + '  ' + col_arr[((i-1) * 8 + j)]);
                     pol.add_colour(col_arr[((i-1)*8 + j)]);
-                    j+=3;
+                    j+=2;
                 });        
             }
         i+=1;
@@ -355,5 +355,25 @@ export class Topic
         });
         return entity_dict;
 
+    }
+    get statistics_of_entity_types()
+    {
+        var type_dict = {
+            names : [],
+            numbers : [],
+            colour : []
+        }
+
+        for (const [o, element] of Object.entries(this._entities_type))
+        {
+            for(const [p, entity_arr] of Object.entries(element))
+            {
+                type_dict.names.push(p);
+                type_dict.numbers.push(entity_arr.length);
+                type_dict.colour.push(entity_arr[0].colour);
+            }
+            
+        }
+        return type_dict;
     }
 }
