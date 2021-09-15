@@ -142,7 +142,7 @@ function set_statistics(index)
 
   let div = document.getElementById("mainChart");
   div.innerHTML = "";
-  let dat = full_data[index].statistics_of_entities;
+  let dat = full_data[index].statistics_of_entity_types;
   let plot = create_pie_plot(full_data[index].formatted_name, dat.names, dat.numbers, dat.colour, div);
 
   // handle click event in Charts

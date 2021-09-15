@@ -241,8 +241,8 @@ export class Topic
                 console.log('switch  ' + i)    
                 switch (fr) {
                     case 1:
-                        f1 = .2
-                        f2 = .15
+                        f1 = .1
+                        f2 = .1
                         f3 = .1
                         break;
                     case 2:
@@ -275,7 +275,7 @@ export class Topic
                 entity_arr.forEach(pol =>{
                     // console.log(pol + '  ' + col_arr[((i-1) * 8 + j)]);
                     pol.add_colour(col_arr[((i-1)*8 + j)]);
-                    j+=3;
+                    j+=2;
                 });        
             }
         i+=1;
