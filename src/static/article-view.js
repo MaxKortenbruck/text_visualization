@@ -158,6 +158,7 @@ function create_entity_button(entity)
 	let span = document.createElement("span");
 	span.className = "badge badge-secondary";
 	span.style = "margin: 5px; background-color: " + entity.colour + " !important;" ;
+  span.setAttribute("data-rep", entity.representative);
 	span.appendChild(document.createTextNode(entity.formatted_name));
 	span.id = "entity_" + entity.identifier;
 	span.onclick = function()
@@ -204,8 +205,6 @@ function set_statistics_bar()
   let div = document.getElementById("mainChart");
   let dat = full_data[open_topic].statistics_of_entities;
   let plot = create_bar_plot(full_data[open_topic].formatted_name, dat.names, dat.numbers, dat.colour, div);
-  console.log("bar: ")
-  console.log(dat.numbers)
 
   plot.on('click', function(params) {
     entity_in_statistic_click(params);
