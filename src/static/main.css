@@ -343,6 +343,10 @@ body
 	vertical-align:middle;
 	margin:0 0 .1rem .5rem
 }*/
+.badge
+{
+	transition: 0.5s;
+}
 .badge:hover
 {
 	color: #bababa;
