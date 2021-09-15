@@ -259,4 +259,24 @@ export class Topic
         return entity_dict;
 
     }
+    get statistics_of_entity_types()
+    {
+        var type_dict = {
+            names : [],
+            numbers : [],
+            colour : []
+        }
+
+        for (const [o, element] of Object.entries(this._entities_type))
+        {
+            for(const [p, entity_arr] of Object.entries(element))
+            {
+                type_dict.names.push(p);
+                type_dict.numbers.push(entity_arr.length);
+                type_dict.colour.push(entity_arr[0].colour);
+            }
+            
+        }
+        return type_dict;
+    }
 }
