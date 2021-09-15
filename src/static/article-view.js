@@ -92,9 +92,18 @@ function set_articles(index)
 
   full_data[index].articles.forEach( article => {
     let trChild = document.createElement("tr");
+    trChild.className = "";
     trChild.id = "row;" + article.id;
     trChild.onclick = function()
     {
+        if(trChild.className == '')
+        {
+          trChild.className = 'table-click'
+        }
+        else
+        {
+          trChild.className = ""
+        }
         article_click(article);
         return false;
     }
@@ -133,7 +142,7 @@ function set_statistics(index)
 
   let div = document.getElementById("mainChart");
   div.innerHTML = "";
-  let dat = full_data[index].statistics_of_entities;
+  let dat = full_data[index].statistics_of_entity_types;
   let plot = create_pie_plot(full_data[index].formatted_name, dat.names, dat.numbers, dat.colour, div);
 
   // handle click event in Charts
@@ -149,6 +158,7 @@ function create_entity_button(entity)
 	let span = document.createElement("span");
 	span.className = "badge badge-secondary";
 	span.style = "margin: 5px; background-color: " + entity.colour + " !important;" ;
+  span.setAttribute("data-rep", entity.representative);
 	span.appendChild(document.createTextNode(entity.formatted_name));
 	span.id = "entity_" + entity.identifier;
 	span.onclick = function()
@@ -195,8 +205,6 @@ function set_statistics_bar()
   let div = document.getElementById("mainChart");
   let dat = full_data[open_topic].statistics_of_entities;
   let plot = create_bar_plot(full_data[open_topic].formatted_name, dat.names, dat.numbers, dat.colour, div);
-  console.log("bar: ")
-  console.log(dat.numbers)
 
   plot.on('click', function(params) {
     entity_in_statistic_click(params);
@@ -308,6 +316,7 @@ function determine_open_articles()
 function close_text(button_element)
 {
   let to_close = button_element.parentNode.parentNode.parentNode.parentNode.parentNode;
+  console.log(to_close)
   document.getElementById("articel_view;row").removeChild(to_close);
   determine_open_articles();
 }
@@ -324,6 +333,8 @@ function display_article(article)
     //check if the article is already open
     if(document.getElementById(articel_div_id))
     {
+      document.getElementById("articel_view;row").removeChild(document.getElementById(articel_div_id));
+      determine_open_articles();
       return;
     }
 
@@ -384,7 +395,7 @@ function display_article(article)
 
     // accordion item for text
     let accordion_text = document.createElement("div");
-    accordion_text.className = "accordion-item";
+    accordion_text.className = "accordion-item acc-text";
   	accordion_text.style = "font-size: 17px;";
     accordion.appendChild(accordion_text)
 
@@ -429,7 +440,7 @@ function display_article(article)
 
     //accordion item for statistics
     let accordion_stat = document.createElement("div");
-    accordion_stat.className = "accordion-item";
+    accordion_stat.className = "accordion-item acc-stat";
     accordion.appendChild(accordion_stat)
 
     //header for statistics
@@ -657,7 +668,7 @@ function update_open_entities(entity = false, article = false, dele = false, all
         article.mark_entity(ent);   
       }
     }
-    text(node, article, false)
+    text(node, article)
   }
   // mark entity in all open articles
   else if(!article && !dele)
@@ -670,7 +681,7 @@ function update_open_entities(entity = false, article = false, dele = false, all
         a.mark_entity(entity);
         var node_id = "text;" + "articlespacer" + a.clean_topic + "spacer" + a.political_direction;
         var nde = document.getElementById(node_id);
-        text(nde, a, entity);
+        text(nde, a);
       }
     }
   }
@@ -701,9 +712,9 @@ function update_open_entities(entity = false, article = false, dele = false, all
   }
 } 
 
-function text(node, article, entity = null)
+function text(node, article)
 { 
-  article.set_text(node, entity);
+  article.set_text(node);
 }
 
 on_load();
