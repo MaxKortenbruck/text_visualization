@@ -1,16 +1,18 @@
 'use strict'
 
 export class Mention {
-    constructor(sent, txt, tok, annot, ind, ent)
+    constructor(sent, txt, tok, annot, hti, htw, ind, pol )
     {
         this._sentence = sent;
         this._text = txt;
         this._tokens = tok;
         this._annotate_type = annot;
         this._index = ind;
-        this._political_direction_of_article = null;
+        this._head_token_index = hti;
+        this._head_token_word = htw;
+        this._political_direction_of_article = pol;
         
-        let temp = ent.merging_history.original.phrases[ind][1].split("_");
+        // let temp = ent.merging_history.original.phrases[ind][1].split("_");
         // console.log("temp: " + temp)
         // console.log(ent.merging_history.original.phrases[ind][0])
         // console.log(this._text)
@@ -22,7 +24,7 @@ export class Mention {
         // else {console.log("Error in phrases and text index")}
 
         //this._normalized_text = this.set_norm_text(this._text);
-        this._political_direction_of_article = temp[1];
+        // this._political_direction_of_article = temp[1];
         // console.log(this._political_direction_of_article);
 
     }

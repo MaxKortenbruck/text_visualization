@@ -1,4 +1,7 @@
-
+:root
+{
+	--entity-representative: '' ;
+}
 
 body
 {
@@ -297,8 +300,8 @@ body
 	display:inline-block;
 	border-radius:.25em;
 	border:1px solid;
-	filter:brightness(120%);
-	color:white
+	filter:brightness(100%);
+
 }
 .acc-text
 {
@@ -322,14 +325,15 @@ body
 }
 */
 
-[entity]:hover
+/* [entity]:hover
 {
-	filter:brightness(160%)
-}
+	color: #bababa;
+	box-shadow:0px 0px 10px 0px #adadad !important;
+} */
 /*[entity]:after
 {
 	box-sizing:border-box;
-	content:attr(data-entity);
+	content:attr(entity);
 	font-size:.6em;
 	line-height:1;
 	padding:.35em .35em;
@@ -339,11 +343,28 @@ body
 	vertical-align:middle;
 	margin:0 0 .1rem .5rem
 }*/
+.badge
+{
+	transition: 0.5s;
+}
 .badge:hover
 {
 	color: #bababa;
 	box-shadow:0px 0px 10px 0px #adadad !important;
 }
+
+.badge:hover::after
+{
+	content: "| " attr(data-rep);
+	/*font-size:.6em;*/
+	line-height:1;
+	padding:.25em .25em;
+	border-radius:.25em;
+	display:inline-block;
+	vertical-align:middle;
+	margin:0 0 .1rem .5rem;
+}
+
 
 .btn
 {

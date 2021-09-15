@@ -4,26 +4,25 @@ import {Mention} from "./mention.js";
 import { DefaultDict } from "./default_dict.js";
 
 export class Entity {
-    constructor(data, topic, entity_name, identifier, number)
+    constructor(entity, topic, entity_name, identifier, number)
     {   
-        var self = this;
         this._identifier = identifier
         this._name = entity_name;
         this._topic = topic;
         this._number = number;
 
-        var ent = data[topic].entities.find(item => item.name === entity_name);
+        //var ent = data[topic].entities.find(item => item.name === entity_name);
       
         this._mentions_array = [];
-        this._phrasing_complexity = ent.phrasing_complexity;       
-        this._type = ent.type;        
-        this._size = ent.size;
-        this._representative = ent.merging_history.representative;
+        this._phrasing_complexity = entity.phrasing_complexity;       
+        this._type = entity.type;        
+        this._size = entity.size;
+        this._representative = entity.merging_history.original.representative;
         this._colour = null;
         this._political_mentions_dict = {
             directions : []
         };
-        this.set_mentions(ent);
+        this.set_mentions(entity);
     }
 
     //mentions nach ll und L un R mit Object ordnen
@@ -31,20 +30,21 @@ export class Entity {
     {
         var index = 0;
         entity.mentions.forEach(element => {            
-            var m = new Mention(element.sentence, element.text, element.tokens, element.annot_type, index, entity);
+            let pol = entity.merging_history.original.phrases[index][1].split("_");
+            var m = new Mention(element.sentence, element.text, element.tokens, element.annot_type, element.head_token_index,
+                                element.head_toke_word, index, pol[1]);
             index ++;
             this._mentions_array.push(m);
-            if(!this._political_mentions_dict.directions.includes(m.political_direction_of_article))
+            if(!this._political_mentions_dict.directions.includes(pol[1]))
             {
-                this._political_mentions_dict.directions.push(m.political_direction_of_article);
-                this._political_mentions_dict[m.political_direction_of_article] = [m];
+                this._political_mentions_dict.directions.push(pol[1]);
+                this._political_mentions_dict[pol[1]] = [m];
             }
             else
             {
-                this._political_mentions_dict[m.political_direction_of_article].push(m);
+                this._political_mentions_dict[pol[1]].push(m);
             }
         })
-        console.log(this._political_mentions_dict);
     }
 
     count_mentions(key = "all")

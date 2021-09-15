@@ -115,6 +115,36 @@ function rainbow(numOfSteps, step) {
     return (c);
 }
 
+function RGB2Color(r,g,b)
+{
+  return '#' + byte2Hex(r) + byte2Hex(g) + byte2Hex(b);
+}
+
+function byte2Hex(n)
+  {
+    var nybHexString = "0123456789ABCDEF";
+    return String(nybHexString.substr((n >> 4) & 0x0F,1)) + nybHexString.substr(n & 0x0F,1);
+  }
+
+function makeColorGradient(frequency1, frequency2, frequency3,
+    phase1, phase2, phase3,
+    center, width, len)
+{
+    var c_arr = [];
+    if (center == undefined)   center = 128;
+    if (width == undefined)    width = 127;
+    if (len == undefined)      len = 50;
+
+    for (var i = 0; i < len; ++i)
+    {
+        var r = Math.sin(frequency1*i + phase1) * width + center;
+        var g = Math.sin(frequency2*i + phase2) * width + center;
+        var b = Math.sin(frequency3*i + phase3) * width + center;
+        var c = RGB2Color(r,g,b)
+        c_arr.push(c)
+    }
+    return c_arr;
+}
 
 export class Topic
 {
@@ -127,6 +157,7 @@ export class Topic
         //this.index = this.set_topic_index(data, topic_name);
         this._articles = [];
         this._entities = [];
+        this._entities_type = {};
         this.set_articles(data);
         this.set_entities(data);
         this.entities_to_articles();
@@ -159,7 +190,18 @@ export class Topic
         for(const  [i, ent] of data[this._identifier].entities.entries())
         {
             var id = this._identifier + ";" + ent.name;
-            var entity = new Entity(data, this._identifier, ent.name, id, i);
+            var entity = new Entity(ent, this._identifier, ent.name, id, i);
+
+            var an = entity.type.split('-');
+            if(!(this._entities_type[an[0]]))
+            {
+                this._entities_type[an[0]] = {};
+            }
+            if(!(this._entities_type[an[0]][entity.type]))
+            {
+                this._entities_type[an[0]][entity.type] = [];
+            }
+            this._entities_type[an[0]][entity.type].push(entity);
             this._entities.push(entity);
         }
     }
@@ -168,7 +210,7 @@ export class Topic
         for(const [i, doc] of data[this._identifier].documents.entries())
         {
             let article_name = this._identifier + ";" + doc.title;
-            var article = new Document(data, article_name, this._identifier, i);
+            var article = new Document(doc, data, article_name, this._identifier, i);
             this._articles.push(article);
         }
     }
@@ -186,19 +228,74 @@ export class Topic
 
     set_colours()
     {	
-        for(const [i , element] of this._entities.entries())
-        {	
-            //element.add_colour(rainbow(this._entities.length, i+1));
-            //element.add_colour(random_colour(this._entities.length, i+1));
-			if ( i >= colour_array.length)
-			{
-				element.add_colour(random_colour());
-			}
-			else
-			{
-				element.add_colour(colour_array[i]);
-			}		
-        }
+        var fr = 1;
+        var f1, f2, f3;
+        var i = 0;
+        var col_arr = [];
+        console.log(this._entities_type);
+        for (const [o, element] of Object.entries(this._entities_type))
+        {  
+            if( i % 5 == 0 )
+            {   
+                console.log(fr)
+                console.log('switch  ' + i)    
+                switch (fr) {
+                    case 1:
+                        f1 = .2
+                        f2 = .15
+                        f3 = .1
+                        break;
+                    case 2:
+                        f1 = .15
+                        f2 = .1
+                        f3 = .1
+                        break;
+                    case 3:
+                        f1 = .1
+                        f2 = .15
+                        f3 = .1
+                        break;
+                    case 4:
+                        var f1 = .1
+                        var f2 = .1
+                        var f3 = .15
+                    default:
+                        break;
+                }
+                console.log(f1)
+                console.log(f2)
+                console.log(f3)
+                col_arr = makeColorGradient(f1,f2,f3,0,2,4, 170,75, 125);
+                fr++;
+                i++;
+            }
+            for(const [p, entity_arr] of Object.entries(element))
+            {
+                var j = 0;
+                entity_arr.forEach(pol =>{
+                    // console.log(pol + '  ' + col_arr[((i-1) * 8 + j)]);
+                    pol.add_colour(col_arr[((i-1)*8 + j)]);
+                    j+=3;
+                });        
+            }
+        i+=1;
+        // console.log(i)
+        
+        };
+
+        // for(const [i , element] of this._entities.entries())
+        // {	
+        //     //element.add_colour(rainbow(this._entities.length, i+1));
+        //     //element.add_colour(random_colour(this._entities.length, i+1));
+		// 	if ( i >= colour_array.length)
+		// 	{
+		// 		element.add_colour(random_colour());
+		// 	}
+		// 	else
+		// 	{
+		// 		element.add_colour(colour_array[i]);
+		// 	}		
+        // }
     }
 
     get identifier()
