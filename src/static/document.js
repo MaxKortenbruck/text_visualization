@@ -95,13 +95,11 @@ export class Document {
             for(let i = 0; i < this._marked_text.length; i++)
             {    
                 sent_ent = enti.mentions_in_sentence(i, this._political_direction);
-                console.log(sent_ent)
-                if(sent_ent.length > 1)
-                {   
-                    console.log("sort")
-                    sent_ent.sort(this.compare);
-                }
-                console.log(sent_ent)
+                // if(sent_ent.length > 1)
+                // {   
+                //     console.log("sort")
+                //     sent_ent.sort(this.compare);
+                // }
                 let index = 0;  
                 for(let j = 0; j < this._marked_text[i].length; j++)
                 {
@@ -109,9 +107,7 @@ export class Document {
                     {
                         if(sent_ent[index].tokens[0] == j)
                         {
-                            console.log("i: " +i+" j: "+j);
                             let tmp_text = "<span entity=\"" + this.clean_topic.toLowerCase() +"-" + enti.id_number+ "\" style=background-color:"+ enti.colour +">" + this._marked_text[i][j];
-                            console.log(this._marked_text[i][j]);
                             if(sent_ent[index].tokens.length == 1)
                             {
                                 tmp_text += "</span>";
@@ -123,7 +119,6 @@ export class Document {
                             let tmp_text = this._marked_text[i][j] + ("</span>");
                             sentence_text[j] = tmp_text;
                             index ++;
-                            console.log(sentence_text[j] + "   "+j)
                         }     
                     }
                     else

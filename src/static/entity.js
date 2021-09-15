@@ -17,7 +17,7 @@ export class Entity {
         this._phrasing_complexity = entity.phrasing_complexity;       
         this._type = entity.type;        
         this._size = entity.size;
-        this._representative = entity.merging_history.representative;
+        this._representative = entity.merging_history.original.representative;
         this._colour = null;
         this._political_mentions_dict = {
             directions : []
@@ -171,11 +171,6 @@ export class Entity {
     get phrasing_complexity()
     {
         return this._phrasing_complexity;
-    }
-
-    get representative()
-    {
-        return this._representative;
     }
 
     mentions_in_sentence(sentence, direction)

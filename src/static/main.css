@@ -333,7 +333,7 @@ body
 /*[entity]:after
 {
 	box-sizing:border-box;
-	content:attr(data-entity);
+	content:attr(entity);
 	font-size:.6em;
 	line-height:1;
 	padding:.35em .35em;

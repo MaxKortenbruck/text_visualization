@@ -241,8 +241,8 @@ export class Topic
                 console.log('switch  ' + i)    
                 switch (fr) {
                     case 1:
-                        f1 = .1
-                        f2 = .1
+                        f1 = .2
+                        f2 = .15
                         f3 = .1
                         break;
                     case 2:
@@ -266,9 +266,8 @@ export class Topic
                 console.log(f2)
                 console.log(f3)
                 col_arr = makeColorGradient(f1,f2,f3,0,2,4, 170,75, 125);
-                fr ++;
-                console.log(fr)
-                i+=1;
+                fr++;
+                i++;
             }
             for(const [p, entity_arr] of Object.entries(element))
             {
@@ -276,7 +275,7 @@ export class Topic
                 entity_arr.forEach(pol =>{
                     // console.log(pol + '  ' + col_arr[((i-1) * 8 + j)]);
                     pol.add_colour(col_arr[((i-1)*8 + j)]);
-                    j+= 3;
+                    j+=3;
                 });        
             }
         i+=1;
