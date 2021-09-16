@@ -652,6 +652,11 @@ function on_load() {
  * @param {Object} entity - entity class Object that needs to be marked in all open articles
  * @param {Object} article - newly opened article class Object that needs it's entities marked
  * @param {Boolean} dele - true, if entities need to be deleted fro all articles. If an entity is passed as well, only this entity will be unmarked in all articles 
+ * @param {Boolean} all - if true as well as dele = true, all open entities are closed
+ * @param {Object} node - HTML text node that displays the article text
+ * 
+ * Example:
+ * 
  */
 function update_open_entities(entity = false, article = false, dele = false, all = false, node = false)
 {

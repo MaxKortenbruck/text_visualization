@@ -3,7 +3,6 @@
 export class Document {
     constructor(doc, data, article, topic, number)
     {
-        //complete identifier topic;article
         this._identifier = article;
         this._number = number;
 

@@ -312,37 +312,6 @@ body
 	background-color: lightgreen !important;
 	color: lightgreen !important;
 }
-/*
-.entity
-{
-	padding:.25em .25em;
-	margin:0 .25em;
-	line-height:1;
-	display:inline-block;
-	border-radius:.25em;
-	border:1px solid;
-	filter:brightness(120%)
-}
-*/
-
-/* [entity]:hover
-{
-	color: #bababa;
-	box-shadow:0px 0px 10px 0px #adadad !important;
-} */
-/*[entity]:after
-{
-	box-sizing:border-box;
-	content:attr(entity);
-	font-size:.6em;
-	line-height:1;
-	padding:.35em .35em;
-	border-radius:.35em;
-	text-transform:uppercase;
-	display:inline-block;
-	vertical-align:middle;
-	margin:0 0 .1rem .5rem
-}*/
 .badge
 {
 	transition: 0.5s;
