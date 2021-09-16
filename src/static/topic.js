@@ -65,10 +65,23 @@ export class Topic
         this._articles = [];
         this._entities = [];
         this._entities_type = {};
+        this._entity_type_clear_dict = {
+            'person-ne' : 'Single, named person',
+            'person-nes' : 'Multiple, named persons',
+            'group-ne' : 'Organization',
+            'country-ne' : 'Named country',
+            'person-nn' : 'Describing noun for a single person',
+            'person-nns': 'Describing noun for multiple persons',
+            'group' : 'A Group of people or a place',
+            'country' : 'A general Location',
+            'misc' : 'Abstract concept'
+
+        }
         this.set_articles(data);
         this.set_entities(data);
         this.entities_to_articles();
         this.set_colours();
+
     }
     
     /**
@@ -195,10 +208,11 @@ export class Topic
             {
                 var j = 0;
                 entity_arr.forEach(pol =>{
-                    // console.log(pol + '  ' + col_arr[((i-1) * 8 + j)]);
+                    console.log(pol)
+                    console.log(pol + '  ' + col_arr[((i-1) * 8 + j)]);
                     pol.add_colour(col_arr[((i-1)*8 + j)]);
-                    j+=2;
-                });        
+                });
+                j+=1;        
             }
         i+=1;
         // console.log(i)
@@ -313,7 +327,7 @@ export class Topic
         {
             for(const [p, entity_arr] of Object.entries(element))
             {
-                type_dict.names.push(p);
+                type_dict.names.push(this._entity_type_clear_dict[p]);
                 type_dict.numbers.push(entity_arr.length);
                 type_dict.colour.push(entity_arr[0].colour);
             }
