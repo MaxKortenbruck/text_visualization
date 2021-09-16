@@ -24,39 +24,47 @@ function rainbow(numOfSteps, step) {
     return (c);
 }
 
-function RGB2Color(r,g,b)
-{
-  return '#' + byte2Hex(r) + byte2Hex(g) + byte2Hex(b);
-}
-
-function byte2Hex(n)
+function hex(n)
   {
     var nybHexString = "0123456789ABCDEF";
     return String(nybHexString.substr((n >> 4) & 0x0F,1)) + nybHexString.substr(n & 0x0F,1);
   }
 
-function makeColorGradient(frequency1, frequency2, frequency3,
+function makeColorGradient(freq1, freq2, freq3,
     phase1, phase2, phase3,
     center, width, len)
 {
     var c_arr = [];
-    if (center == undefined)   center = 128;
+    if (center == undefined)
+        center = 128;
     if (width == undefined)    width = 127;
     if (len == undefined)      len = 50;
 
-    for (var i = 0; i < len; ++i)
+    for (let i = 0; i < len; i++)
     {
-        var r = Math.sin(frequency1*i + phase1) * width + center;
-        var g = Math.sin(frequency2*i + phase2) * width + center;
-        var b = Math.sin(frequency3*i + phase3) * width + center;
-        var c = RGB2Color(r,g,b)
+        var r = Math.sin(freq1*i + phase1) * width + center;
+        var g = Math.sin(freq2*i + phase2) * width + center;
+        var b = Math.sin(freq3*i + phase3) * width + center;
+        var c = '#' + hex(r) + hex(g) + hex(b);
         c_arr.push(c)
     }
     return c_arr;
 }
 
+/**
+ * The Topic class. A new topic object can be created by calling the
+ * constructor 
+ * >>> var topic = new Topic(data, topic_id, topic_name) 
+ * The Topic class also instantiates its' articles and entities.
+ */
 export class Topic
 {
+    /**
+     * 
+     * @param {Object} data - JSON Data Object with the Information about the topic, entitys and article 
+     * @param {String} topic_id -  Unique topic id 
+     * @param {String} topic_name - Compact topic name
+     */
     constructor(data, topic_id, topic_name)
     {
 
@@ -269,7 +277,6 @@ export class Topic
         return ret.slice(0, -17).replace(/[-,_,.,0,1,2,3,4,5,6,7,8,9]/g, "");
     }
     /**
-     * @returns 
      *              Dictionary style Object where the three keys 
      *                  < names, numbers, colour, phrasing_complexity >
      *              each hold an array with the attributes of the articles' entities.
@@ -315,6 +322,10 @@ export class Topic
         return entity_dict;
 
     }
+    /**
+     * Returns a dict of names, numbers and colour of the entitytype attribute.
+     * The data of one entity is found at the same index across all three arrays.
+     */
     get statistics_of_entity_types()
     {
         var type_dict = {

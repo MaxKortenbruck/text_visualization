@@ -1,9 +1,22 @@
 'use strict'
 
 import {Mention} from "./mention.js";
-import { DefaultDict } from "./default_dict.js";
 
+/**
+ * The entity class. A new object of the entity class can be created by
+ * calling the cosntructor:
+ * >>> var entity = new Entity(entity, topic, entity_name, identifier, number)
+ * The entity class also instantiates each of its' mentions.
+ */
 export class Entity {
+    /**
+     * 
+     * @param {Object} entity - Reference to the entity data in the JSON object 
+     * @param {Object} topic - Reference to the topic Object the entity belongs to
+     * @param {String} entity_name - Compact name of the entity 
+     * @param {String} identifier - Unique identifier of the entity
+     * @param {*} number - Index of the Entity in the dataset
+     */
     constructor(entity, topic, entity_name, identifier, number)
     {   
         this._identifier = identifier
@@ -35,6 +48,7 @@ export class Entity {
                                 element.head_toke_word, index, pol[1]);
             index ++;
             this._mentions_array.push(m);
+            // map the entities to their types like person -> person-nn
             if(!this._political_mentions_dict.directions.includes(pol[1]))
             {
                 this._political_mentions_dict.directions.push(pol[1]);
