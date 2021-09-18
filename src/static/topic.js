@@ -88,7 +88,7 @@ export class Topic
 
         this._identifier = topic_id;
         this._name = topic_name;
-        this._index = ind;
+        this._index = idn;
         this._articles = [];
         this._entities = [];
         this._entities_type = {};
@@ -166,7 +166,7 @@ export class Topic
         for(const [i, doc] of data[this._identifier].documents.entries())
         {
             let article_name = this._identifier + ";" + doc.title;
-            var article = new Document(doc, data, article_name, this._identifier, ind ,i);
+            var article = new Document(doc, data, article_name, this._identifier, this._index ,i);
             this._articles.push(article);
         }
     }
