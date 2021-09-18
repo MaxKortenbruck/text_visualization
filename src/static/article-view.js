@@ -393,7 +393,7 @@ function display_article(article)
 
     //create and append headline
     console.log(full_data[article.topic])
-    let headline = "["+full_data[article.topic].formatted_name +"] "+article.title + " [" + article.political_direction +"]";
+    let headline = "["+full_data[article.topic_index].formatted_name +"] "+article.title + " [" + article.political_direction +"]";
     let headlineElement = document.createElement("h4");
     headlineElement.style = "line-height: 1.5;";
     headlineElement.appendChild( document.createTextNode(headline));
@@ -684,7 +684,6 @@ function entity_in_statistic_click(params)
 
   //scan "article_view;row" for open articles and update treemaps
   let open_articles = document.getElementById("articel_view;row").children;
-  //console.log(open_articles.length)
   for(let i=0; i<open_articles.length; i++)
   {
     let art_div = document.getElementById("text;" + open_articles[i].id);
