@@ -14,12 +14,14 @@ var full_data = [];
 
 // allocates data from Json in cascade style to Objects:
 // Topic -> Document & Entity -> Mention
+var idn = 0;
 for(const[key, value] of Object.entries(json_data))
 {
     var title = key;
     var name = value.topic;
-    var a = new Topic(json_data, title, name);
+    var a = new Topic(json_data, title, name, idn);
     full_data.push(a);
+    idn++;
 }
 
 // asynchronous function to aquire the dataset from the server. The source IP needs to be changed accordingly
@@ -390,7 +392,8 @@ function display_article(article)
     divChild.style = "padding: 20px; height: 500px;";
 
     //create and append headline
-    let headline = article.title;
+    console.log(full_data[article.topic])
+    let headline = "["+full_data[article.topic].formatted_name +"] "+article.title + " [" + article.political_direction +"]";
     let headlineElement = document.createElement("h4");
     headlineElement.style = "line-height: 1.5;";
     headlineElement.appendChild( document.createTextNode(headline));

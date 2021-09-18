@@ -81,12 +81,14 @@ export class Topic
      * @param {Object} data - JSON Data Object with the Information about the topic, entitys and article 
      * @param {String} topic_id -  Unique topic id 
      * @param {String} topic_name - Compact topic name
+     * @param {Integer} idn - Index of the topic in the data structure
      */
-    constructor(data, topic_id, topic_name)
+    constructor(data, topic_id, topic_name, idn)
     {
 
         this._identifier = topic_id;
         this._name = topic_name;
+        this._index = ind;
         this._articles = [];
         this._entities = [];
         this._entities_type = {};
@@ -164,7 +166,7 @@ export class Topic
         for(const [i, doc] of data[this._identifier].documents.entries())
         {
             let article_name = this._identifier + ";" + doc.title;
-            var article = new Document(doc, data, article_name, this._identifier, i);
+            var article = new Document(doc, data, article_name, this._identifier, ind ,i);
             this._articles.push(article);
         }
     }
@@ -194,7 +196,6 @@ export class Topic
             num_types ++;
             Object.entries(o).forEach(([k, v]) => {
                 count ++;
-                console.log(count)
             })
             num_sub_types.push(count);
             count = 0;
@@ -243,11 +244,20 @@ export class Topic
     {
         return this._articles;
     }
-
+    /**
+     * @returns String of the topic name
+     */
     get clean_topic()
     {   
         var ret = this._identifier;
         return ret.slice(0, -17).replace(/[-,_,.,0,1,2,3,4,5,6,7,8,9]/g, "");
+    }
+    /**
+     * @returns Index of the current topic in the data structure
+     */
+    get index()
+    {
+        return this.index;
     }
     /**
      *              Dictionary style Object where the three keys 
