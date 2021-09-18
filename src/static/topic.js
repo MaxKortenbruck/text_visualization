@@ -3,52 +3,69 @@
 import {Entity} from "./entity.js";
 import {Document} from "./document.js";
 
-function rainbow(numOfSteps, step) {
-    // This function generates vibrant, "evenly spaced" colours (i.e. no clustering). This is ideal for creating easily distinguishable vibrant markers in Google Maps and other apps.
-    // Adam Cole, 2011-Sept-14
-    // HSV to RBG adapted from: http://mjijackson.com/2008/02/rgb-to-hsl-and-rgb-to-hsv-color-model-conversion-algorithms-in-javascript
-    var r, g, b;
-    var h = step/ numOfSteps;
-    var i = ~~(h * 6);
-    var f = h * 6 - i;
-    var q = 1 - f;
-    switch(i % 6){
-        case 0: r = 1; g = f; b = 0; break;
-        case 1: r = q; g = 1; b = 0; break;
-        case 2: r = 0; g = 1; b = f; break;
-        case 3: r = 0; g = q; b = 1; break;
-        case 4: r = f; g = 0; b = 1; break;
-        case 5: r = 1; g = 0; b = q; break;
-    }
-    var c = "#" + ("00" + (~ ~(r * 255)).toString(16)).slice(-2) + ("00" + (~ ~(g * 255)).toString(16)).slice(-2) + ("00" + (~ ~(b * 255)).toString(16)).slice(-2);
-    return (c);
-}
-
-function hex(n)
-  {
-    var nybHexString = "0123456789ABCDEF";
-    return String(nybHexString.substr((n >> 4) & 0x0F,1)) + nybHexString.substr(n & 0x0F,1);
-  }
-
-function makeColorGradient(freq1, freq2, freq3,
-    phase1, phase2, phase3,
-    center, width, len)
+/**
+ * Create entity colours based on their type. 
+ * The function creates a hsl colour encoding and changes it to hsl in order
+ * to be read by css
+ * @param {Integer} num_types 
+ * @param {Array} num_sub_types 
+ * @returns 2-Dimensional Array with colours for the entity
+ */
+function create_colour(num_types, num_sub_types )
 {
-    var c_arr = [];
-    if (center == undefined)
-        center = 128;
-    if (width == undefined)    width = 127;
-    if (len == undefined)      len = 50;
-
-    for (let i = 0; i < len; i++)
+   // Define an Intervall fpr each entity type, so the colours do not match
+   const intervall = Math.floor(360/num_types);
+   const max = Math.max(...num_sub_types);
+   var colour_intervalls = [];
+   var mult = 10;
+   if(max * 10 >= intervall)
+   {
+       while(mult * max >= intervall - 5)
+       {
+            mult -= 2;
+       }
+   }
+   for(let i = 0; i < num_types; i++)
+   {
+        colour_intervalls.push(create_hsl(num_sub_types[i], i*intervall, 95, 60, mult))
+   }
+   return colour_intervalls;
+}
+/**
+ * Creates the actual hsl-encoding for the colour gradient used by the entities with the same overall entity type
+ * @param {Integer} num - Number of colour variations based on the entity subtypes
+ * @param {Integer} h - Value from 0 to 360
+ * @param {Integer} s - Saturation
+ * @param {Integer} l - Lightness
+ * @param {Integer} mult - The multiplicator for creating the colour gradient 
+ * @returns An Array with the colours in HEX code
+ */
+function create_hsl(num, h, s, l, mult)
+{
+    var col_arr_hex = []
+    for (let i = 0; i < num; i++)
     {
-        var r = Math.sin(freq1*i + phase1) * width + center;
-        var g = Math.sin(freq2*i + phase2) * width + center;
-        var b = Math.sin(freq3*i + phase3) * width + center;
-        var c = '#' + hex(r) + hex(g) + hex(b);
-        c_arr.push(c)
+        col_arr_hex.push(to_hex(h+i*mult, s-i*1.1, l));
     }
-    return c_arr;
+    return col_arr_hex;
+}
+/**
+ * Turns a given hsl encoding to HEX
+ * @param {Integer} h - Value from 0 to 360
+ * @param {Integer} s - Saturation
+ * @param {Integer} l - Lightness
+ * @returns String of the hsl colour in HEX
+ */
+function to_hex(h, s, l)
+{
+    l /= 100;
+    const i = s * Math.min(l, 1-l) / 100;
+    var f = function(x){
+        const k = (x + h / 30) % 12;
+        const colour = l - i * Math.max(Math.min(k-3, 9-k, 1), -1);
+        return Math.round(255*colour).toString(16).padStart(2, "0");
+    };
+    return "#"+f(0)+f(8)+f(4);
 }
 
 /**
@@ -171,75 +188,31 @@ export class Topic
      */
     set_colours()
     {	
-        var fr = 1;
-        var f1, f2, f3;
+        var num_types = 0, count = 0; 
+        var num_sub_types = [];
+        Object.entries(this._entities_type).forEach(([s,o]) =>{
+            num_types ++;
+            Object.entries(o).forEach(([k, v]) => {
+                count ++;
+                console.log(count)
+            })
+            num_sub_types.push(count);
+            count = 0;
+        });
+        var colour_arr = create_colour(num_types, num_sub_types)
         var i = 0;
-        var col_arr = [];
-        console.log(this._entities_type);
         for (const [o, element] of Object.entries(this._entities_type))
         {  
-            if( i % 5 == 0 )
-            {   
-                console.log(fr)
-                console.log('switch  ' + i)    
-                switch (fr) {
-                    case 1:
-                        f1 = .1
-                        f2 = .1
-                        f3 = .1
-                        break;
-                    case 2:
-                        f1 = .15
-                        f2 = .1
-                        f3 = .1
-                        break;
-                    case 3:
-                        f1 = .1
-                        f2 = .15
-                        f3 = .1
-                        break;
-                    case 4:
-                        var f1 = .1
-                        var f2 = .1
-                        var f3 = .15
-                    default:
-                        break;
-                }
-                console.log(f1)
-                console.log(f2)
-                console.log(f3)
-                col_arr = makeColorGradient(f1,f2,f3,0,2,4, 170,75, 125);
-                fr++;
-                i++;
-            }
+            var j = 0;
             for(const [p, entity_arr] of Object.entries(element))
             {
-                var j = 0;
                 entity_arr.forEach(pol =>{
-                    console.log(pol)
-                    console.log(pol + '  ' + col_arr[((i-1) * 8 + j)]);
-                    pol.add_colour(col_arr[((i-1)*8 + j)]);
+                    pol.add_colour(colour_arr[i][j]);
                 });
-                j+=1;        
+                j++;
             }
-        i+=1;
-        // console.log(i)
-        
-        };
-
-        // for(const [i , element] of this._entities.entries())
-        // {	
-        //     //element.add_colour(rainbow(this._entities.length, i+1));
-        //     //element.add_colour(random_colour(this._entities.length, i+1));
-		// 	if ( i >= colour_array.length)
-		// 	{
-		// 		element.add_colour(random_colour());
-		// 	}
-		// 	else
-		// 	{
-		// 		element.add_colour(colour_array[i]);
-		// 	}		
-        // }
+            i++;
+        }           
     }
     /**
      * @returns {String} Indentifier of the topic

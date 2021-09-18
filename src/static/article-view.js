@@ -1,12 +1,3 @@
-/** 
- * Created By : Wanja Zemke 
- * On:
- * 
- * Last Change By : Max Kortenbruck
- * On: 15.07.2021
-**/
-
-import { get_topics, get_articles, get_statistics, get_entity_statistics, get_text, get_statistics_of_article } from "./base_functions.js";
 import { create_pie_plot, create_text_pie_plot, create_treemap, create_bar_plot, create_scatter_plot } from "./article-view-charts.js";
 import {Topic} from "./topic.js"
 
@@ -22,7 +13,7 @@ var json_data = await get_json();
 var full_data = []; 
 
 // allocates data from Json in cascade style to Objects:
-// Topic -> Document, Entity -> Mention
+// Topic -> Document & Entity -> Mention
 for(const[key, value] of Object.entries(json_data))
 {
     var title = key;
@@ -31,6 +22,7 @@ for(const[key, value] of Object.entries(json_data))
     full_data.push(a);
 }
 
+// asynchronous function to aquire the dataset from the server. The source IP needs to be changed accordingly
 async function get_json(file="api")
 {
     let ret = await fetch("http://127.0.0.1:5000/" + file);
@@ -38,6 +30,9 @@ async function get_json(file="api")
     return data;
 }
 
+/**
+ * Sets the topic selection HTML element
+ */
 function set_topics() {
 
   let list = document.getElementById("articel_view;available_topics")
@@ -57,6 +52,10 @@ function set_topics() {
     };
 }
 
+/**
+ * Sets the article selction HTML elements 
+ * @param {Integer} index - Index of the topic in the dataset  
+ */
 function set_articles(index)
 {
   //add list with Articles
@@ -133,7 +132,10 @@ function set_articles(index)
   }
   div_a_aritcles.appendChild(table);
 }
-
+/**
+ * Creates the topic's corresponding statistics and creates their HTML elements
+ * @param {INTEGER} index - Index of the topic in the dataset
+ */
 function set_statistics(index)
 {
   //create pie plot
@@ -152,7 +154,11 @@ function set_statistics(index)
 
   document.getElementById("statistics_on_load_warning").style.display="none";
 }
-
+/**
+ * Creates a clickable button for the entity
+ * @param {Object} entity - The correspondiong entity
+ * @returns HTML span element
+ */
 function create_entity_button(entity)
 {
 	let span = document.createElement("span");
@@ -163,14 +169,16 @@ function create_entity_button(entity)
 	span.id = "entity_" + entity.identifier;
 	span.onclick = function()
 	{
-		console.log(entity)
 		open_entity(entity);
 		return false;
 	}	
 	
 	return span;
 }
-
+/**
+ * Creates and fills a HTML element that shows all the topic's entities
+ * @param {Integer} index - Index of the corresponding topic in the dataset
+ */
 function set_entities(index)
 {
 	
@@ -191,8 +199,7 @@ function set_entities(index)
 	
 	document.getElementById("entities_on_load_warning").style.display="none";
 }
-
-
+// ad click to the maine 
 document.getElementById("mainChart;pie").addEventListener("click", set_statistics_pie)
 function set_statistics_pie()
 {
@@ -226,6 +233,7 @@ function set_statistics_scatter()
 function set_entity_statistics(entity, parent, article_direction)
 {
   let data = entity.count_mentions(article_direction);
+  console.log(data)
   create_treemap(entity.formatted_name, data, entity.colour, parent);
 }
 

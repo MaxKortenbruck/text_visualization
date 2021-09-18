@@ -84,19 +84,22 @@ export class Entity {
             ent = this.get_mentions_for_article(key);
 
         } 
+        console.log(ent)
         ent.forEach( ment => {
-            if(!names.includes(ment.normalized_text))
+            if(!names.includes(ment.text))
             {
-                names.push(ment.normalized_text);
-                index = names.indexOf(ment.normalized_text);
+                names.push(ment.text);
+                index = names.indexOf(ment.text);
                 values[index] = 1;
             }
             else
             {
-                index = names.indexOf(ment.normalized_text);
+                index = names.indexOf(ment.text);
                 values[index] += 1;
             }
         })
+        console.log(names)
+        console.log(values)
         if(names.length != values.length){throw Error};
         var ent = [];
         for(let i = 0; i < names.length; i++)
