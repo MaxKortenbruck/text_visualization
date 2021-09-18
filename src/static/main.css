@@ -305,12 +305,12 @@ body
 }
 .acc-text
 {
-	background-color: lavender !important;
+	background-color: rgb(228, 228, 253) !important;
 }
 .acc-stat
 {
-	background-color: lightgreen !important;
-	color: lightgreen !important;
+	background-color: #fde6af !important;
+	color: #fde6af !important;
 }
 .badge
 {
