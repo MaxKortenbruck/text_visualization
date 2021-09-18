@@ -83,6 +83,9 @@ export class Document {
         console.log(this._marked_entities);
     }
 
+    /**
+     * Marks the selected entitiies by highlighting their mentions in the article
+     */
     mark_text()
     {
         let marked_text = [];
@@ -94,11 +97,6 @@ export class Document {
             for(let i = 0; i < this._marked_text.length; i++)
             {    
                 sent_ent = enti.mentions_in_sentence(i, this._political_direction);
-                // if(sent_ent.length > 1)
-                // {   
-                //     console.log("sort")
-                //     sent_ent.sort(this.compare);
-                // }
                 let index = 0;  
                 for(let j = 0; j < this._marked_text[i].length; j++)
                 {
@@ -137,18 +135,12 @@ export class Document {
         });  
     }
 
-    compare(b, a)
-    {
-        console.log("sortfunktion");
-        console.log(a.tokens[0] +" < "+ b.tokens[0]);
-        console.log(a.tokens[0] < b.tokens[0]);
-        if(a.tokens[0] < b.tokens[0]){return 1;}
-        if(a.tokens[0] > b.tokens[0]){return -1;}
-        return 0;      
-    }
-
+    //Possible security issue -> change inner.html to 
+    /**
+     * Passes the marked or unmarked text to the provided text node
+     * @param {Objet} node 
+     */
     set_text(node) 
-    // check ob text vorher masrkiert werden muss odfer nicht
     {
         var text_return = "";
         var parsed_text = [];
@@ -164,8 +156,6 @@ export class Document {
             parsed_text = this._text_array;
             this._marked_text = this._text_array;
         }
-        //console.log(parsed_text);
-        //console.log(this._marked_entities.length);
         for(const [i, sentence] of parsed_text.entries())
             {  
                 if(!i)
@@ -178,7 +168,9 @@ export class Document {
             };        
         node.innerHTML = text_return;
     }
-    
+    /**
+     * @retrurns A dict with the numbers, colours and names of the entities occuring in the article
+     */
     get statistics_of_article()
     {   
         var mention_dict = {
@@ -195,48 +187,66 @@ export class Document {
         })
         return mention_dict;
     }
-
+    /**
+     * @returns The political direction of the article
+     */
     get political_direction()
     {
         return this._political_direction;
     }
-
+    /**
+     * @returns The unique identifier of the article
+     */
     get id()
     {
         return this._identifier;
     }
-
-    get name()
+    /**
+     * @returns the name of the article
+     */
+    get name() 
     {
         return this._name;
     }
-
-    get topic()
+    /**
+     * @returns The topic of the article
+     */
+    get topic() 
     {
         return this._topic;
     }
-
+    /**
+     * @returns The title of the article
+     */
     get title()
     {
         return this._title;
     }
-
+    /**
+     * @returns The articles topic without numbers or special characters
+     */
     get clean_topic()
     {   
         var ret = this._topic;
         return ret.slice(0, -17).replace(/[-,_,.,0,1,2,3,4,5,6,7,8,9]/g, "");
     }
-
-    get entities()
+    /**
+     * @returns All entities occurring in the article
+     */
+    get entities() 
     {
         return this._my_entities;
     }
-
+    /**
+     * @returns All marked entities in the article
+     */
     get marked_entities()
     {
         return this._marked_entities;
     }
-
+    /**
+     * @returns The Index of the Article, based on the JSON data structure 
+     */
     get id_number()
     {
         return this._number;

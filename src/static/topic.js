@@ -60,7 +60,7 @@ function makeColorGradient(freq1, freq2, freq3,
 export class Topic
 {
     /**
-     * 
+     * @constructor
      * @param {Object} data - JSON Data Object with the Information about the topic, entitys and article 
      * @param {String} topic_id -  Unique topic id 
      * @param {String} topic_name - Compact topic name
