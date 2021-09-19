@@ -149,7 +149,8 @@ function set_statistics(index)
 
   let div = document.getElementById("mainChart");
   div.innerHTML = "";
-  let dat = full_data[index].statistics_of_entity_types;
+  // let dat = full_data[index].statistics_of_entity_types;
+  let dat = full_data[index].statistics_of_entities;
   let plot = create_pie_plot(full_data[index].formatted_name, dat.names, dat.numbers, dat.colour, div);
 
   // handle click event in Charts
@@ -202,10 +203,21 @@ function set_entities(index)
 		entities_parent.appendChild(span);
 	}
 	
-	document.getElementById("entities_on_load_warning").style.display="none";
+document.getElementById("entities_on_load_warning").style.display="none";
 }
+
+document.getElementById("mainChart;piegroups").addEventListener("click", set_statistics_pie_for_group)
+function set_statistics_pie_for_group()
+{
+  let div = document.getElementById("mainChart");
+  div.innerHTML = "";
+  let dat = full_data[open_topic].statistics_of_entity_types;
+  create_pie_plot(full_data[open_topic].formatted_name, dat.names, dat.numbers, dat.colour, div);
+}
+
+
 // ad click to the statistics
-document.getElementById("mainChart;pie").addEventListener("click", set_statistics_pie)
+document.getElementById("mainChart;pieentity").addEventListener("click", set_statistics_pie)
 /**
  * Sets the statistics for the pie plot
  */
