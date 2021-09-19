@@ -17,24 +17,6 @@ Ist das addon installiert, könnt ihr in der Commandpalette (Ctrl+Shift+P)  *Git
 Da es sich um ein privates repo handelt, müsst ihr euch noch mit euren github daten einloggen, da wird man von vscode aber durchgeführt. 
 
 
-
-Nutzung des Webservers:
-
-Es muss Docker auf dem System installiert sein. Bei Linux muss zusätzlich noch Docker Compose installiert sein. 
-
-Im Wurzelverzeichnis
-
->docker-compose build
-
-dann
-
->docker-compose up -d
-
-zum beenden:
-
->docker-compose down
-
-
 Hinweise zum Programmieren:
 
 Das css File wird in firefox durch strg+F5 mit neu geladen, sonst wird es im Cache gespeichert und nicht immer neu geladen.
@@ -77,7 +59,47 @@ Include very short code examples that show what the project does as concisely as
 
 ## Installation
 Provide step-by-step examples and descriptions of how to set up a development environment.
-- TBD
+
+You can use your favorite code editor.
+
+To run the Webserver on your machine you can ether use docker or run the app.py directly.
+
+### Use docker
+
+To use docker you need to install docker on your machine. On Linux you aditionaly need docker compose aditionaly.
+
+1. Navigate to the root directory of your machine
+
+2. Build the container by using: 
+
+>docker-compose build
+
+3. then start the container:
+
+>docker-compose up -d
+
+To stop the container simpy use: 
+
+>docker-compose down
+
+### start app.py direct
+
+To run the app.py directly you need to have installed the latest python version. Aditionally you need to have installed flask.
+
+To run the app.py navigate to the src directory:
+
+>cd ./src
+
+then start the app with: 
+
+>python3 app.py
+
+### Acsess the website
+
+If the server is running correctly you can accsess the site using a brower of your choice.
+
+>http://127.0.0.1:5000
+
 
 ## How to use the project
 On the project's start screen you gain some generel information about the project and a short description of how to use it. 

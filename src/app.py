@@ -8,10 +8,7 @@ app = Flask(__name__)
 app.config['TEMPLATES_AUTO_RELOAD'] = True
 
 def get_path(article = ''):
-    path = '.\static\\ressourcen\jsons'
-    path = os.path.join(path, article)
-    print(path)
-    return path
+    return os.path.join('static', 'ressourcen', 'jsons', article)
 
 
 @app.route('/')

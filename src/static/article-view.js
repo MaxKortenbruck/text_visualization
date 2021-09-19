@@ -8,6 +8,9 @@ var plotted_articles_dict = {}
 //saves open topic
 let open_topic;
 
+//saves the active entity
+let aktiv_entity = null
+
 //json data stored in full_data
 var json_data = await get_json();
 var full_data = []; 
@@ -594,7 +597,7 @@ function display_article(article)
     //create a div Element for the treemap
     let div_treemap = document.createElement("div")
     div_treemap.id = "treemap;" + article.clean_topic + ";" + article.political_direction;
-	console.log(div_treemap.id);
+	  console.log(div_treemap.id);
     collapse_stat.appendChild(div_treemap);
 
     divChild.appendChild(accordion);
@@ -602,6 +605,13 @@ function display_article(article)
     div.appendChild(divChild);
     document.getElementById("articel_view;row").appendChild(div);
     determine_open_articles();
+}
+
+document.getElementById("button-statistic-topic").addEventListener("click", reload_statistics)
+function reload_statistics()
+{
+  set_statistics(open_topic)
+  entity_in_statistic_click()
 }
 
 
@@ -658,8 +668,12 @@ function article_click(article)
  * entity is added to the open entities
  * @param {Object} params 
  */
-function entity_in_statistic_click(params)
+function entity_in_statistic_click(params = null)
 {
+  if(params == null)
+  {
+    params = aktiv_entity
+  }
   let entity = null;
   let artcl = false;
 
