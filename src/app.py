@@ -40,7 +40,6 @@ def send_json():
         with open(get_path(article)) as f:
             data = json.load(f)
         articles[article] = data
-    print('das sind die Artikel' + str(articles))
     return json.dumps(articles)
 
 @app.route('/alle_jsons')
@@ -52,7 +51,6 @@ def send_json_names():
         articles.append(f)
 
     data['articles'] = articles
-    print('das sind die Artikel' + articles)
 
     return json.dumps(data)
 
