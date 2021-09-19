@@ -1,12 +1,3 @@
-/** 
- * Created By : Wanja Zemke 
- * On:
- * 
- * Last Change By : Max Kortenbruck
- * On: 15.07.2021
-**/
-
-import { get_topics, get_articles, get_statistics, get_entity_statistics, get_text, get_statistics_of_article } from "./base_functions.js";
 import { create_pie_plot, create_text_pie_plot, create_treemap, create_bar_plot, create_scatter_plot } from "./article-view-charts.js";
 import {Topic} from "./topic.js"
 
@@ -22,15 +13,18 @@ var json_data = await get_json();
 var full_data = []; 
 
 // allocates data from Json in cascade style to Objects:
-// Topic -> Document, Entity -> Mention
+// Topic -> Document & Entity -> Mention
+var idn = 0;
 for(const[key, value] of Object.entries(json_data))
 {
     var title = key;
     var name = value.topic;
-    var a = new Topic(json_data, title, name);
+    var a = new Topic(json_data, title, name, idn);
     full_data.push(a);
+    idn++;
 }
 
+// asynchronous function to aquire the dataset from the server. The source IP needs to be changed accordingly
 async function get_json(file="api")
 {
     let ret = await fetch("http://127.0.0.1:5000/" + file);
@@ -38,6 +32,9 @@ async function get_json(file="api")
     return data;
 }
 
+/**
+ * Sets the topic selection HTML element
+ */
 function set_topics() {
 
   let list = document.getElementById("articel_view;available_topics")
@@ -57,6 +54,10 @@ function set_topics() {
     };
 }
 
+/**
+ * Sets the article selction HTML elements 
+ * @param {Integer} index - Index of the topic in the dataset  
+ */
 function set_articles(index)
 {
   //add list with Articles
@@ -133,7 +134,10 @@ function set_articles(index)
   }
   div_a_aritcles.appendChild(table);
 }
-
+/**
+ * Creates the topic's corresponding statistics and creates their HTML elements
+ * @param {INTEGER} index - Index of the topic in the dataset
+ */
 function set_statistics(index)
 {
   //create pie plot
@@ -152,7 +156,11 @@ function set_statistics(index)
 
   document.getElementById("statistics_on_load_warning").style.display="none";
 }
-
+/**
+ * Creates a clickable button for the entity
+ * @param {Object} entity - The correspondiong entity
+ * @returns HTML span element
+ */
 function create_entity_button(entity)
 {
 	let span = document.createElement("span");
@@ -163,14 +171,16 @@ function create_entity_button(entity)
 	span.id = "entity_" + entity.identifier;
 	span.onclick = function()
 	{
-		console.log(entity)
 		open_entity(entity);
 		return false;
 	}	
 	
 	return span;
 }
-
+/**
+ * Creates and fills a HTML element that shows all the topic's entities
+ * @param {Integer} index - Index of the corresponding topic in the dataset
+ */
 function set_entities(index)
 {
 	
@@ -191,15 +201,20 @@ function set_entities(index)
 	
 	document.getElementById("entities_on_load_warning").style.display="none";
 }
-
-
+// ad click to the statistics
 document.getElementById("mainChart;pie").addEventListener("click", set_statistics_pie)
+/**
+ * Sets the statistics for the pie plot
+ */
 function set_statistics_pie()
 {
   set_statistics(open_topic);
 }
 
 document.getElementById("mainChart;bar").addEventListener("click", set_statistics_bar)
+/**
+ * Creates the bar plot for the entities of a topic
+ */
 function set_statistics_bar()
 {
   let div = document.getElementById("mainChart");
@@ -212,6 +227,9 @@ function set_statistics_bar()
 }
 
 document.getElementById("mainChart;scatter").addEventListener("click", set_statistics_scatter);
+/**
+ * Function to instantiate the scatter plot
+ */
 function set_statistics_scatter()
 {
   let div = document.getElementById("mainChart");
@@ -222,13 +240,22 @@ function set_statistics_scatter()
     entity_in_statistic_click(params);
   })
 }
-
+/**
+ * Function to create a scatter plot fot a scpecific entity
+ * @param {Object} entity - Refererence to the entity object 
+ * @param {HTMLElement} parent - Parent node of this HTML element
+ * @param {String} article_direction - Political direction of the article
+ */
 function set_entity_statistics(entity, parent, article_direction)
 {
   let data = entity.count_mentions(article_direction);
+  console.log(data)
   create_treemap(entity.formatted_name, data, entity.colour, parent);
 }
-
+/**
+ * Creates bar plot for a specific article, includes zero values
+ * @param {String} index - HTML id of the selected article's corresponding HTML element 
+ */
 function set_entity_statistics_bar(index)
 {
   let res = index.split("spacer");
@@ -249,7 +276,10 @@ function set_entity_statistics_bar(index)
     entity_in_statistic_click(params);
   })
 }
-
+/**
+ * Creates pie plot for a specific article, includes zero values
+ * @param {String} index - HTML id of the selected article's corresponding HTML element 
+ */
 function set_entity_statistics_pie(index)
 {
 
@@ -267,7 +297,10 @@ function set_entity_statistics_pie(index)
     entity_in_statistic_click(params);
   })
 }
-
+/**
+ * Displays entity when the corresponding node is clicked
+ * @param {Object} entity  
+ */
 function open_entity(entity)
 {
   let parent = document.getElementById("openentities");
@@ -304,7 +337,10 @@ function open_entity(entity)
   parent.appendChild(span);
 }
 
-
+/**
+ * This functions determines the number of open articles. The maximum counted
+ * number is two
+ */
 function determine_open_articles()
 {
   let row = document.getElementById("articel_view;row")
@@ -312,21 +348,29 @@ function determine_open_articles()
   if(anz > 2){ anz = 2};
   row.className = "row row-cols-" + anz;
 }
-
+/**
+ * Function that closes an article when clicked on the closing button
+ * @param {HTMLElement} button_element - HTML Button that was clicked
+ */
 function close_text(button_element)
 {
   let to_close = button_element.parentNode.parentNode.parentNode.parentNode.parentNode;
-  console.log(to_close)
   document.getElementById("articel_view;row").removeChild(to_close);
   determine_open_articles();
 }
-
+/**
+ * Function that closes an entity and removes it from the opened display
+ * @param {HTMLElement} element - HTML Button that was clicked
+ */
 function close_entity(element)
 {
   let to_close = element.parentNode;
   document.getElementById("openentities").removeChild(to_close);
 }
-
+/**
+ * Function that creates an accordion element for the provided article and already markes every open entity in the article's text
+ * @param {Object} article - Reference to the article/document object
+ */
 function display_article(article)
 {
     var articel_div_id = "articlespacer" + article.clean_topic + "spacer" + article.political_direction;  
@@ -348,7 +392,8 @@ function display_article(article)
     divChild.style = "padding: 20px; height: 500px;";
 
     //create and append headline
-    let headline = article.title;
+    console.log(full_data[article.topic])
+    let headline = "["+full_data[article.topic_index].formatted_name +"] "+article.title + " [" + article.political_direction +"]";
     let headlineElement = document.createElement("h4");
     headlineElement.style = "line-height: 1.5;";
     headlineElement.appendChild( document.createTextNode(headline));
@@ -562,6 +607,9 @@ function display_article(article)
 
 
 document.getElementById("open_all_entities_button").addEventListener("click", open_all_entities);
+/**
+ * Function that opens all of a topic's closed entities
+ */
 function open_all_entities()
 {
 	for (let entity of full_data[open_topic].entities)
@@ -572,6 +620,9 @@ function open_all_entities()
 
 
 document.getElementById("close_all_open_entities_button").addEventListener("click", close_all_open_entities)
+/**
+ * Function that closes all of a topic's open entities
+ */
 function close_all_open_entities()
 {
   let div = document.getElementById("openentities");
@@ -582,16 +633,11 @@ function close_all_open_entities()
   }
   update_open_entities(false, false, true, true);
 }
-
-/*
-function topic_click(element)
-{
-  let topic = element.split(";")[1];
-  set_articles(topic);
-  set_statistics(topic);
-}
-*/
-
+/**
+ * This function is called, wehn a topic is selcted. It instantiates all of it's entity and article
+ * HTML elemnts
+ * @param {Object} topic - Reference to a topic object 
+ */
 function topic_click(topic)
 {
   open_topic = topic;
@@ -599,12 +645,19 @@ function topic_click(topic)
   set_articles(topic);
   set_entities(topic);
 }
-
+/**
+ * Displays an article when it is selcted in the menue
+ * @param {Object} article 
+ */
 function article_click(article)
 {
   display_article(article);
 }
-
+/**
+ * When an entity is clicked in a statistic, all the entity related statistics are uopdated and the 
+ * entity is added to the open entities
+ * @param {Object} params 
+ */
 function entity_in_statistic_click(params)
 {
   let entity = null;
@@ -631,7 +684,6 @@ function entity_in_statistic_click(params)
 
   //scan "article_view;row" for open articles and update treemaps
   let open_articles = document.getElementById("articel_view;row").children;
-  //console.log(open_articles.length)
   for(let i=0; i<open_articles.length; i++)
   {
     let art_div = document.getElementById("text;" + open_articles[i].id);
@@ -642,16 +694,20 @@ function entity_in_statistic_click(params)
     set_entity_statistics(entity, treemap_parent, article_direction)
   }
 }
-
+/**
+ * This function sets the topics when the HTML site is loaded the first time 
+ */
 function on_load() {
   set_topics();
 }
 
 /**
  * Function to mark und and unmark entities in all open articles
- * @param {Object} entity - entity that needs to be marked in all open articles
- * @param {Object} article - newly opened article that needs it's entities marked
+ * @param {Object} entity - entity class Object that needs to be marked in all open articles
+ * @param {Object} article - newly opened article class Object that needs it's entities marked
  * @param {Boolean} dele - true, if entities need to be deleted fro all articles. If an entity is passed as well, only this entity will be unmarked in all articles 
+ * @param {Boolean} all - if true as well as dele = true, all open entities are closed
+ * @param {Object} node - HTML text node that displays the article text
  */
 function update_open_entities(entity = false, article = false, dele = false, all = false, node = false)
 {
@@ -711,7 +767,12 @@ function update_open_entities(entity = false, article = false, dele = false, all
     
   }
 } 
-
+/**
+ * Calls the set_text function in the provided article to display the article's
+ * text in the provided textnode
+ * @param {HTMLElement} node 
+ * @param {Object} article 
+ */
 function text(node, article)
 { 
   article.set_text(node);

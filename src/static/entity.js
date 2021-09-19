@@ -1,9 +1,21 @@
 'use strict'
 
 import {Mention} from "./mention.js";
-import { DefaultDict } from "./default_dict.js";
 
+/**
+ * The entity class. A new object of the entity class can be created by
+ * calling the cosntructor:
+ * >>> var entity = new Entity(entity, topic, entity_name, identifier, number)
+ * The entity class also instantiates each of its' mentions.
+ */
 export class Entity {
+    /** 
+     * @param {Object} entity - Reference to the entity data in the JSON object 
+     * @param {Object} topic - Reference to the topic Object the entity belongs to
+     * @param {String} entity_name - Compact name of the entity 
+     * @param {String} identifier - Unique identifier of the entity
+     * @param {*} number - Index of the Entity in the dataset
+     */
     constructor(entity, topic, entity_name, identifier, number)
     {   
         this._identifier = identifier
@@ -25,7 +37,12 @@ export class Entity {
         this.set_mentions(entity);
     }
 
-    //mentions nach ll und L un R mit Object ordnen
+   /**
+    * Maps all mentions of the entity to their political directions.
+    * The result is a two dimensional array Object where you can access all mentions 
+    * of the political spectrum by calling entity.political_mentions_dict['LL'].
+    * @param {Object} entity - Reference to the entity data in the JSON object
+    */
     set_mentions(entity)
     {
         var index = 0;
@@ -35,6 +52,7 @@ export class Entity {
                                 element.head_toke_word, index, pol[1]);
             index ++;
             this._mentions_array.push(m);
+            // map the entities to their types like person -> person-nn
             if(!this._political_mentions_dict.directions.includes(pol[1]))
             {
                 this._political_mentions_dict.directions.push(pol[1]);
@@ -46,7 +64,13 @@ export class Entity {
             }
         })
     }
-
+    /**
+     * Counts the mentions of the entity and returns the names and numbers. 
+     * The default returns the numbers for all mentions. Or one can pass an article
+     * for counting only the entity's mentions in the passed article.
+     * @param {Object} key - Reference of article to count the number of mentions from. Default is "all"
+     * @returns Array Object with the numbers amd names.
+     */
     count_mentions(key = "all")
     {
         var ent = [], names = [], values = [];
@@ -60,19 +84,22 @@ export class Entity {
             ent = this.get_mentions_for_article(key);
 
         } 
+        console.log(ent)
         ent.forEach( ment => {
-            if(!names.includes(ment.normalized_text))
+            if(!names.includes(ment.text))
             {
-                names.push(ment.normalized_text);
-                index = names.indexOf(ment.normalized_text);
+                names.push(ment.text);
+                index = names.indexOf(ment.text);
                 values[index] = 1;
             }
             else
             {
-                index = names.indexOf(ment.normalized_text);
+                index = names.indexOf(ment.text);
                 values[index] += 1;
             }
         })
+        console.log(names)
+        console.log(values)
         if(names.length != values.length){throw Error};
         var ent = [];
         for(let i = 0; i < names.length; i++)
@@ -84,6 +111,12 @@ export class Entity {
         }
         return ent;
     }
+    /**
+     * Returns all the mentions of a specific article. If no article is provided,
+     * all mentions of the entity are returned.
+     * @param {Object} key - Refernce to the article Object 
+     * @returns Arrax of mentions
+     */
     get_mentions_for_article(key = "all")
     {   
         
@@ -103,32 +136,45 @@ export class Entity {
             return ret_array;
         }
     }
-
+    /**
+     * Adds a colour as HEX code like #AABBCC to the entity
+     * @param {String} colour - HEX code of the colour
+     */
     add_colour(colour)
     {
         this._colour = colour;
     }
-
+    /** 
+     * @returns Array with all the entity's mentions
+     */
     get mentions_array()
     {
         return this._mentions_array;
     }
-
+    /**
+     * @returns The entity type
+     */
     get type()
     {
         return this._type;
     }
-
-    get size()
+    /**
+     * @returns The entity size
+     */
+    get size() 
     {
         return this._size;
     }
-
+    /**
+     * @returns The entity representative
+     */
     get representative()
     {
         return this._representative;
     }
-
+    /**
+     * @returns The title without any special characters
+     */
     get title()
     {
         let text = this._identifier.split("_");
@@ -139,40 +185,59 @@ export class Entity {
         }
         return text;
     }
-
-    get identifier()
+    /**
+     * @returns The unique identifier 
+     */
+    get identifier() 
     {
         return this._identifier;
     }
-
-    get mentions()
+    /**
+     * @returns A two dimensional array Object where you can access all mentions 
+     *   of the political spectrum by calling your_object['LL'].
+     */
+    get mentions() 
     {
         return this._political_mentions_dict.directions;
     }
-
-    get formatted_name()
+    /**
+     * @returns The nomalized name without numbers
+     */
+    get formatted_name() 
     {
         var ret = this._name;
         ret = ret.slice(0, -2);
         ret = ret.replace(/[_,0,1,2,3,4,5,6,7,8,9]/g, " ");
         return ret;
     }
-
+    /**
+     * @returns The HEX code of the colour
+     */
     get colour()
     {
         return this._colour;
     }
-
+    /**
+     * @returns The index (id) number
+     */
     get id_number()
     {
         return this._number;
     }
-
+    /**
+     * @returns The phrasing complexity
+     */
     get phrasing_complexity()
     {
         return this._phrasing_complexity;
     }
-
+    /**
+     * Returns references to all the mentions of this entity from a specific
+     * sentence and from specified political spectrum
+     * @param {Integer} sentence - Number of the sentence 
+     * @param {String} direction - Political direction
+     * @returns Array with mentins
+     */
     mentions_in_sentence(sentence, direction)
     {   
         let ret = [];
@@ -189,28 +254,4 @@ export class Entity {
         }
         return ret;
     }
-
-
-
-
-
-
-    //Deprecated
-
-   setValue(map, key, value) 
-   {
-        if (!map.has(key)) 
-        {
-            map.set(key, new Set(value));
-            return;
-        }
-        map.get(key).add(value);
-    }
-
-    is_name(entity)
-    {
-        return entity.name === self._name;
-    }
-
-
 }
