@@ -1,27 +1,4 @@
 # Text Visualization
-
-## Hier entsteht DAS BESTE tool aller Zeiten.
-
-### Branching
-
-Bitte alle Teilprojekte in seperaten branch aufteilen
-
-Github free erlaubt leider keine Merge requests, also falls ihr auf den master merged, bitte keine force-pushes durchführen!
-
-Und natürlich nur mergen, wenn ihr euch absolut sicher seid.
-
-### Git Hub mit vs code
-
-Für vs code gibt es eine Version Control extension, die passenderweise auch github pull requests heisst, dann muss man die Versionskontrolle nicht über das terminal machen. 
-Ist das addon installiert, könnt ihr in der Commandpalette (Ctrl+Shift+P)  *Git: Clone*  eingeben und dann die URL  *https://github.com/MaxKortenbruck/text_visualization*  einfügen und Enter hauen. 
-Da es sich um ein privates repo handelt, müsst ihr euch noch mit euren github daten einloggen, da wird man von vscode aber durchgeführt. 
-
-
-Hinweise zum Programmieren:
-
-Das css File wird in firefox durch strg+F5 mit neu geladen, sonst wird es im Cache gespeichert und nicht immer neu geladen.
-
-# Text Visualization
 ## Table of contents
 * [General Information](#general-information)
 * [Motivation](#motivation)
@@ -58,15 +35,33 @@ Include very short code examples that show what the project does as concisely as
 - TBD
 
 ## Installation
-Provide step-by-step examples and descriptions of how to set up a development environment.
 
-You can use your favorite code editor.
+### Clone repository
 
-To run the Webserver on your machine you can ether use docker or run the app.py directly.
+You first need to make sure, that you use a current git Version on your system.
+If you use a Linux, Winbdows or macOS based distribution, you can check your installation by opening a terminal and typing
+into your terminal
 
-### Use docker
+>git --version
 
-To use docker you need to install docker on your machine. On Linux you aditionaly need docker compose aditionaly.
+If you have no output, you need to install git and check your installation by typing the above line again.
+
+After you have installed git, clone the repository to a new or empty existing directory of your choice by typing
+
+>git -C ./path/to/your/workspace -clone https://github.com/MaxKortenbruck/text_visualization
+
+### Start a local server
+
+To test and run the application, you need a local server. In this project, we use the Flask framework. It is python based and we would
+advice you to create a new python virtual enviroment for this project to avoid any complications with other installations. 
+If you need help creating a virtual enviroment in python, we sugest the following website:
+https://docs.python.org/3/library/venv.html
+
+For creating the new server, you have two options:
+
+#### Use docker
+
+To use docker you need to install docker and docker compose. Check your installation by docker -v into your terminal
 
 1. Navigate to the root directory of your machine
 
@@ -74,7 +69,7 @@ To use docker you need to install docker on your machine. On Linux you aditional
 
 >docker-compose build
 
-3. then start the container:
+3. Then start the container in the detached mode, so it keeps running in the backgorund after you close your terminal:
 
 >docker-compose up -d
 
@@ -84,7 +79,7 @@ To stop the container simpy use:
 
 ### start app.py direct
 
-To run the app.py directly you need to have installed the latest python version. Aditionally you need to have installed flask.
+To run the app.py you may need to install the flask package.
 
 To run the app.py navigate to the src directory:
 
