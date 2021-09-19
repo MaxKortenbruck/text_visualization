@@ -1,7 +1,7 @@
 'use strict'
 
 export class Document {
-    constructor(doc, data, article, topic, number)
+    constructor(doc, data, article, topic, ind ,number)
     {
         this._identifier = article;
         this._number = number;
@@ -15,6 +15,7 @@ export class Document {
         this._political_direction = tmp[1];
         
         this._topic = topic;
+        this._topic_index = ind;
         this._my_entities = [];
         this._marked_entities = [];
         let text = this.set_article_text(data);
@@ -250,5 +251,12 @@ export class Document {
     get id_number()
     {
         return this._number;
+    }
+    /**
+     * @returns The index of the article's topic
+     */
+    get topic_index()
+    {
+        return this._topic_index;
     }
 }

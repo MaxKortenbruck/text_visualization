@@ -315,17 +315,17 @@ body
 .badge
 {
 	transition: 0.5s;
+	color:black;
 }
 .badge:hover
 {
-	color: #bababa;
+	color:black;
 	box-shadow:0px 0px 10px 0px #adadad !important;
 }
 
-.badge:hover::after
+.badge[data-rep]:hover::after
 {
 	content: "| " attr(data-rep);
-	/*font-size:.6em;*/
 	line-height:1;
 	padding:.25em .25em;
 	border-radius:.25em;
@@ -333,7 +333,6 @@ body
 	vertical-align:middle;
 	margin:0 0 .1rem .5rem;
 }
-
 
 .btn
 {
