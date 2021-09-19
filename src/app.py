@@ -1,10 +1,18 @@
 import json
 import os
+from pathlib import Path
 
 from flask import Flask, render_template
 
 app = Flask(__name__)
 app.config['TEMPLATES_AUTO_RELOAD'] = True
+
+def get_path(article = ''):
+    path = '.\static\\ressourcen\jsons'
+    path = os.path.join(path, article)
+    print(path)
+    return path
+
 
 @app.route('/')
 def main():
@@ -25,25 +33,26 @@ def contact():
 @app.route('/api')
 def send_json():
 
-    files = os.listdir('./static/ressourcen/jsons')
+    files = os.listdir(get_path())
+    print(os.listdir(get_path()))
     articles = {}
     for article in files:
-        with open('./static/ressourcen/jsons/' + article) as f:
+        with open(get_path(article)) as f:
             data = json.load(f)
         articles[article] = data
-    #with open('./static/ressourcen/jsons/2021-05-05_19_15_53_3_DemocratsSueRUTrump_entity_data.json') as f:
-    #    data = json.load(f)
+    print('das sind die Artikel' + str(articles))
     return json.dumps(articles)
 
 @app.route('/alle_jsons')
 def send_json_names():
     data = {}
     articles = []
-    files = os.listdir('./static/ressourcen/jsons')
+    files = os.listdir(get_path())
     for f in files:
         articles.append(f)
 
     data['articles'] = articles
+    print('das sind die Artikel' + articles)
 
     return json.dumps(data)
 
