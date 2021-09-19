@@ -8,6 +8,9 @@ var plotted_articles_dict = {}
 //saves open topic
 let open_topic;
 
+//saves the active entity
+let aktiv_entity = null
+
 //json data stored in full_data
 var json_data = await get_json();
 var full_data = []; 
@@ -146,7 +149,8 @@ function set_statistics(index)
 
   let div = document.getElementById("mainChart");
   div.innerHTML = "";
-  let dat = full_data[index].statistics_of_entity_types;
+  // let dat = full_data[index].statistics_of_entity_types;
+  let dat = full_data[index].statistics_of_entities;
   let plot = create_pie_plot(full_data[index].formatted_name, dat.names, dat.numbers, dat.colour, div);
 
   // handle click event in Charts
@@ -199,10 +203,21 @@ function set_entities(index)
 		entities_parent.appendChild(span);
 	}
 	
-	document.getElementById("entities_on_load_warning").style.display="none";
+document.getElementById("entities_on_load_warning").style.display="none";
 }
+
+document.getElementById("mainChart;piegroups").addEventListener("click", set_statistics_pie_for_group)
+function set_statistics_pie_for_group()
+{
+  let div = document.getElementById("mainChart");
+  div.innerHTML = "";
+  let dat = full_data[open_topic].statistics_of_entity_types;
+  create_pie_plot(full_data[open_topic].formatted_name, dat.names, dat.numbers, dat.colour, div);
+}
+
+
 // ad click to the statistics
-document.getElementById("mainChart;pie").addEventListener("click", set_statistics_pie)
+document.getElementById("mainChart;pieentity").addEventListener("click", set_statistics_pie)
 /**
  * Sets the statistics for the pie plot
  */
@@ -594,7 +609,7 @@ function display_article(article)
     //create a div Element for the treemap
     let div_treemap = document.createElement("div")
     div_treemap.id = "treemap;" + article.clean_topic + ";" + article.political_direction;
-	console.log(div_treemap.id);
+	  console.log(div_treemap.id);
     collapse_stat.appendChild(div_treemap);
 
     divChild.appendChild(accordion);
@@ -602,6 +617,13 @@ function display_article(article)
     div.appendChild(divChild);
     document.getElementById("articel_view;row").appendChild(div);
     determine_open_articles();
+}
+
+document.getElementById("button-statistic-topic").addEventListener("click", reload_statistics)
+function reload_statistics()
+{
+  set_statistics(open_topic)
+  entity_in_statistic_click()
 }
 
 
@@ -658,8 +680,12 @@ function article_click(article)
  * entity is added to the open entities
  * @param {Object} params 
  */
-function entity_in_statistic_click(params)
+function entity_in_statistic_click(params = null)
 {
+  if(params == null)
+  {
+    params = aktiv_entity
+  }
   let entity = null;
   let artcl = false;
 
