@@ -91,7 +91,7 @@ If you have no output, you need to install git and check your installation by ty
 
 After you have installed git, clone the repository to a new or empty, existing directory of your choice by typing:
 
->git -C ./path/to/your/workspace -clone https://github.com/MaxKortenbruck/text_visualization
+>git -C ./path/to/your/workspace clone https://github.com/MaxKortenbruck/text_visualization
 
 ### Start a local server
 
