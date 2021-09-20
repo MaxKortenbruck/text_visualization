@@ -53,17 +53,17 @@ and entitities for each JSON-FIle, which are read and stored as topics.
 
 ![Alt text](/src/doc/pictures/dia_cl.png)
 
-You can add JSON files by sending them from the server by .....
-
 If you want to change the source from where the JSON Files are loaded, you need to change the
 
 >def get_path(article = '')
 
-function in the file src/app.py file. 
+function in the file 
+
+>src/app.py  
 
 If you run the application on a local server, it suffices to pre-load or copy the data into :
  
- >static/ressourcen/jsons
+>static/ressourcen/jsons
 
 ## Documentation
 
@@ -72,7 +72,11 @@ A full documentation is available in the
 >/src/doc
 
 directory. It is HTML based and uses JSDOC. You can access it similar to starting the local server,
-you need to access the /src/doc/ directory and run
+you need to access the 
+
+>/src/doc/ 
+
+directory and run
 
 >python3 doc.py
 
