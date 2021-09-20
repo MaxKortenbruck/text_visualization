@@ -104,7 +104,8 @@ For creating the new server, you have two options:
 
 #### Use docker
 
-To use docker you need to install docker and docker compose. Check your installation by docker -v into your terminal
+To use docker you need to install docker and docker compose. Check your installation by docker -v into your terminal.
+For any questions, please refer to: https://docs.docker.com/
 
 1. Navigate to the root directory of your machine
 
