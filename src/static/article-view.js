@@ -614,8 +614,11 @@ function display_article(article)
     document.getElementById("articel_view;row").appendChild(div);
     determine_open_articles();
 }
-
+// ad an eventlistener for the statistics Button in the general topic
 document.getElementById("button-statistic-topic").addEventListener("click", reload_statistics)
+/**
+ * reloads all statistics. Ites needed because otherwise there are some size problems with the charts
+*/
 function reload_statistics()
 {
   set_statistics(open_topic)
