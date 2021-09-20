@@ -1,6 +1,6 @@
 # Text Visualization
 ## Table of contents
-* [General Information](#general-information)
+* [General information](#general-information)
 * [Motivation](#motivation)
 * [Technologies](#technologies)
 * [Features](#features)
@@ -9,7 +9,7 @@
 * [How to use the project](#how-to-use-the-project)
 * [License](#license)
 
-## General Information
+## General information
 This application enables text analyzation by visualizing coreferential mentions in news articles and drawing up statistics.
 For every article you can choose which entities to mark in the text and which statistics you would like to see. You can also choose whether you would like to analyze a single article or to compare multiple articles side by side.
 
@@ -35,7 +35,7 @@ You can explore specific mentions and their implications in and across articles.
 
 ![Alt text](/src/doc/pictures/text_mark.png)
 
-A more sbtract view is provided by different plots, like bar charts or scatter plots to alllow for more general text analysis and cross article compasrison:
+A more abstract view is provided by different plots, like bar charts or scatter plots to allow for more general text analysis and cross article compasrison:
 
 ![Alt text](/src/doc/pictures/scatter.png)
 
