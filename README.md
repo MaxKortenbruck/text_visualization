@@ -4,7 +4,8 @@
 * [Motivation](#motivation)
 * [Technologies](#technologies)
 * [Features](#features)
-* [Code examples](#code-examples)
+* [Additions to Articles](#additions-to-articles)
+* [Documentation](#documentation)
 * [Installation](#installation)
 * [How to use the project](#how-to-use-the-project)
 * [License](#license)
@@ -69,17 +70,13 @@ If you run the application on a local server, it suffices to pre-load or copy th
 
 A full documentation is available in the 
 
->/src/doc
+>/src/doc/out
 
-directory. It is HTML based and uses JSDOC. You can access it similar to starting the local server,
-you need to access the 
+directory. It is HTML based and uses JSDOC. You can access it by opening the
 
->/src/doc/ 
+>index.html
 
-directory and run
-
->python3 doc.py
-
+file in your browser
 
 ## Installation
 
