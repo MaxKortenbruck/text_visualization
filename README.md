@@ -95,7 +95,7 @@ After you have installed git, clone the repository to a new or empty, existing d
 
 ### Start a local server
 
-To test and run the application, you need a local server. In this project, we use the Flask framework. It is python based and we would
+To test and run the application, you need a local server. In this project, we use the Flask framework. It is python based and we would **strongly** 
 advice you to create a new python virtual enviroment for this project to avoid any complications with other installations. 
 If you need help creating a virtual enviroment in python, we suggest the following website:
 https://docs.python.org/3/library/venv.html
@@ -104,11 +104,12 @@ For creating the new server, you have two options:
 
 #### Use docker
 
-To use docker you need to install docker and docker compose. Check your installation by docker -v into your terminal
+To use docker you need to install docker and docker compose. Check your installation by docker -v into your terminal.
+For any questions, please refer to: https://docs.docker.com/
 
-1. Navigate to the root directory of your machine
+1. Navigate to your workspace directory
 
-2. Build the container by using: 
+2. Build the container by executing as root: 
 
 >docker-compose build
 
