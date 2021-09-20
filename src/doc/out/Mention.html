@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Class: Mention</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Class: Mention</h1>
+
+    
+
+
+
+
+<section>
+
+<header>
+    
+        <h2><span class="attribs"><span class="type-signature"></span></span>Mention<span class="signature">(sent, txt, tok, annot, hti, htw, ind, pol)</span><span class="type-signature"></span></h2>
+        
+            <div class="class-description">The Mention class. You can create a new Object by calling the constructur as:
+>>> mention = new Mnetion(sentence, text, tokens, annotation_type, head_token_index,
+             head-Token_word, index ,political_direction)</div>
+        
+    
+</header>
+
+<article>
+    <div class="container-overview">
+    
+        
+
+    
+    <h2>Constructor</h2>
+    
+
+    
+    <h4 class="name" id="Mention"><span class="type-signature"></span>new Mention<span class="signature">(sent, txt, tok, annot, hti, htw, ind, pol)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>sent</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Integer</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Number of the sentence</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>txt</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Text of the mention</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>tok</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The tokens of the mention</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>annot</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The annotation type</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>hti</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Integer</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The head token index</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>htw</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The head token word</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>ind</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Integer</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The index of the entity, incrementaly based on the JSON data structure</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>pol</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Political direction of the mention's articel</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="mention.js.html">mention.js</a>, <a href="mention.js.html#line8">line 8</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <h3 class="subsection-title">Members</h3>
+
+        
+            
+<h4 class="name" id="annotate_type"><span class="type-signature"></span>annotate_type<span class="type-signature"></span></h4>
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="mention.js.html">mention.js</a>, <a href="mention.js.html#line55">line 55</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="index"><span class="type-signature"></span>index<span class="type-signature"></span></h4>
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="mention.js.html">mention.js</a>, <a href="mention.js.html#line62">line 62</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="political_direction_of_article"><span class="type-signature"></span>political_direction_of_article<span class="type-signature"></span></h4>
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="mention.js.html">mention.js</a>, <a href="mention.js.html#line34">line 34</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="sentence"><span class="type-signature"></span>sentence<span class="type-signature"></span></h4>
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="mention.js.html">mention.js</a>, <a href="mention.js.html#line69">line 69</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="text"><span class="type-signature"></span>text<span class="type-signature"></span></h4>
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="mention.js.html">mention.js</a>, <a href="mention.js.html#line41">line 41</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="tokens"><span class="type-signature"></span>tokens<span class="type-signature"></span></h4>
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="mention.js.html">mention.js</a>, <a href="mention.js.html#line48">line 48</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+    
+
+    
+
+    
+
+    
+</article>
+
+</section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Document.html">Document</a></li><li><a href="Entity.html">Entity</a></li><li><a href="Mention.html">Mention</a></li><li><a href="Topic.html">Topic</a></li></ul><h3>Global</h3><ul><li><a href="global.html#article_click">article_click</a></li><li><a href="global.html#close_all_open_entities">close_all_open_entities</a></li><li><a href="global.html#close_entity">close_entity</a></li><li><a href="global.html#close_text">close_text</a></li><li><a href="global.html#create_colour">create_colour</a></li><li><a href="global.html#create_entity_button">create_entity_button</a></li><li><a href="global.html#create_hsl">create_hsl</a></li><li><a href="global.html#determine_open_articles">determine_open_articles</a></li><li><a href="global.html#display_article">display_article</a></li><li><a href="global.html#entity_in_statistic_click">entity_in_statistic_click</a></li><li><a href="global.html#get_json">get_json</a></li><li><a href="global.html#on_load">on_load</a></li><li><a href="global.html#open_all_entities">open_all_entities</a></li><li><a href="global.html#open_entity">open_entity</a></li><li><a href="global.html#reload_statistics">reload_statistics</a></li><li><a href="global.html#set_articles">set_articles</a></li><li><a href="global.html#set_entities">set_entities</a></li><li><a href="global.html#set_entity_statistics">set_entity_statistics</a></li><li><a href="global.html#set_entity_statistics_bar">set_entity_statistics_bar</a></li><li><a href="global.html#set_entity_statistics_pie">set_entity_statistics_pie</a></li><li><a href="global.html#set_statistics">set_statistics</a></li><li><a href="global.html#set_statistics_bar">set_statistics_bar</a></li><li><a href="global.html#set_statistics_scatter">set_statistics_scatter</a></li><li><a href="global.html#set_topics">set_topics</a></li><li><a href="global.html#text">text</a></li><li><a href="global.html#to_hex">to_hex</a></li><li><a href="global.html#topic_click">topic_click</a></li><li><a href="global.html#update_open_entities">update_open_entities</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Mon Sep 20 2021 17:15:59 GMT+0200 (Central European Summer Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: mention.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: mention.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>'use strict'
+
+/**
+ * The Mention class. You can create a new Object by calling the constructur as:
+ * >>> mention = new Mnetion(sentence, text, tokens, annotation_type, head_token_index,
+ *              head-Token_word, index ,political_direction)
+ */
+export class Mention {
+    /**
+     * 
+     * @param {Integer} sent - Number of the sentence 
+     * @param {String} txt - Text of the mention
+     * @param {Array} tok - The tokens of the mention 
+     * @param {String} annot - The annotation type 
+     * @param {Integer} hti - The head token index
+     * @param {String} htw - The head token word
+     * @param {Integer} ind - The index of the entity, incrementaly based on the JSON data structure
+     * @param {String} pol - Political direction of the mention's articel
+     */
+    constructor(sent, txt, tok, annot, hti, htw, ind, pol )
+    {
+        this._sentence = sent;
+        this._text = txt;
+        this._tokens = tok;
+        this._annotate_type = annot;
+        this._index = ind;
+        this._head_token_index = hti;
+        this._head_token_word = htw;
+        this._political_direction_of_article = pol;
+    }
+    /**
+     * @returns The political direction of the article the mentioon belongs to
+     */
+    get political_direction_of_article()
+    {
+        return this._political_direction_of_article;
+    }
+    /**
+     * @returns The text of the mention
+     */    
+    get text()
+    {
+        return this._text;
+    }
+    /**
+     * @returns An Array of tokens, the indexes of the mention's words in the respective sentence
+     */    
+    get tokens()
+    {
+        return this._tokens;
+    }
+    /**
+     * @returns The annotation type of the mention
+     */
+    get annotate_type()
+    {
+        return this._annotate_type;
+    }
+    /**
+     * @returns The mentions index, incrementally based on the JSON datastructure
+     */
+    get index()
+    {
+        return this._index;
+    }
+    /**
+     * @returns The index of the sentence the mention is located
+     */
+    get sentence()
+    {
+        return this._sentence;
+    }
+}</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Document.html">Document</a></li><li><a href="Entity.html">Entity</a></li><li><a href="Mention.html">Mention</a></li><li><a href="Topic.html">Topic</a></li></ul><h3>Global</h3><ul><li><a href="global.html#article_click">article_click</a></li><li><a href="global.html#close_all_open_entities">close_all_open_entities</a></li><li><a href="global.html#close_entity">close_entity</a></li><li><a href="global.html#close_text">close_text</a></li><li><a href="global.html#create_colour">create_colour</a></li><li><a href="global.html#create_entity_button">create_entity_button</a></li><li><a href="global.html#create_hsl">create_hsl</a></li><li><a href="global.html#determine_open_articles">determine_open_articles</a></li><li><a href="global.html#display_article">display_article</a></li><li><a href="global.html#entity_in_statistic_click">entity_in_statistic_click</a></li><li><a href="global.html#get_json">get_json</a></li><li><a href="global.html#on_load">on_load</a></li><li><a href="global.html#open_all_entities">open_all_entities</a></li><li><a href="global.html#open_entity">open_entity</a></li><li><a href="global.html#reload_statistics">reload_statistics</a></li><li><a href="global.html#set_articles">set_articles</a></li><li><a href="global.html#set_entities">set_entities</a></li><li><a href="global.html#set_entity_statistics">set_entity_statistics</a></li><li><a href="global.html#set_entity_statistics_bar">set_entity_statistics_bar</a></li><li><a href="global.html#set_entity_statistics_pie">set_entity_statistics_pie</a></li><li><a href="global.html#set_statistics">set_statistics</a></li><li><a href="global.html#set_statistics_bar">set_statistics_bar</a></li><li><a href="global.html#set_statistics_scatter">set_statistics_scatter</a></li><li><a href="global.html#set_topics">set_topics</a></li><li><a href="global.html#text">text</a></li><li><a href="global.html#to_hex">to_hex</a></li><li><a href="global.html#topic_click">topic_click</a></li><li><a href="global.html#update_open_entities">update_open_entities</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Mon Sep 20 2021 17:15:59 GMT+0200 (Central European Summer Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
