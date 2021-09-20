@@ -1,8 +1,36 @@
-import { create_pie_plot, create_text_pie_plot, create_treemap, create_bar_plot, create_scatter_plot } from "./article-view-charts.js";
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: article-view.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: article-view.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import { create_pie_plot, create_text_pie_plot, create_treemap, create_bar_plot, create_scatter_plot } from "./article-view-charts.js";
 import {Topic} from "./topic.js"
 
 /* global definitionsfor the script*/
-// globally safes plotted articles in the format { formatted_name : [&topic, &articel] } 
+// globally safes plotted articles in the format { formatted_name : [&amp;topic, &amp;articel] } 
 var plotted_articles_dict = {}
 
 //saves open topic
@@ -12,11 +40,11 @@ let open_topic;
 let aktiv_entity = null
 
 //json data stored in full_data
-var json_data = await get_json();
+var json_data = get_json();
 var full_data = []; 
 
 // allocates data from Json in cascade style to Objects:
-// Topic -> Document & Entity -> Mention
+// Topic -> Document &amp; Entity -> Mention
 var idn = 0;
 for(const[key, value] of Object.entries(json_data))
 {
@@ -312,7 +340,7 @@ function open_entity(entity)
 {
   let parent = document.getElementById("openentities");
   //check if entity is already open
-  for(let i=0; i<parent.children.length; i++)
+  for(let i=0; i&lt;parent.children.length; i++)
   {
     if(parent.children[i].firstChild.data == entity.formatted_name)
     {
@@ -628,7 +656,7 @@ function reload_statistics()
 
     //scan "article_view;row" for open articles and update treemaps
     let open_articles = document.getElementById("articel_view;row").children;
-    for(let i=0; i<open_articles.length; i++)
+    for(let i=0; i&lt;open_articles.length; i++)
     {
       let art_div = document.getElementById("text;" + open_articles[i].id);
       //text(art_div, artcl, entity);
@@ -728,7 +756,7 @@ function entity_in_statistic_click(params = null)
 
   //scan "article_view;row" for open articles and update treemaps
   let open_articles = document.getElementById("articel_view;row").children;
-  for(let i=0; i<open_articles.length; i++)
+  for(let i=0; i&lt;open_articles.length; i++)
   {
     let art_div = document.getElementById("text;" + open_articles[i].id);
     //text(art_div, artcl, entity);
@@ -756,11 +784,11 @@ function on_load() {
 function update_open_entities(entity = false, article = false, dele = false, all = false, node = false)
 {
   // mark all open articles in newly opened article
-  if(!entity && !dele)
+  if(!entity &amp;&amp; !dele)
   { 
     //open_articles = document.getElementById("articel_view;row").children;
     let parent = document.getElementById("openentities");
-    for(let i=0; i<parent.children.length; i++)
+    for(let i=0; i&lt;parent.children.length; i++)
     {
       let ent = article.entities.find(enti => enti.formatted_name === parent.children[i].firstChild.data);
       if(ent)
@@ -771,12 +799,12 @@ function update_open_entities(entity = false, article = false, dele = false, all
     text(node, article)
   }
   // mark entity in all open articles
-  else if(!article && !dele)
+  else if(!article &amp;&amp; !dele)
   {
     for(title in  plotted_articles_dict)
     {
       var a = plotted_articles_dict[title];
-      if(a.entities.includes(entity) && !a.marked_entities.includes(entity))
+      if(a.entities.includes(entity) &amp;&amp; !a.marked_entities.includes(entity))
       {
         a.mark_entity(entity);
         var node_id = "text;" + "articlespacer" + a.clean_topic + "spacer" + a.political_direction;
@@ -823,3 +851,26 @@ function text(node, article)
 }
 
 on_load();
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Document.html">Document</a></li><li><a href="Entity.html">Entity</a></li><li><a href="Mention.html">Mention</a></li><li><a href="Topic.html">Topic</a></li></ul><h3>Global</h3><ul><li><a href="global.html#article_click">article_click</a></li><li><a href="global.html#close_all_open_entities">close_all_open_entities</a></li><li><a href="global.html#close_entity">close_entity</a></li><li><a href="global.html#close_text">close_text</a></li><li><a href="global.html#create_colour">create_colour</a></li><li><a href="global.html#create_entity_button">create_entity_button</a></li><li><a href="global.html#create_hsl">create_hsl</a></li><li><a href="global.html#determine_open_articles">determine_open_articles</a></li><li><a href="global.html#display_article">display_article</a></li><li><a href="global.html#entity_in_statistic_click">entity_in_statistic_click</a></li><li><a href="global.html#get_json">get_json</a></li><li><a href="global.html#on_load">on_load</a></li><li><a href="global.html#open_all_entities">open_all_entities</a></li><li><a href="global.html#open_entity">open_entity</a></li><li><a href="global.html#reload_statistics">reload_statistics</a></li><li><a href="global.html#set_articles">set_articles</a></li><li><a href="global.html#set_entities">set_entities</a></li><li><a href="global.html#set_entity_statistics">set_entity_statistics</a></li><li><a href="global.html#set_entity_statistics_bar">set_entity_statistics_bar</a></li><li><a href="global.html#set_entity_statistics_pie">set_entity_statistics_pie</a></li><li><a href="global.html#set_statistics">set_statistics</a></li><li><a href="global.html#set_statistics_bar">set_statistics_bar</a></li><li><a href="global.html#set_statistics_scatter">set_statistics_scatter</a></li><li><a href="global.html#set_topics">set_topics</a></li><li><a href="global.html#text">text</a></li><li><a href="global.html#to_hex">to_hex</a></li><li><a href="global.html#topic_click">topic_click</a></li><li><a href="global.html#update_open_entities">update_open_entities</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Mon Sep 20 2021 17:15:59 GMT+0200 (Central European Summer Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
