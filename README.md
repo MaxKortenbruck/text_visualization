@@ -27,8 +27,20 @@ The project is created with:
 - ECharts 5.1.2
 
 ## Features
-What makes your project stand out? Include screenshots, code snippets, logos, etc.
-- TBD
+This project allows you to cmapare articles from a range of selected topics with different political orientations.
+
+![Alt text](/src/doc/pictures/main.png)
+
+You can explore specific mentions and their implications in and across articles.
+
+![Alt text](/src/doc/pictures/text_mark.png)
+
+A more sbtract view is provided by different plotsa, lika bar charts or scatter plots to alllow for more general text analysis and cross article compasrison
+
+![Alt text](/src/doc/pictures/scatter.png)
+![Alt text](/src/doc/pictures/stat_bar.png)
+![Alt text](/src/doc/pictures/cross_article.png)
+
 
 ## Code examples
 Include very short code examples that show what the project does as concisely as possible. Developers should be able to figure out how your project solves their problem by looking at the code examples. Make sure the API you are showing off is intuitive, and that your code is short and concise. See the news-please project for example.
@@ -39,8 +51,7 @@ Include very short code examples that show what the project does as concisely as
 ### Clone repository
 
 You first need to make sure, that you use a current git Version on your system.
-If you use a Linux, Winbdows or macOS based distribution, you can check your installation by opening a terminal and typing
-into your terminal
+If you use a Linux, Windows or macOS based distribution, you can check your installation by opening a terminal and typing
 
 >git --version
 
@@ -77,7 +88,7 @@ To stop the container simpy use:
 
 >docker-compose down
 
-### start app.py direct
+#### start app.py direct
 
 To run the app.py you may need to install the flask package.
 
