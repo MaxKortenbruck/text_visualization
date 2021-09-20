@@ -27,7 +27,7 @@ The project is created with:
 - ECharts 5.1.2
 
 ## Features
-This project allows you to cmapare articles from a range of selected topics with different political orientations.
+This project allows you to compare articles from a range of selected topics with different political orientations.
 
 ![Alt text](/src/doc/pictures/main.png)
 
@@ -35,16 +35,47 @@ You can explore specific mentions and their implications in and across articles.
 
 ![Alt text](/src/doc/pictures/text_mark.png)
 
-A more sbtract view is provided by different plotsa, lika bar charts or scatter plots to alllow for more general text analysis and cross article compasrison
+A more sbtract view is provided by different plots, like bar charts or scatter plots to alllow for more general text analysis and cross article compasrison:
 
 ![Alt text](/src/doc/pictures/scatter.png)
+
+Each plot concerning entities also provides a treemap with variations of how the selected entity is mentioned 
+inside the respective article
+
 ![Alt text](/src/doc/pictures/stat_bar.png)
+
 ![Alt text](/src/doc/pictures/cross_article.png)
 
 
-## Code examples
-Include very short code examples that show what the project does as concisely as possible. Developers should be able to figure out how your project solves their problem by looking at the code examples. Make sure the API you are showing off is intuitive, and that your code is short and concise. See the news-please project for example.
-- TBD
+## Additions to articles
+The project creates topic and entity objects automaticly, once a JSON file is loaded, by recursivly creating new objects for articles
+and entitities for each JSON-FIle, which are read and stored as topics.
+
+![Alt text](/src/doc/pictures/dia_cl.png)
+
+You can add JSON files by sending them from the server by .....
+
+If you want to change the source from where the JSON Files are loaded, you need to change the
+
+>def get_path(article = '')
+
+function in the file src/app.py file. 
+
+If you run the application on a local server, it suffices to pre-load or copy the data into :
+ 
+ >static/ressourcen/jsons
+
+## Documentation
+
+A full documentation is available in the 
+
+>/src/doc
+
+directory. It is HTML based and uses JSDOC. You can access it similar to starting the local server,
+you need to access the /src/doc/ directory and run
+
+>python3 doc.py
+
 
 ## Installation
 
