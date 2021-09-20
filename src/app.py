@@ -8,7 +8,7 @@ app = Flask(__name__)
 app.config['TEMPLATES_AUTO_RELOAD'] = True
 
 def get_path(article = ''):
-    return os.path.join('static', 'ressourcen', 'jsons', article)
+    return os.path.join( 'static', 'ressourcen', 'jsons', article)
 
 
 @app.route('/')
@@ -31,7 +31,6 @@ def contact():
 def send_json():
 
     files = os.listdir(get_path())
-    print(os.listdir(get_path()))
     articles = {}
     for article in files:
         with open(get_path(article)) as f:

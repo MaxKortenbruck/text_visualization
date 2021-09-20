@@ -34,7 +34,7 @@ function RGBToHex(r, g, b){
 }
 
 // returns chart
-function create_pie_plot(key, names, mentioned, colour, parentFromChart, article)
+function create_pie_plot(title_plot, key, names, mentioned, colour, parentFromChart, article)
 {
     while(parentFromChart.firstChild)
     {
@@ -63,11 +63,10 @@ function create_pie_plot(key, names, mentioned, colour, parentFromChart, article
         i++;
         array.push(dict);
     })
-
     // specify chart configuration item and data
     let option = {
         title: {
-            text: 'Entities from ' + key,
+            text: title_plot,
             left: 'center'
         },
         tooltip: {
@@ -395,10 +394,10 @@ function create_scatter_plot(key, names, mentioned, colour, phrasing_complexity,
 
         },
         xAxis: {
-            name: "mentioned"
+            name: "number of\nmentions"
         },
         yAxis: {
-            name: "phrasing_complexity"
+            name: "phrasing complexity in log"
         },
         series: series
     };

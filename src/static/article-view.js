@@ -146,12 +146,13 @@ function set_statistics(index)
   //create pie plot
   document.getElementById("statistics_headline").innerHTML = full_data[index].formatted_name;
 
-
   let div = document.getElementById("mainChart");
   div.innerHTML = "";
   // let dat = full_data[index].statistics_of_entity_types;
   let dat = full_data[index].statistics_of_entities;
-  let plot = create_pie_plot(full_data[index].formatted_name, dat.names, dat.numbers, dat.colour, div);
+
+  let title = 'Groups from ' + full_data[index].formatted_name;
+  let plot = create_pie_plot(title, full_data[index].formatted_name, dat.names, dat.numbers, dat.colour, div);
 
   // handle click event in Charts
   plot.on('click', function(params) {
@@ -212,18 +213,8 @@ function set_statistics_pie_for_group()
   let div = document.getElementById("mainChart");
   div.innerHTML = "";
   let dat = full_data[open_topic].statistics_of_entity_types;
-  create_pie_plot(full_data[open_topic].formatted_name, dat.names, dat.numbers, dat.colour, div);
-}
-
-
-// ad click to the statistics
-document.getElementById("mainChart;pieentity").addEventListener("click", set_statistics_pie)
-/**
- * Sets the statistics for the pie plot
- */
-function set_statistics_pie()
-{
-  set_statistics(open_topic);
+  let title = 'Groups from ' + full_data[open_topic].formatted_name;
+  create_pie_plot(title, full_data[open_topic].formatted_name, dat.names, dat.numbers, dat.colour, div);
 }
 
 document.getElementById("mainChart;bar").addEventListener("click", set_statistics_bar)
@@ -306,7 +297,8 @@ function set_entity_statistics_pie(index)
 
   let title = full_data[open_topic].articles.find(article => article.political_direction == res[2]).title
   let dat = full_data[open_topic].articles.find(article => article.political_direction == res[2]).statistics_of_article;
-  let plot = create_pie_plot(title, dat.names, dat.numbers, dat.colour ,div);
+  let title_plot = 'Entities from ' + title;
+  let plot = create_pie_plot(title_plot, title, dat.names, dat.numbers, dat.colour ,div, title_plot);
 
   plot.on('click', function(params) {
     entity_in_statistic_click(params);
@@ -512,6 +504,10 @@ function display_article(article)
     //button for expansion from the statistics
     let accordion_stat_button = document.createElement("button");
     accordion_stat_button.className = "accordion-button";
+    accordion_stat_button.id = "button-statistic-article"
+    accordion_stat_button.onclick = function() {
+      reload_statistics()
+    }
     accordion_stat_button.type= "button";
     accordion_stat_button.setAttribute("data-bs-toggle", "collapse");
     accordion_stat_button.setAttribute("data-bs-target", "#statCollapse" + articel_div_id);
@@ -618,12 +614,36 @@ function display_article(article)
     document.getElementById("articel_view;row").appendChild(div);
     determine_open_articles();
 }
-
+// ad an eventlistener for the statistics Button in the general topic
 document.getElementById("button-statistic-topic").addEventListener("click", reload_statistics)
+/**
+ * reloads all statistics. Ites needed because otherwise there are some size problems with the charts
+*/
 function reload_statistics()
 {
   set_statistics(open_topic)
-  entity_in_statistic_click()
+  if(aktiv_entity != null)
+  {
+    set_entity_statistics(aktiv_entity, document.getElementById("entityChart") );
+
+    //scan "article_view;row" for open articles and update treemaps
+    let open_articles = document.getElementById("articel_view;row").children;
+    for(let i=0; i<open_articles.length; i++)
+    {
+      let art_div = document.getElementById("text;" + open_articles[i].id);
+      //text(art_div, artcl, entity);
+      let res = open_articles[i].id.split("spacer");
+      let treemap_parent = document.getElementById("treemap;" + res[1] + ";" + res[2]);
+      let article_direction = res[2];
+      set_entity_statistics(aktiv_entity, treemap_parent, article_direction)
+      console.log("neu geladen")
+    }
+  }
+}
+
+function reload_statistics_article()
+{
+  console.log("klappt schonmal")
 }
 
 
@@ -682,10 +702,6 @@ function article_click(article)
  */
 function entity_in_statistic_click(params = null)
 {
-  if(params == null)
-  {
-    params = aktiv_entity
-  }
   let entity = null;
   let artcl = false;
 
@@ -704,6 +720,8 @@ function entity_in_statistic_click(params = null)
     let tpc = full_data[open_topic];
     entity = tpc.entities.find( item => item.formatted_name == params.name);
   }
+
+  aktiv_entity = entity;
 
   set_entity_statistics(entity, document.getElementById("entityChart") );
   open_entity(entity);
